@@ -1,0 +1,1058 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="一方小筑，与君共勉">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小小白的笔记屋">
+<meta property="og:url" content="https://luoying2002.github.io/page/2/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="一方小筑，与君共勉">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying2002.github.io/images/banner.webp">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying2002.github.io/images/banner.webp">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        <link rel="preload" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">小小白的笔记屋</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper ">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">102</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">12</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+      
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main">
+  
+    <div class="post-categories-wrapper" data-aos="fade-up">
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/Java/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件15.jpg" data-sizes="auto" alt="Java多线程" class="lazyload">
+              
+            
+            <h2>Java多线程</h2>
+            <h3>6 篇文章</h3>
+          </div>
+        </div>
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/Python/%E7%88%AC%E8%99%AB" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件39.jpg" data-sizes="auto" alt="爬虫" class="lazyload">
+              
+            
+            <h2>爬虫</h2>
+            <h3>11 篇文章</h3>
+          </div>
+        </div>
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/Linux" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件2.jpg" data-sizes="auto" alt="Linux" class="lazyload">
+              
+            
+            <h2>Linux</h2>
+            <h3>36 篇文章</h3>
+          </div>
+        </div>
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/%E7%A7%91%E6%8A%80%E6%9D%82%E8%B0%88/AI%E5%B7%A5%E5%85%B7" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件4.jpg" data-sizes="auto" alt="AI工具" class="lazyload">
+              
+            
+            <h2>AI工具</h2>
+            <h3>8 篇文章</h3>
+          </div>
+        </div>
+      
+    </div>
+  
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/13/9ikmkjbw/" aria-label="Linux系统目录"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件43.jpg" data-sizes="auto" alt="Linux系统目录" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-13</span>
+        <span><span class="icon-pencil"></span>1.6k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux系统目录</h2>
+      <article class="post-article">
+        
+          在 Linux 系统中，目录结构是遵循 FHS（Filesystem Hierarchy Standard，文件系统层次结构标准） 的，每个目录都有特定的用途和功能。以下是 Linux 系统主要目录的详细介绍，它们位于系统的根目录 / 下。
+
+ 根目录（/）
+
+根目录是 Linux 文件系统的起点，所有目录和文件都从这里开始。
+根目录本身通常只包含子目录，而不直接存放文件。
+注意：确保根目录有足够的空间，因为它的损坏会导致系统无法启动。
+
+
+ 主要子目录详解
+ /bin
+
+作用：存放基本的用户二进制可执行文件。
+内容：普通用户和管理员都可以使用的常用命令，例如：
+
+ls、cp、mv、rm、ca
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/03/w7hzn2bs/" aria-label="Linux命令详解---命令帮助信息"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件8.jpg" data-sizes="auto" alt="Linux命令详解---命令帮助信息" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-03</span>
+        <span><span class="icon-pencil"></span>1k 字</span>
+        <span><span class="icon-clock"></span>3 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---命令帮助信息</h2>
+      <article class="post-article">
+        
+          在 Linux/Unix 系统中，获取命令的帮助信息是常见的需求。以下是几种常用的方法，用于查看命令的帮助文档、参数说明和相关使用信息。
+
+ 使用 --help
+几乎所有命令都支持 --help 选项，用于简要地显示命令的使用方法和参数说明。
+1命令 --help
+
+示例：
+
+1ls --help
+
+
+输出：显示 ls 命令的所有选项及其功能。
+
+
+适用场景：快速查看命令的基本用法和选项。
+
+
+
+ 使用 man（手册页）
+man 命令用于查看命令的详细手册页，包括用法、参数、描述等。
+1man 命令
+
+示例：
+
+1man ls
+
+输出：显示 ls 命令的完整手册页。
+
+ man 的快捷键操作
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/01/11cnxpb1/" aria-label="深度学习---基础概念"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="深度学习---基础概念" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-01</span>
+        <span><span class="icon-pencil"></span>1.5k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">深度学习---基础概念</h2>
+      <article class="post-article">
+        
+          深度学习（Deep Learning）是机器学习（Machine Learning）的一个分领域，它通过模拟人脑神经网络的结构和功能来处理复杂的数据问题。深度学习在诸多领域（如计算机视觉、自然语言处理、语音识别等）取得了显著的成果。以下从基本概念、核心技术、常见模型到实际应用对深度学习进行全面解析。
+ 深度学习的基本概念
+ 什么是深度学习？
+深度学习是一种基于人工神经网络（Artificial Neural Networks, ANN）的算法，它之所以被称为“深度”，是因为模型通常由多层神经网络组成。这些层级结构使得深度学习模型能够逐步提取数据中的特征，从低级特征（如边缘、纹理）到高级特征（如
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/01/xf4572aq/" aria-label="Latex数学公式符号汇总"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件12.jpg" data-sizes="auto" alt="Latex数学公式符号汇总" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-01</span>
+        <span><span class="icon-pencil"></span>2.3k 字</span>
+        <span><span class="icon-clock"></span>11 分钟</span>
+      </div>
+      <h2 class="post-title">Latex数学公式符号汇总</h2>
+      <article class="post-article">
+        
+          TeX数学公式指南，仅供参考。
+ 基础环境
+ 公式环境类型
+
+
+
+类型
+语法
+说明
+
+
+
+
+行内公式
+$...$
+嵌入文本中的公式
+
+
+行间公式
+$$...$$
+独立成行的公式
+
+
+编号公式
+\begin&amp;#123;equation&amp;#125;...\end&amp;#123;equation&amp;#125;
+自动编号的公式
+
+
+无编号公式
+\begin&amp;#123;equation*&amp;#125;...\end&amp;#123;equation*&amp;#125;
+不编号的公式
+
+
+
+ 基本语法规则
+
+公式必须在数学环境中书写
+使用花括号 &amp;#123;&amp;#125; 进行分组
+多个参数用 \ 开头的命令
+下标用 _，上标
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/09/24/iwuv6gww/" aria-label="文心一言，能超过ChatGPT吗？"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件1.jpg" data-sizes="auto" alt="文心一言，能超过ChatGPT吗？" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-09-24</span>
+        <span><span class="icon-pencil"></span>26 字</span>
+        <span><span class="icon-clock"></span>1 分钟</span>
+      </div>
+      <h2 class="post-title">文心一言，能超过ChatGPT吗？</h2>
+      <article class="post-article">
+        
+          小小白公众号：「胡扯王国」
+微信公众号文章：文心一言，能超过ChatGPT吗？
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/09/18/442h4dlb/" aria-label="Linux命令详解---vim"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件6.jpg" data-sizes="auto" alt="Linux命令详解---vim" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-09-18</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---vim</h2>
+      <article class="post-article">
+        
+          vim 是 Linux/Unix 系统中功能强大的文本编辑器，支持多种模式（如普通模式、插入模式、命令模式），并提供丰富的命令操作，用于编辑、查找、替换、保存等任务。以下是 vim 常用命令及其用法的详解。
+
+ 启动 vim
+ 打开文件
+1vim 文件名
+
+示例：
+
+1vim example.txt
+
+作用：打开 example.txt 文件。如果文件不存在，则创建一个新文件。
+
+
+ 打开多个文件
+1vim 文件1 文件2
+
+示例：
+
+1vim file1.txt file2.txt
+
+作用：同时打开 file1.txt 和 file2.txt，可以在多个文件之间切换。
+
+
+ 打开文件并跳转到
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/09/17/z9gvqadp/" aria-label="Linux命令详解---touch"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件42.jpg" data-sizes="auto" alt="Linux命令详解---touch" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-09-17</span>
+        <span><span class="icon-pencil"></span>1.3k 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---touch</h2>
+      <article class="post-article">
+        
+          touch 是 Linux/Unix 系统中用于创建空文件或更新文件时间戳的命令。它是一个简单而常用的工具，特别适合文件操作时快速创建新文件或修改现有文件的时间信息。
+
+ 基本语法
+1touch [选项] 文件名
+
+选项：控制行为（如修改时间戳、创建文件等）。
+文件名：指定需要操作的目标文件，可以是一个或多个。
+
+
+ 常用功能
+ 创建空文件
+如果文件不存在，touch 会创建一个新的空文件。
+1touch 文件名
+
+示例：
+
+1touch example.txt
+
+作用：创建一个名为 example.txt 的空文件。
+
+
+ 批量创建多个文件
+可以同时创建多个文件。
+1touch 文件1 文件
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/09/15/c8yrzjxg/" aria-label="Linux命令详解---tar"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件36.jpg" data-sizes="auto" alt="Linux命令详解---tar" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-09-15</span>
+        <span><span class="icon-pencil"></span>1.3k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---tar</h2>
+      <article class="post-article">
+        
+          tar 是 Linux/Unix 系统中用于创建、解压缩归档文件的工具。它常用于备份文件、打包文件夹以及解压归档文件。tar 支持多种压缩格式（如 .gz、.bz2 和 .xz），并且可以直接操作这些压缩文件。
+
+ 基本语法
+1tar [选项] [参数] [文件/目录]
+
+选项：指定操作类型（如打包、解压缩等）和附加功能（如显示详细信息）。
+参数：指定目标文件或目录。
+文件/目录：操作的目标文件或目录。
+
+
+ 常用选项
+
+
+
+选项
+含义
+
+
+
+
+-c
+创建归档文件（create）。
+
+
+-x
+解压归档文件（extract）。
+
+
+-f
+指定归档文件的名称（file）。
+
+
+-v
+显示操作过程的
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/08/28/lx5mg678/" aria-label="Linux命令详解---apt"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件44.jpg" data-sizes="auto" alt="Linux命令详解---apt" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-08-28</span>
+        <span><span class="icon-pencil"></span>1.3k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---apt</h2>
+      <article class="post-article">
+        
+          apt 是基于 Debian 和 Ubuntu 系列的 Linux 发行版中常用的包管理工具。它是 apt-get 和 apt-cache 的简化版，提供了更直观的命令和输出，用于安装、卸载、更新和管理软件包。
+
+ 基本语法
+1apt [子命令] [选项] [参数]
+
+子命令：指定要执行的操作（如 install、update、remove 等）。
+选项：可以用来控制 apt 的行为（如 -y 表示自动确认）。
+参数：指定操作的目标（如某个软件包名称）。
+
+
+ 常用子命令及用法
+ 更新软件包索引
+1apt update
+
+作用：从配置的源服务器上获取最新的软件包列表，更新本地索引。
+示例：
+
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/08/13/jneaca9h/" aria-label="Linux命令详解---yum"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件11.jpg" data-sizes="auto" alt="Linux命令详解---yum" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-08-13</span>
+        <span><span class="icon-pencil"></span>1.3k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---yum</h2>
+      <article class="post-article">
+        
+          yum 是基于 RPM 包管理的 Linux 系统（如 CentOS、RHEL）的包管理工具，用于方便地安装、更新、卸载和管理软件包。yum 会自动解决软件包的依赖关系，并从指定的仓库中下载和安装所需的包。
+在 CentOS 8 和 RHEL 8 中，yum 被替换为 dnf（但 yum 仍作为兼容命令存在）。以下内容基于传统的 yum 命令。
+
+ 基本语法
+1yum [选项] [子命令] [参数]
+
+选项：可以用来控制 yum 的行为（如 -y 表示自动确认）。
+子命令：指定要执行的操作（如 install、update、remove 等）。
+参数：指定操作的目标（如某个软件包名称）。
+
+
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+
+
+  <nav id="page-nav" data-aos="fade-up">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
+  </nav>
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2024
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        121.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        08:09
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">102</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">12</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+    
+  </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+    
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+
