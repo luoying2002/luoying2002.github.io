@@ -1,0 +1,960 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---rsync |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="rsync 是 Linux 和类 Unix 系统中一个强大的命令行工具，用于快速、高效地同步文件和目录。它支持本地同步、远程同步，并且可以增量传输文件（仅传输更改的部分），从而提高效率。rsync 常用于文件备份、远程复制以及数据迁移。   基本语法 1rsync [选项] 源路径 目标路径  源路径：需要同步的文件或目录。 目标路径：同步的目标位置，可以是本地路径或远程路径。 远程路径格式：us">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---rsync">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/zr2olwm8/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="rsync 是 Linux 和类 Unix 系统中一个强大的命令行工具，用于快速、高效地同步文件和目录。它支持本地同步、远程同步，并且可以增量传输文件（仅传输更改的部分），从而提高效率。rsync 常用于文件备份、远程复制以及数据迁移。   基本语法 1rsync [选项] 源路径 目标路径  源路径：需要同步的文件或目录。 目标路径：同步的目标位置，可以是本地路径或远程路径。 远程路径格式：us">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T13:21:10.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.521Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---rsync">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---rsync</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%92%8C%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作和示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5"><span class="toc-number">3.1.</span> <span class="toc-text"> 本地文件同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5"><span class="toc-number">3.2.</span> <span class="toc-text"> 远程文件同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%90%8C%E6%AD%A5%E5%88%B0%E8%BF%9C%E7%A8%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 从本地同步到远程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 从远程同步到本地</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E4%BC%A0%E8%BE%93"><span class="toc-number">3.3.</span> <span class="toc-text"> 压缩传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%90%8C%E6%AD%A5%E8%BF%9B%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text"> 显示同步进度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%9B%AE%E6%A0%87%E4%B8%AD%E5%A4%9A%E4%BD%99%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">3.5.</span> <span class="toc-text"> 删除目标中多余的文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">3.5.1.</span> <span class="toc-text"> 注意：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.6.</span> <span class="toc-text"> 排除文件或目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">3.6.1.</span> <span class="toc-text"> 排除多个文件&#x2F;目录：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E5%92%8C%E5%8C%85%E5%90%AB%E7%BB%93%E5%90%88"><span class="toc-number">3.6.2.</span> <span class="toc-text"> 排除和包含结合：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text"> 仅更新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%90%8C%E6%AD%A5%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C"><span class="toc-number">3.8.</span> <span class="toc-text"> 测试同步（模拟执行）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ssh-%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="toc-number">3.9.</span> <span class="toc-text"> 使用 SSH 远程同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E4%BC%A0%E8%BE%93%E5%B8%A6%E5%AE%BD"><span class="toc-number">3.10.</span> <span class="toc-text"> 限制传输带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5%E5%92%8C%E7%89%B9%E6%AE%8A%E6%96%87%E4%BB%B6"><span class="toc-number">3.11.</span> <span class="toc-text"> 同步符号链接和特殊文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E5%A4%87%E4%BB%BD"><span class="toc-number">3.12.</span> <span class="toc-text"> 增量备份</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text"> 常见用法总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#rsync-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">4.1.</span> <span class="toc-text"> rsync 的优点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-zr2olwm8" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/zr2olwm8/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T13:21:10.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>rsync</code> 是 Linux 和类 Unix 系统中一个强大的命令行工具，用于快速、高效地同步文件和目录。它支持本地同步、远程同步，并且可以增量传输文件（仅传输更改的部分），从而提高效率。<code>rsync</code> 常用于文件备份、远程复制以及数据迁移。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync [选项] 源路径 目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>源路径</strong>：需要同步的文件或目录。</li>
+<li><strong>目标路径</strong>：同步的目标位置，可以是本地路径或远程路径。</li>
+<li><strong>远程路径格式</strong>：<code>user@host:path</code>。</li>
+</ul>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-a</code></td>
+<td>归档模式，递归传输，并保留文件权限、时间戳、符号链接等（常用）。</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>显示详细信息（verbose）。</td>
+</tr>
+<tr>
+<td><code>-z</code></td>
+<td>在传输过程中压缩数据（适用于网络传输）。</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>递归传输目录（包含子目录和文件）。</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>仅更新文件（如果目标文件更新日期较新，则跳过）。</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>保留文件的时间戳。</td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td>保留文件权限。</td>
+</tr>
+<tr>
+<td><code>--progress</code></td>
+<td>显示同步的详细进度信息。</td>
+</tr>
+<tr>
+<td><code>--delete</code></td>
+<td>删除目标路径中源路径中不存在的文件（保持两端完全同步）。</td>
+</tr>
+<tr>
+<td><code>--exclude</code></td>
+<td>排除指定文件或目录（如 <code>--exclude '*.log'</code> 排除所有 <code>.log</code> 文件）。</td>
+</tr>
+<tr>
+<td><code>--include</code></td>
+<td>包含指定文件或目录（与 <code>--exclude</code> 结合使用）。</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td>模拟执行命令，不真正传输文件（用于测试）。</td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td>指定远程连接使用的加密协议（如 <code>ssh</code>）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常用操作和示例"><a class="markdownIt-Anchor" href="#常用操作和示例"></a> <strong>常用操作和示例</strong></h1>
+<h2 id="本地文件同步"><a class="markdownIt-Anchor" href="#本地文件同步"></a> <strong>本地文件同步</strong></h2>
+<p>将目录 <code>/source/path</code> 同步到 <code>/destination/path</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av /source/path /destination/path</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>选项解释</strong>：
+<ul>
+<li><code>-a</code>：归档模式，保留文件属性。</li>
+<li><code>-v</code>：显示详细信息。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：
+<ul>
+<li>如果源路径以斜杠 <code>/</code> 结尾（如 <code>/source/path/</code>），只同步目录内的内容。</li>
+<li>如果没有斜杠（如 <code>/source/path</code>），则整个目录包括其内容都会同步。</li>
+</ul>
+</li>
+</ul>
+<h3 id="示例"><a class="markdownIt-Anchor" href="#示例"></a> 示例：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 同步目录内容（不包含目录本身）</span></span><br><span class="line">rsync -av /home/user/docs/ /backup/docs/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同步整个目录（包含目录本身）</span></span><br><span class="line">rsync -av /home/user/docs /backup/</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="远程文件同步"><a class="markdownIt-Anchor" href="#远程文件同步"></a> <strong>远程文件同步</strong></h2>
+<h3 id="从本地同步到远程"><a class="markdownIt-Anchor" href="#从本地同步到远程"></a> <strong>从本地同步到远程</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av /local/path/ user@remote_host:/remote/path/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将本地的 <code>/local/path/</code> 同步到远程主机的 <code>/remote/path/</code>。</li>
+</ul>
+<h3 id="从远程同步到本地"><a class="markdownIt-Anchor" href="#从远程同步到本地"></a> <strong>从远程同步到本地</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av user@remote_host:/remote/path/ /local/path/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将远程主机的 <code>/remote/path/</code> 同步到本地的 <code>/local/path/</code>。</li>
+</ul>
+<hr />
+<h2 id="压缩传输"><a class="markdownIt-Anchor" href="#压缩传输"></a> <strong>压缩传输</strong></h2>
+<ul>
+<li>使用 <code>-z</code> 选项可以在传输过程中压缩数据以提高传输效率：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz /local/path/ user@remote_host:/remote/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="显示同步进度"><a class="markdownIt-Anchor" href="#显示同步进度"></a> <strong>显示同步进度</strong></h2>
+<ul>
+<li>使用 <code>--progress</code> 查看每个文件的传输进度：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --progress /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="删除目标中多余的文件"><a class="markdownIt-Anchor" href="#删除目标中多余的文件"></a> <strong>删除目标中多余的文件</strong></h2>
+<ul>
+<li>使用 <code>--delete</code> 选项，可以删除目标路径中不存在于源路径的文件：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --delete /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="注意"><a class="markdownIt-Anchor" href="#注意"></a> <strong>注意</strong>：</h3>
+<ul>
+<li>使用 <code>--delete</code> 前建议加上 <code>--dry-run</code> 进行模拟测试，避免意外删除：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --delete --dry-run /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="排除文件或目录"><a class="markdownIt-Anchor" href="#排除文件或目录"></a> <strong>排除文件或目录</strong></h2>
+<ul>
+<li>使用 <code>--exclude</code> 排除特定文件或目录：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --exclude <span class="string">&#x27;*.log&#x27;</span> /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="排除多个文件目录"><a class="markdownIt-Anchor" href="#排除多个文件目录"></a> <strong>排除多个文件/目录</strong>：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --exclude <span class="string">&#x27;tmp/&#x27;</span> --exclude <span class="string">&#x27;*.log&#x27;</span> /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+<h3 id="排除和包含结合"><a class="markdownIt-Anchor" href="#排除和包含结合"></a> <strong>排除和包含结合</strong>：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --exclude <span class="string">&#x27;*.tmp&#x27;</span> --include <span class="string">&#x27;*.txt&#x27;</span> /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="仅更新文件"><a class="markdownIt-Anchor" href="#仅更新文件"></a> <strong>仅更新文件</strong></h2>
+<ul>
+<li>使用 <code>-u</code> 选项，只同步更新的文件（目标文件较新时不覆盖）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avu /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="测试同步模拟执行"><a class="markdownIt-Anchor" href="#测试同步模拟执行"></a> <strong>测试同步（模拟执行）</strong></h2>
+<ul>
+<li>使用 <code>--dry-run</code> 模拟执行命令，不真正传输文件：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --dry-run /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="使用-ssh-远程同步"><a class="markdownIt-Anchor" href="#使用-ssh-远程同步"></a> <strong>使用 SSH 远程同步</strong></h2>
+<ul>
+<li>
+<p>默认情况下，<code>rsync</code> 使用 <code>rsh</code> 作为远程传输协议。可以通过 <code>-e</code> 指定使用 <code>ssh</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av -e ssh /source/path/ user@remote_host:/remote/path/</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>指定 SSH 端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av -e <span class="string">&quot;ssh -p 2222&quot;</span> /source/path/ user@remote_host:/remote/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="限制传输带宽"><a class="markdownIt-Anchor" href="#限制传输带宽"></a> <strong>限制传输带宽</strong></h2>
+<ul>
+<li>使用 <code>--bwlimit</code> 限制传输速度（单位为 KB/s）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --bwlimit=1000 /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="同步符号链接和特殊文件"><a class="markdownIt-Anchor" href="#同步符号链接和特殊文件"></a> <strong>同步符号链接和特殊文件</strong></h2>
+<ul>
+<li>默认情况下，<code>rsync</code> 会同步符号链接而不是目标文件。如果需要同步符号链接，可以使用：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --links /source/path/ /destination/path/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="增量备份"><a class="markdownIt-Anchor" href="#增量备份"></a> <strong>增量备份</strong></h2>
+<ul>
+<li>使用 <code>--backup</code> 和 <code>--backup-dir</code> 创建增量备份：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -av --backup --backup-dir=/backup/incremental /source/path/ /backup/full/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h1 id="常见用法总结"><a class="markdownIt-Anchor" href="#常见用法总结"></a> <strong>常见用法总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th>用法</th>
+<th>命令示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本地目录同步</td>
+<td><code>rsync -av /source/path/ /destination/path/</code></td>
+</tr>
+<tr>
+<td>远程同步到本地</td>
+<td><code>rsync -av user@remote_host:/remote/path/ /local/path/</code></td>
+</tr>
+<tr>
+<td>本地同步到远程</td>
+<td><code>rsync -av /local/path/ user@remote_host:/remote/path/</code></td>
+</tr>
+<tr>
+<td>显示进度</td>
+<td><code>rsync -av --progress /source/path/ /destination/path/</code></td>
+</tr>
+<tr>
+<td>删除目标中多余文件</td>
+<td><code>rsync -av --delete /source/path/ /destination/path/</code></td>
+</tr>
+<tr>
+<td>排除文件/目录</td>
+<td><code>rsync -av --exclude 'tmp/' /source/path/ /destination/path/</code></td>
+</tr>
+<tr>
+<td>使用 SSH 同步</td>
+<td><code>rsync -av -e ssh /source/path/ user@remote_host:/remote/path/</code></td>
+</tr>
+<tr>
+<td>模拟运行（测试）</td>
+<td><code>rsync -av --dry-run /source/path/ /destination/path/</code></td>
+</tr>
+<tr>
+<td>增量备份</td>
+<td><code>rsync -av --backup --backup-dir=/backup/incremental /source/path/ /backup/full/</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rsync-的优点"><a class="markdownIt-Anchor" href="#rsync-的优点"></a> <strong><code>rsync</code> 的优点</strong></h2>
+<ol>
+<li><strong>增量传输</strong>：仅传输更改的部分，节省带宽。</li>
+<li><strong>支持多种协议</strong>：支持本地和远程同步，远程同步可以通过 SSH 进行安全传输。</li>
+<li><strong>高效</strong>：支持压缩传输和快速文件对比。</li>
+<li><strong>灵活的选项</strong>：可以排除特定文件、删除多余文件等。</li>
+</ol>
+<hr />
+<h1 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> <strong>注意事项</strong></h1>
+<ol>
+<li>
+<p><strong>斜杠区别</strong>：</p>
+<ul>
+<li>源路径 <strong>带斜杠</strong>：仅同步目录内容。</li>
+<li>源路径 <strong>不带斜杠</strong>：同步整个目录及其内容。</li>
+</ul>
+</li>
+<li>
+<p><strong>小心使用 <code>--delete</code></strong>：</p>
+<ul>
+<li><code>--delete</code> 会删除目标路径中多余的文件，建议先使用 <code>--dry-run</code> 测试。</li>
+</ul>
+</li>
+<li>
+<p><strong>权限问题</strong>：</p>
+<ul>
+<li>如果需要保留文件的权限、所有者等属性，可能需要使用 <code>sudo</code>。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<p><code>rsync</code> 是一个功能强大且高效的工具，适用于本地和远程的文件同步和备份。通过灵活的选项组合，<code>rsync</code> 能满足多种文件传输需求。熟练掌握 <code>rsync</code> 的用法，可以大大提高数据同步和备份的效率。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/zr2olwm8/">https://luoying.netlify.app/2024/10/09/zr2olwm8/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---rsync</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件25.jpg" data-sizes="auto" alt="Linux命令详解---vim" class="lazyload">
+          
+        
+        <a href="/2024/10/09/442h4dlb/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---vim
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Linux命令详解---pwd" class="lazyload">
+        
+      
+      <a href="/2024/10/09/imn8uma5/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---pwd
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%92%8C%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作和示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5"><span class="toc-number">3.1.</span> <span class="toc-text"> 本地文件同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5"><span class="toc-number">3.2.</span> <span class="toc-text"> 远程文件同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%90%8C%E6%AD%A5%E5%88%B0%E8%BF%9C%E7%A8%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 从本地同步到远程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 从远程同步到本地</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E4%BC%A0%E8%BE%93"><span class="toc-number">3.3.</span> <span class="toc-text"> 压缩传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%90%8C%E6%AD%A5%E8%BF%9B%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text"> 显示同步进度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%9B%AE%E6%A0%87%E4%B8%AD%E5%A4%9A%E4%BD%99%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">3.5.</span> <span class="toc-text"> 删除目标中多余的文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">3.5.1.</span> <span class="toc-text"> 注意：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.6.</span> <span class="toc-text"> 排除文件或目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">3.6.1.</span> <span class="toc-text"> 排除多个文件&#x2F;目录：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E5%92%8C%E5%8C%85%E5%90%AB%E7%BB%93%E5%90%88"><span class="toc-number">3.6.2.</span> <span class="toc-text"> 排除和包含结合：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text"> 仅更新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%90%8C%E6%AD%A5%E6%A8%A1%E6%8B%9F%E6%89%A7%E8%A1%8C"><span class="toc-number">3.8.</span> <span class="toc-text"> 测试同步（模拟执行）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ssh-%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="toc-number">3.9.</span> <span class="toc-text"> 使用 SSH 远程同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E4%BC%A0%E8%BE%93%E5%B8%A6%E5%AE%BD"><span class="toc-number">3.10.</span> <span class="toc-text"> 限制传输带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5%E5%92%8C%E7%89%B9%E6%AE%8A%E6%96%87%E4%BB%B6"><span class="toc-number">3.11.</span> <span class="toc-text"> 同步符号链接和特殊文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E5%A4%87%E4%BB%BD"><span class="toc-number">3.12.</span> <span class="toc-text"> 增量备份</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text"> 常见用法总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#rsync-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">4.1.</span> <span class="toc-text"> rsync 的优点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

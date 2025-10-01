@@ -1,0 +1,920 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---find |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="find 是 Linux 和类 Unix 操作系统中的一个强大命令，用于在目录中查找文件或目录，并可以对找到的文件执行特定的操作。它支持根据文件名、类型、大小、时间等条件进行搜索，非常灵活和强大。 以下是对 find 命令的详细介绍，包括基本用法、常用选项和示例。   基本语法 1find [路径] [条件] [操作]  路径：指定要搜索的目录路径，默认为当前目录（.）。 条件：指定查找文件的条件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---find">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/rh586uhh/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="find 是 Linux 和类 Unix 操作系统中的一个强大命令，用于在目录中查找文件或目录，并可以对找到的文件执行特定的操作。它支持根据文件名、类型、大小、时间等条件进行搜索，非常灵活和强大。 以下是对 find 命令的详细介绍，包括基本用法、常用选项和示例。   基本语法 1find [路径] [条件] [操作]  路径：指定要搜索的目录路径，默认为当前目录（.）。 条件：指定查找文件的条件">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T14:24:29.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.272Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---find">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---find</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%E5%92%8C%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项和条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%A6%E8%A7%A3%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 详解条件和操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E5%90%8D%E6%9F%A5%E6%89%BE-name-%E5%92%8C-iname"><span class="toc-number">3.1.</span> <span class="toc-text"> 按文件名查找（-name 和 -iname）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E6%9F%A5%E6%89%BE-type"><span class="toc-number">3.2.</span> <span class="toc-text"> 按文件类型查找（-type）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E6%9F%A5%E6%89%BE-size"><span class="toc-number">3.3.</span> <span class="toc-text"> 按文件大小查找（-size）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%97%B6%E9%97%B4%E6%9F%A5%E6%89%BE-mtime-atime-ctime"><span class="toc-number">3.4.</span> <span class="toc-text"> 按时间查找（-mtime、-atime、-ctime）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%9F%A5%E6%89%BE-perm"><span class="toc-number">3.5.</span> <span class="toc-text"> 按文件权限查找（-perm）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E6%90%9C%E7%B4%A2%E8%8C%83%E5%9B%B4-maxdepth-%E5%92%8C-mindepth"><span class="toc-number">3.6.</span> <span class="toc-text"> 限制搜索范围（-maxdepth 和 -mindepth）**</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C-exec-%E5%92%8C-delete"><span class="toc-number">3.7.</span> <span class="toc-text"> 执行操作（-exec 和 -delete）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#-exec"><span class="toc-number">3.7.0.1.</span> <span class="toc-text"> -exec</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#-delete"><span class="toc-number">3.7.0.2.</span> <span class="toc-text"> -delete</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%A9%BA%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95-empty"><span class="toc-number">3.8.</span> <span class="toc-text"> 查找空文件或目录（-empty）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%94%A8%E6%88%B7%E6%88%96%E7%BB%84%E6%9F%A5%E6%89%BE-user-%E5%92%8C-group"><span class="toc-number">3.9.</span> <span class="toc-text"> 按用户或组查找（-user 和 -group）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text"> 示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%BD%93%E5%89%8D%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89-txt-%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text"> 查找当前目录下的所有 .txt 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE-varlog-%E4%B8%8B%E5%A4%A7%E4%BA%8E-10-mb-%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text"> 查找 &#x2F;var&#x2F;log 下大于 10 MB 的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%9C%80%E8%BF%91-3-%E5%A4%A9%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.3.</span> <span class="toc-text"> 查找最近 3 天修改过的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%B9%B6%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89-tmp-%E6%96%87%E4%BB%B6"><span class="toc-number">4.4.</span> <span class="toc-text"> 查找并删除所有 .tmp 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%B9%B6%E5%A4%8D%E5%88%B6%E6%89%80%E6%9C%89-jpg-%E6%96%87%E4%BB%B6%E5%88%B0-backup"><span class="toc-number">4.5.</span> <span class="toc-text"> 查找并复制所有 .jpg 文件到 &#x2F;backup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%A9%BA%E6%96%87%E4%BB%B6%E6%88%96%E7%A9%BA%E7%9B%AE%E5%BD%95"><span class="toc-number">4.6.</span> <span class="toc-text"> 查找空文件或空目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6%E4%B8%BA-2-%E7%9A%84%E6%89%80%E6%9C%89-sh-%E6%96%87%E4%BB%B6"><span class="toc-number">4.7.</span> <span class="toc-text"> 查找目录的最大深度为 2 的所有 .sh 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%89%80%E6%9C%89%E6%9D%83%E9%99%90%E4%B8%BA-644-%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.8.</span> <span class="toc-text"> 查找所有权限为 644 的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%94%A8%E6%88%B7%E4%B8%BA-root-%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6"><span class="toc-number">4.9.</span> <span class="toc-text"> 查找用户为 root 的所有文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%BF%9D%E7%95%99%E5%B9%B6%E5%8E%8B%E7%BC%A9%E6%9F%A5%E6%89%BE%E5%88%B0%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.10.</span> <span class="toc-text"> 按目录结构保留并压缩查找到的文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-rh586uhh" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/rh586uhh/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T14:24:29.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>find</code> 是 Linux 和类 Unix 操作系统中的一个强大命令，用于在目录中查找文件或目录，并可以对找到的文件执行特定的操作。它支持根据文件名、类型、大小、时间等条件进行搜索，非常灵活和强大。</p>
+<p>以下是对 <code>find</code> 命令的详细介绍，包括基本用法、常用选项和示例。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find [路径] [条件] [操作]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>路径</strong>：指定要搜索的目录路径，默认为当前目录（<code>.</code>）。</li>
+<li><strong>条件</strong>：指定查找文件的条件（例如文件名、大小、时间等）。</li>
+<li><strong>操作</strong>：对查找到的文件执行的操作（例如删除、移动或打印路径）。</li>
+</ul>
+<hr />
+<h1 id="常用选项和条件"><a class="markdownIt-Anchor" href="#常用选项和条件"></a> <strong>常用选项和条件</strong></h1>
+<table>
+<thead>
+<tr>
+<th>条件/选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-name</code></td>
+<td>按文件名查找，支持通配符（如 <code>*.txt</code>）。</td>
+</tr>
+<tr>
+<td><code>-type</code></td>
+<td>按文件类型查找（<code>f</code> 表示文件，<code>d</code> 表示目录）。</td>
+</tr>
+<tr>
+<td><code>-size</code></td>
+<td>按文件大小查找（如 <code>+100k</code> 表示大于 100 KB，<code>-10M</code> 表示小于 10 MB）。</td>
+</tr>
+<tr>
+<td><code>-mtime</code></td>
+<td>查找按修改时间的文件（如 <code>-mtime +7</code> 表示 7 天前修改的文件）。</td>
+</tr>
+<tr>
+<td><code>-atime</code></td>
+<td>查找按访问时间的文件。</td>
+</tr>
+<tr>
+<td><code>-ctime</code></td>
+<td>查找按更改属性时间的文件（例如权限变化）。</td>
+</tr>
+<tr>
+<td><code>-user</code></td>
+<td>按文件的拥有者查找。</td>
+</tr>
+<tr>
+<td><code>-group</code></td>
+<td>按文件的所属组查找。</td>
+</tr>
+<tr>
+<td><code>-perm</code></td>
+<td>按文件权限查找（如 <code>-perm 755</code>）。</td>
+</tr>
+<tr>
+<td><code>-exec</code></td>
+<td>对查找到的文件执行操作。</td>
+</tr>
+<tr>
+<td><code>-delete</code></td>
+<td>删除查找到的文件。</td>
+</tr>
+<tr>
+<td><code>-iname</code></td>
+<td>按文件名查找，但忽略大小写。</td>
+</tr>
+<tr>
+<td><code>-empty</code></td>
+<td>查找空文件或空目录。</td>
+</tr>
+<tr>
+<td><code>-maxdepth</code></td>
+<td>限制搜索的目录深度。</td>
+</tr>
+<tr>
+<td><code>-mindepth</code></td>
+<td>设置搜索的最小深度。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="详解条件和操作"><a class="markdownIt-Anchor" href="#详解条件和操作"></a> <strong>详解条件和操作</strong></h1>
+<h2 id="按文件名查找-name-和-iname"><a class="markdownIt-Anchor" href="#按文件名查找-name-和-iname"></a> <strong>按文件名查找（<code>-name</code> 和 <code>-iname</code>）</strong></h2>
+<ul>
+<li>使用 <code>-name</code> 按精确文件名查找（区分大小写）。</li>
+<li>使用 <code>-iname</code> 按文件名查找（不区分大小写）。</li>
+<li>支持通配符 <code>*</code> 和 <code>?</code>：
+<ul>
+<li><code>*</code> 匹配任意多个字符。</li>
+<li><code>?</code> 匹配任意单个字符。</li>
+</ul>
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.txt&quot;</span></span><br><span class="line">find /var/log -iname <span class="string">&quot;*.log&quot;</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按文件类型查找-type"><a class="markdownIt-Anchor" href="#按文件类型查找-type"></a> <strong>按文件类型查找（<code>-type</code>）</strong></h2>
+<ul>
+<li><code>f</code>：普通文件。</li>
+<li><code>d</code>：目录。</li>
+<li><code>l</code>：符号链接文件。</li>
+<li><code>c</code>：字符设备文件。</li>
+<li><code>b</code>：块设备文件。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> f    <span class="comment"># 查找所有文件</span></span><br><span class="line">find . -<span class="built_in">type</span> d    <span class="comment"># 查找所有目录</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按文件大小查找-size"><a class="markdownIt-Anchor" href="#按文件大小查找-size"></a> <strong>按文件大小查找（<code>-size</code>）</strong></h2>
+<ul>
+<li><code>+</code> 表示大于，<code>-</code> 表示小于，直接数字表示等于。</li>
+<li>单位：
+<ul>
+<li><code>b</code>：字节。</li>
+<li><code>k</code>：千字节。</li>
+<li><code>M</code>：兆字节。</li>
+<li><code>G</code>：千兆字节。</li>
+</ul>
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -size +1M    <span class="comment"># 查找大于 1 MB 的文件</span></span><br><span class="line">find . -size -10k   <span class="comment"># 查找小于 10 KB 的文件</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按时间查找-mtime-atime-ctime"><a class="markdownIt-Anchor" href="#按时间查找-mtime-atime-ctime"></a> <strong>按时间查找（<code>-mtime</code>、<code>-atime</code>、<code>-ctime</code>）</strong></h2>
+<ul>
+<li><code>-mtime</code>：按文件的修改时间查找。</li>
+<li><code>-atime</code>：按文件的访问时间查找。</li>
+<li><code>-ctime</code>：按文件的属性更改时间查找。</li>
+</ul>
+<p>时间格式：</p>
+<ul>
+<li><code>+n</code> 表示 n 天前。</li>
+<li><code>-n</code> 表示 n 天以内。</li>
+<li><code>n</code> 表示正好 n 天前。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find . -mtime +7    <span class="comment"># 查找 7 天前修改的文件</span></span><br><span class="line">find . -atime -2    <span class="comment"># 查找最近 2 天访问过的文件</span></span><br><span class="line">find . -ctime 1     <span class="comment"># 查找正好 1 天前更改属性的文件</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按文件权限查找-perm"><a class="markdownIt-Anchor" href="#按文件权限查找-perm"></a> <strong>按文件权限查找（<code>-perm</code>）</strong></h2>
+<ul>
+<li>精确匹配权限：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -perm 644</span><br></pre></td></tr></table></figure>
+</li>
+<li>文件至少包含指定权限：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -perm -755</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="限制搜索范围-maxdepth-和-mindepth"><a class="markdownIt-Anchor" href="#限制搜索范围-maxdepth-和-mindepth"></a> 限制搜索范围（<code>-maxdepth</code> 和 <code>-mindepth</code>）**</h2>
+<ul>
+<li><code>-maxdepth</code>：限制搜索的最大目录深度。</li>
+<li><code>-mindepth</code>：限制搜索的最小目录深度。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -maxdepth 2 -name <span class="string">&quot;*.txt&quot;</span>   <span class="comment"># 仅搜索当前目录及下一级目录</span></span><br><span class="line">find . -mindepth 3 -<span class="built_in">type</span> f         <span class="comment"># 搜索第三层及更深的文件</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="执行操作-exec-和-delete"><a class="markdownIt-Anchor" href="#执行操作-exec-和-delete"></a> <strong>执行操作（<code>-exec</code> 和 <code>-delete</code>）</strong></h2>
+<h4 id="-exec"><a class="markdownIt-Anchor" href="#-exec"></a> <strong><code>-exec</code></strong></h4>
+<ul>
+<li>对查找到的文件执行命令。</li>
+<li><code>&#123;&#125;</code> 用于占位，表示找到的文件。</li>
+<li><code>\;</code> 表示命令结束。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.log&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> &#123;&#125; \;    <span class="comment"># 删除所有 .log 文件</span></span><br><span class="line">find . -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">chmod</span> 644 &#123;&#125; \;  <span class="comment"># 将所有文件权限设置为 644</span></span><br></pre></td></tr></table></figure>
+<h4 id="-delete"><a class="markdownIt-Anchor" href="#-delete"></a> <strong><code>-delete</code></strong></h4>
+<ul>
+<li>删除满足条件的文件或目录（危险操作）。</li>
+<li>示例：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.tmp&quot;</span> -delete</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="查找空文件或目录-empty"><a class="markdownIt-Anchor" href="#查找空文件或目录-empty"></a> <strong>查找空文件或目录（<code>-empty</code>）</strong></h2>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -empty    <span class="comment"># 查找空文件或空目录</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按用户或组查找-user-和-group"><a class="markdownIt-Anchor" href="#按用户或组查找-user-和-group"></a> <strong>按用户或组查找（<code>-user</code> 和 <code>-group</code>）</strong></h2>
+<ul>
+<li><code>-user</code>：按文件的所有者查找。</li>
+<li><code>-group</code>：按文件所属的组查找。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find . -user root    <span class="comment"># 查找所有者是 root 的文件</span></span><br><span class="line">find . -group staff  <span class="comment"># 查找所属组是 staff 的文件</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="示例"><a class="markdownIt-Anchor" href="#示例"></a> <strong>示例</strong></h1>
+<h2 id="查找当前目录下的所有-txt-文件"><a class="markdownIt-Anchor" href="#查找当前目录下的所有-txt-文件"></a> <strong>查找当前目录下的所有 <code>.txt</code> 文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.txt&quot;</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找-varlog-下大于-10-mb-的文件"><a class="markdownIt-Anchor" href="#查找-varlog-下大于-10-mb-的文件"></a> <strong>查找 <code>/var/log</code> 下大于 10 MB 的文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /var/log -size +10M</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找最近-3-天修改过的文件"><a class="markdownIt-Anchor" href="#查找最近-3-天修改过的文件"></a> <strong>查找最近 3 天修改过的文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -mtime -3</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找并删除所有-tmp-文件"><a class="markdownIt-Anchor" href="#查找并删除所有-tmp-文件"></a> <strong>查找并删除所有 <code>.tmp</code> 文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.tmp&quot;</span> -delete</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找并复制所有-jpg-文件到-backup"><a class="markdownIt-Anchor" href="#查找并复制所有-jpg-文件到-backup"></a> <strong>查找并复制所有 <code>.jpg</code> 文件到 <code>/backup</code></strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.jpg&quot;</span> -<span class="built_in">exec</span> <span class="built_in">cp</span> &#123;&#125; /backup/ \;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找空文件或空目录"><a class="markdownIt-Anchor" href="#查找空文件或空目录"></a> <strong>查找空文件或空目录</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -empty</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找目录的最大深度为-2-的所有-sh-文件"><a class="markdownIt-Anchor" href="#查找目录的最大深度为-2-的所有-sh-文件"></a> <strong>查找目录的最大深度为 2 的所有 <code>.sh</code> 文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -maxdepth 2 -name <span class="string">&quot;*.sh&quot;</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找所有权限为-644-的文件"><a class="markdownIt-Anchor" href="#查找所有权限为-644-的文件"></a> <strong>查找所有权限为 644 的文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -perm 644</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找用户为-root-的所有文件"><a class="markdownIt-Anchor" href="#查找用户为-root-的所有文件"></a> <strong>查找用户为 <code>root</code> 的所有文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -user root</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="按目录结构保留并压缩查找到的文件"><a class="markdownIt-Anchor" href="#按目录结构保留并压缩查找到的文件"></a> <strong>按目录结构保留并压缩查找到的文件</strong></h2>
+<ul>
+<li>查找 <code>.log</code> 文件并打包成 <code>logs.tar.gz</code>：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.log&quot;</span> | tar -czvf logs.tar.gz -T -</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<ul>
+<li><strong><code>find</code> 是 Linux 中功能最强大的文件搜索工具之一，支持多种条件组合和自定义操作。</strong></li>
+<li><strong>结合其他命令（如 <code>rm</code>、<code>chmod</code>、<code>cp</code> 等），可以完成复杂的批量操作。</strong></li>
+<li>使用 <code>-delete</code> 和 <code>-exec</code> 时需格外小心，确保路径和条件正确，以避免误操作导致数据丢失。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/rh586uhh/">https://luoying.netlify.app/2024/10/08/rh586uhh/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---find</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件1.jpg" data-sizes="auto" alt="Linux命令详解---重定向和管道" class="lazyload">
+          
+        
+        <a href="/2024/10/08/ie3o1mib/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---重定向和管道
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件5.png" data-sizes="auto" alt="Linux命令详解---apt" class="lazyload">
+        
+      
+      <a href="/2024/10/08/lx5mg678/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---apt
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%E5%92%8C%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项和条件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%A6%E8%A7%A3%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 详解条件和操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E5%90%8D%E6%9F%A5%E6%89%BE-name-%E5%92%8C-iname"><span class="toc-number">3.1.</span> <span class="toc-text"> 按文件名查找（-name 和 -iname）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E6%9F%A5%E6%89%BE-type"><span class="toc-number">3.2.</span> <span class="toc-text"> 按文件类型查找（-type）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E6%9F%A5%E6%89%BE-size"><span class="toc-number">3.3.</span> <span class="toc-text"> 按文件大小查找（-size）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%97%B6%E9%97%B4%E6%9F%A5%E6%89%BE-mtime-atime-ctime"><span class="toc-number">3.4.</span> <span class="toc-text"> 按时间查找（-mtime、-atime、-ctime）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%9F%A5%E6%89%BE-perm"><span class="toc-number">3.5.</span> <span class="toc-text"> 按文件权限查找（-perm）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E6%90%9C%E7%B4%A2%E8%8C%83%E5%9B%B4-maxdepth-%E5%92%8C-mindepth"><span class="toc-number">3.6.</span> <span class="toc-text"> 限制搜索范围（-maxdepth 和 -mindepth）**</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C-exec-%E5%92%8C-delete"><span class="toc-number">3.7.</span> <span class="toc-text"> 执行操作（-exec 和 -delete）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#-exec"><span class="toc-number">3.7.0.1.</span> <span class="toc-text"> -exec</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#-delete"><span class="toc-number">3.7.0.2.</span> <span class="toc-text"> -delete</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%A9%BA%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95-empty"><span class="toc-number">3.8.</span> <span class="toc-text"> 查找空文件或目录（-empty）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%94%A8%E6%88%B7%E6%88%96%E7%BB%84%E6%9F%A5%E6%89%BE-user-%E5%92%8C-group"><span class="toc-number">3.9.</span> <span class="toc-text"> 按用户或组查找（-user 和 -group）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text"> 示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%BD%93%E5%89%8D%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89-txt-%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text"> 查找当前目录下的所有 .txt 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE-varlog-%E4%B8%8B%E5%A4%A7%E4%BA%8E-10-mb-%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text"> 查找 &#x2F;var&#x2F;log 下大于 10 MB 的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%9C%80%E8%BF%91-3-%E5%A4%A9%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.3.</span> <span class="toc-text"> 查找最近 3 天修改过的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%B9%B6%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89-tmp-%E6%96%87%E4%BB%B6"><span class="toc-number">4.4.</span> <span class="toc-text"> 查找并删除所有 .tmp 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%B9%B6%E5%A4%8D%E5%88%B6%E6%89%80%E6%9C%89-jpg-%E6%96%87%E4%BB%B6%E5%88%B0-backup"><span class="toc-number">4.5.</span> <span class="toc-text"> 查找并复制所有 .jpg 文件到 &#x2F;backup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%A9%BA%E6%96%87%E4%BB%B6%E6%88%96%E7%A9%BA%E7%9B%AE%E5%BD%95"><span class="toc-number">4.6.</span> <span class="toc-text"> 查找空文件或空目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6%E4%B8%BA-2-%E7%9A%84%E6%89%80%E6%9C%89-sh-%E6%96%87%E4%BB%B6"><span class="toc-number">4.7.</span> <span class="toc-text"> 查找目录的最大深度为 2 的所有 .sh 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%89%80%E6%9C%89%E6%9D%83%E9%99%90%E4%B8%BA-644-%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.8.</span> <span class="toc-text"> 查找所有权限为 644 的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%94%A8%E6%88%B7%E4%B8%BA-root-%E7%9A%84%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6"><span class="toc-number">4.9.</span> <span class="toc-text"> 查找用户为 root 的所有文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%BF%9D%E7%95%99%E5%B9%B6%E5%8E%8B%E7%BC%A9%E6%9F%A5%E6%89%BE%E5%88%B0%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">4.10.</span> <span class="toc-text"> 按目录结构保留并压缩查找到的文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

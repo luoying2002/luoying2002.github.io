@@ -1,0 +1,780 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Biomni：通用生物医学人工智能代理 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="Biomni：通用生物医学人工智能代理  链接 https:&#x2F;&#x2F;www.biorxiv.org&#x2F;content&#x2F;10.1101&#x2F;2025.05.30.656746v1.full pdf： https:&#x2F;&#x2F;biomni.stanford.edu&#x2F;paper.pdf  背景 以前的方法很大程度上依赖于为缩小生物医学任务范围而定制的专业代理工作流程，这限制了它们在回答关键研究问题所需的整个生物医学领域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Biomni：通用生物医学人工智能代理">
+<meta property="og:url" content="https://luoying.netlify.app/2025/06/16/s02ypw9c/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="Biomni：通用生物医学人工智能代理  链接 https:&#x2F;&#x2F;www.biorxiv.org&#x2F;content&#x2F;10.1101&#x2F;2025.05.30.656746v1.full pdf： https:&#x2F;&#x2F;biomni.stanford.edu&#x2F;paper.pdf  背景 以前的方法很大程度上依赖于为缩小生物医学任务范围而定制的专业代理工作流程，这限制了它们在回答关键研究问题所需的整个生物医学领域">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/F1.large.jpg">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/F2.large.jpg">
+<meta property="article:published_time" content="2025-06-16T11:23:25.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.385Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/F1.large.jpg">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Biomni：通用生物医学人工智能代理">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Biomni：通用生物医学人工智能代理</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#biomni%E9%80%9A%E7%94%A8%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text"> Biomni：通用生物医学人工智能代理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text"> 链接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text"> 背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E6%8B%AC"><span class="toc-number">1.3.</span> <span class="toc-text"> 概括</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text"> 测试结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E7%BB%93%E6%9E%84"><span class="toc-number">1.5.</span> <span class="toc-text"> 代理结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%95%B4%E7%90%86%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E8%A1%8C%E5%8A%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">1.6.</span> <span class="toc-text"> 如何整理一个统一的生物医学行动空间？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E5%A4%9F%E5%A4%84%E7%90%86%E5%90%84%E7%A7%8D%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E4%BB%BB%E5%8A%A1%E7%9A%84%E9%80%9A%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-number">1.7.</span> <span class="toc-text"> 如何构建一个能够处理各种生物医学任务的通用代理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-number">1.8.</span> <span class="toc-text"> 效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#biomni-%E8%81%94%E5%90%88%E5%88%86%E6%9E%90-458-%E4%B8%AA%E5%8F%AF%E7%A9%BF%E6%88%B4%E4%BC%A0%E6%84%9F%E5%99%A8%E6%96%87%E4%BB%B6%E4%BB%A5%E7%94%9F%E6%88%90%E7%94%9F%E7%90%86%E5%81%87%E8%AE%BE"><span class="toc-number">1.9.</span> <span class="toc-text"> Biomni 联合分析 458 个可穿戴传感器文件以生成生理假设</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#biomni-%E8%87%AA%E5%8A%A8%E5%8C%96%E5%A4%8D%E6%9D%82%E7%9A%84%E5%A4%9A%E7%BB%84%E5%AD%A6%E5%88%86%E6%9E%90%E4%BB%A5%E6%8F%AD%E7%A4%BA%E9%AA%A8%E9%AA%BC%E8%B0%B1%E7%B3%BB%E7%9A%84%E8%BD%AC%E5%BD%95%E8%B0%83%E6%8E%A7"><span class="toc-number">1.10.</span> <span class="toc-text"> Biomni 自动化复杂的多组学分析，以揭示骨骼谱系的转录调控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">1.11.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.12.</span> <span class="toc-text"> 局限性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.13.</span> <span class="toc-text"> 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%8E%E6%96%87%E7%8C%AE%E4%B8%AD%E5%8F%91%E7%8E%B0%E8%A1%8C%E5%8A%A8"><span class="toc-number">1.13.1.</span> <span class="toc-text"> 从文献中发现行动</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD-biomni-%E7%8E%AF%E5%A2%83"><span class="toc-number">1.13.2.</span> <span class="toc-text"> 实施 Biomni 环境</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#biomni-a1"><span class="toc-number">1.13.3.</span> <span class="toc-text"> Biomni-A1</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9C%B0%E5%9D%80"><span class="toc-number">1.14.</span> <span class="toc-text"> 代码地址</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-s02ypw9c" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/06/16/s02ypw9c/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-06-16T11:23:25.000Z" itemprop="datePublished">2025-06-16</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" data-aos="zoom-in">论文解读</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h3 id="biomni通用生物医学人工智能代理"><a class="markdownIt-Anchor" href="#biomni通用生物医学人工智能代理"></a> Biomni：通用生物医学人工智能代理</h3>
+<h4 id="链接"><a class="markdownIt-Anchor" href="#链接"></a> 链接</h4>
+<p><a target="_blank" rel="noopener" href="https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1.full">https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1.full</a></p>
+<p>pdf：</p>
+<p><a target="_blank" rel="noopener" href="https://biomni.stanford.edu/paper.pdf">https://biomni.stanford.edu/paper.pdf</a></p>
+<h4 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h4>
+<p>以前的方法很大程度上依赖于为缩小生物医学任务范围而定制的专业代理工作流程，这限制了它们在回答关键研究问题所需的整个生物医学领域的流畅移动和概括的能力。给人工智能代理能够处理广泛的生物医学任务带来了巨大的技术挑战。</p>
+<p>最明显的是，需要将高级推理与执行高度专业化的生物医学动作的能力紧密结合起来。虽然基于 LLM 的推理已经取得了重大进展，但这样的 LLM 需要访问明确定义<code>生物医学动作空间</code>的环境，而<code>生物医学动作空间</code>本质上是多样化、领域特定和复杂的。此外，一个真正有能力的系统需要一个能够与这种<code>生物医学环境</code>进行本地交互的代理架构——自主选择和组合动作，使用其推理能力来计划和执行各种任务，而不依赖于僵化的、预定义的工作流程。</p>
+<h4 id="概括"><a class="markdownIt-Anchor" href="#概括"></a> 概括</h4>
+<p>Biomni，一款通用型生物医学 AI 代理，旨在自动化和推进广泛子领域的生物医学研究。Biomni 扮演着虚拟 AI 生物学家的角色，能够<code>自主提出新颖且可验证的假设</code>，<code>执行复杂的生物信息学分析</code>，并<code>设计严谨的实验方案</code>。</p>
+<p>为了实现这一能力，我们首先通过系统分析从主要生物文献库中精选的涵盖 25 个不同子领域的数万篇生物医学研究论文，构建了一个统一且全面的<code>生物医学行动空间</code>。在此基础上，我们开发了一个由 LLM 驱动的<code>行动发现代理</code>，该代理能够<code>阅读论文并提取推动生物医学发现的关键任务、工具和数据库</code>。然后，我们筛选这些元素并将其部署到 Biomni-E1 中，Biomni-E1 是定义代理交互的<code>生物医学行动空间</code>的基础环境。Biomni-E1 包含 150 个专用生物医学工具、105 个软件包和 59 个数据库。</p>
+<p>我们随后设计了<code>Biomni-A1</code>，这是一种通用的代理架构，能够<code>利用Biomni E1</code>提供的工具和数据集灵活地执行各种生物医学任务。对于用户提出的查询，该代理首先使用检索系统来识别所需的最相关工具、数据库和软件。然后，它运用基于LLM的推理和领域专业知识，生成详细的分步计划。每个步骤都通过可执行代码表达，从而实现精确灵活的生物医学操作组合——鉴于该领域对高度专业化的工具和数据资源的依赖，这一点至关重要。</p>
+<p>与传统的函数调用方法不同，这种方法支持生物医学工作流程的动态性和复杂性。这个集成系统使Biomni不仅能够高效地解决具有挑战性的大规模生物医学问题，还能将其推广到前所未有的生物医学研究领域的新任务。</p>
+<h4 id="测试结果"><a class="markdownIt-Anchor" href="#测试结果"></a> 测试结果</h4>
+<p>严格的基准测试表明，Biomni 在现有的<code>生物医学问答基准测试</code>中表现出色，并在八个开发过程中从未遇到的具有挑战性的实际场景中表现出强大的泛化能力。此外，我们通过三个具有影响力的案例研究强调了 Biomni 的实践能力：</p>
+<p>(1) 分析 458 个可穿戴传感器数据文件以产生新的见解；</p>
+<p>(2) 快速对海量原始数据集（例如单细胞 RNA 测序和 ATAC 测序数据）进行全面的生物信息学分析，以产生新的见解和假设；</p>
+<p>(3) 自主设计实验室方案以协助湿实验室研究人员。</p>
+<p>Biomni 是我们推出的第一代可扩展通用生物医学 AI 代理，为虚拟 AI 生物学家与人类研究人员协同工作的时代奠定了基础，从而显著加速了从基础研究到转化的生物医学发现。</p>
+<h4 id="代理结构"><a class="markdownIt-Anchor" href="#代理结构"></a> 代理结构</h4>
+<p>Biomni 是一种通用的生物医学 AI 代理，由两个主要组件组成：</p>
+<ol>
+<li>
+<p>Biomni-E1（具有统一动作空间的<code>基础生物医学环境</code>）；</p>
+</li>
+<li>
+<p>Biomni-A1（旨在有效利用该环境的智能代理）。</p>
+</li>
+</ol>
+<h4 id="如何整理一个统一的生物医学行动空间"><a class="markdownIt-Anchor" href="#如何整理一个统一的生物医学行动空间"></a> 如何整理一个统一的生物医学行动空间？</h4>
+<p><img src="/images/assets/F1.large.jpg" alt="" /></p>
+<p>Biomni 中统一生物医学行动空间和代理环境的概览。</p>
+<p>(a) 系统化整理统一生物医学行动空间的工作流程。使用 AI 驱动的发现代理，从 25 个生物医学子领域的 2,500 篇近期 bioRxiv 出版物中提取了开展生物医学研究所需的行动。提取的行动经过人类专家的严格验证和整理，最终整合了 105 种生物医学软件工具、150 种专用生物学工具（包括湿实验室方案、AI 驱动的预测模型和特定领域的专业知识）以及 59 个综合生物医学数据库。</p>
+<p>(b) 涵盖遗传学、基因组学、合成生物学、细胞生物学、生理学、微生物学、药理学、生物工程、生物物理学、分子生物学和病理学等不同生物医学子领域的<code>统一生物医学行动空间</code>的图示。图中展示了集成到 Biomni 环境中的代表性工具和数据库，突出了其通用功能。</p>
+<p>© 示例工作流程展示了 Biomni 的推理和动作组合过程，该过程能够自主回答一个复杂的生物学问题。Biomni 根据用户的查询检索相关工具，制定结构化的推理计划，并编写可执行代码以执行全面的生物信息学分析，并根据观察结果不断改进其推理，直至最终得到精确的答案。</p>
+<h4 id="如何构建一个能够处理各种生物医学任务的通用代理"><a class="markdownIt-Anchor" href="#如何构建一个能够处理各种生物医学任务的通用代理"></a> 如何构建一个能够处理各种生物医学任务的通用代理？</h4>
+<p>一个专门的代理架构——一种避免为每个单独任务硬编码工作流的架构。这促成了 Biomni-A1 的开发，它融合了多项对整个生物医学研究领域至关重要的核心创新。</p>
+<p>首先，我们引入了一种基于 <code>LLM 的工具选择机制</code>，旨在应对生物医学工具的复杂性和专业化，并根据用户目标动态检索定制的<code>资源子集</code>。</p>
+<p>其次，考虑到生物医学任务通常需要丰富的程序逻辑，Biomni-A1 使用代码作为<code>通用操作接口</code>——使其能够编写和执行涉及循环、并行化和条件逻辑的复杂工作流。至关重要的是，这种方法还使代理能够交错调用不符合预定义函数签名的软件、工具、数据库和原始数据操作——从而支持灵活、动态地集成异构资源。</p>
+<p>第三，该智能体采用<code>自适应规划策略</code>：它基于生物医学知识制定初始计划，并在执行过程中不断迭代完善，从而实现响应迅速、情境感知的行为。</p>
+<p>这些创新共同使 Biomni-A1 能够泛化到前所未有的任务和领域，动态地组合智能动作，并与软件、数据和工具进行交互，从而体现出通用生物医学智能（图 1c）。</p>
+<h4 id="效果"><a class="markdownIt-Anchor" href="#效果"></a> 效果</h4>
+<p><img src="/images/assets/F2.large.jpg" alt="" /></p>
+<p>Biomni 在各种现实生物医学任务中的零样本泛化。</p>
+<p>(a) 在问答类多项选择基准测试中，Biomni 的表现优于 6 个基准模型，这些基准测试广泛评估了该模型在生物医学领域的能力；</p>
+<p>(b) Biomni 在八个前所未有的真实生物医学场景中展现出强大的零样本性能，这些场景涵盖多个生物医学子领域，且无需任何特定任务的微调或快速工程。评估的任务包括：</p>
+<ul>
+<li><code>变异优先级排序</code>（基因组学）：从某个性状的潜在变异列表中找出最可能的致病变异，这需要推理非编码区域的调控功能；</li>
+<li><code>GWAS 致病基因检测</code>（遗传学和基因组学）：选择某个基因座内最可能的致病基因，这需要细粒度的基因座级推断；</li>
+<li><code>扰动筛选设计</code>（功能基因组学和免疫学）：构建基因面板，以在大型（&gt;20,000 个基因）搜索空间中最大化扰动后效应；</li>
+<li><code>患者基因优先级排序</code>：给定个体患者的基因图谱和表型描述，确定最合理的致病基因；</li>
+<li><code>罕见疾病诊断</code>（临床基因组学）：将患者表型和基因发现与罕见病诊断联系起来；</li>
+<li><code>药物再利用</code>（药理学）：给定一种罕见疾病和一系列候选药物，选择最佳治疗方案；</li>
+<li><code>微生物组疾病分类单元生物信息学分析</code>（微生物学）：对微生物组数据集进行统计关联检验，以发现与疾病相关的分类单元；</li>
+<li><code>单细胞 RNA 测序细胞注释</code>（单细胞生物学）：为跨组织、跨物种和跨平台的单个细胞谱分配准确的细胞类型标签；</li>
+</ul>
+<p>在这些不同的场景中，Biomni 的表现始终优于基线模型（Base LLM、ReAct+Code）和专门环境（Biomni ReAct），突显了其通用生物医学能力以及自主适应新的复杂生物医学任务的能力。</p>
+<h4 id="biomni-联合分析-458-个可穿戴传感器文件以生成生理假设"><a class="markdownIt-Anchor" href="#biomni-联合分析-458-个可穿戴传感器文件以生成生理假设"></a> Biomni 联合分析 458 个可穿戴传感器文件以生成生理假设</h4>
+<p>略。</p>
+<h4 id="biomni-自动化复杂的多组学分析以揭示骨骼谱系的转录调控"><a class="markdownIt-Anchor" href="#biomni-自动化复杂的多组学分析以揭示骨骼谱系的转录调控"></a> Biomni 自动化复杂的多组学分析，以揭示骨骼谱系的转录调控</h4>
+<p>略。</p>
+<h4 id="讨论"><a class="markdownIt-Anchor" href="#讨论"></a> 讨论</h4>
+<p>Biomni 通过将复杂且劳动密集型的工作流程（通常需要专业知识和编程技能）自动化，<code>使研究人员能够将精力转向创造性假设生成、实验创新和跨学科合作</code>。这一转变意义深远。</p>
+<ul>
+<li>在生物制药的靶点和药物发现领域，Biomni 可以自主确定靶点的优先级、设计扰动筛选或重新利用药物，从而为更快、更具成本效益的研究提供途径。</li>
+<li>在临床应用领域，其在基因优先级排序和罕见病诊断方面的能力有助于提供更精准、个性化的洞察和更高效的诊断流程。</li>
+<li>在消费者健康领域，Biomni 将可穿戴数据与多组学分析相结合，旨在实现实时、个性化的健康监测和干预。</li>
+</ul>
+<h4 id="局限性"><a class="markdownIt-Anchor" href="#局限性"></a> 局限性</h4>
+<ul>
+<li>虽然 Biomni 的统一环境涵盖了广泛的生物医学工具和数据库，但评估的任务仅代表了该领域的一个子集，关键领域仍未得到探索。</li>
+<li>在行动发现代理中，我们优先考虑最新文献的决定使代理显得与时俱进，但这也存在着忽略一些基础概念和技术的风险，这些概念和技术尽管具有持久的相关性，但已经从当前的讨论中淡出。</li>
+<li>尽管 Biomni 在数据库查询、序列分析和分子克隆等任务上的表现接近人类水平，但在需要细致入微的临床判断、新颖的实验推理、分析性发明或深度生物学思考与综合的领域，它仍然举步维艰。目前还没有系统能够完全涵盖人类生物医学专业知识。</li>
+</ul>
+<h4 id="方法"><a class="markdownIt-Anchor" href="#方法"></a> 方法</h4>
+<h5 id="从文献中发现行动"><a class="markdownIt-Anchor" href="#从文献中发现行动"></a> 从文献中发现行动</h5>
+<p>收集并分析了 biorxiv 上 2024 年的 100 篇近期出版物，提取并解析其 PDF 内容。每篇论文均按块处理，并由专门的提示引导法 (LLM) 逐一识别并提取三类可操作的见解：任务、软件和数据库。</p>
+<p>具体到任务方面，LLM 被要求重点突出那些在生物医学研究工作流程中需要专门实现的重复性任务。</p>
+<h5 id="实施-biomni-环境"><a class="markdownIt-Anchor" href="#实施-biomni-环境"></a> 实施 Biomni 环境</h5>
+<p>在环境构建的初始迭代中，我们采用了一种保守且有针对性的工具管理方法。</p>
+<p>最初，我们根据与主要研究兴趣（药物研发和临床生物医学）的相关性筛选任务，这些研究领域涵盖生物化学、生物工程、生物物理学、癌症生物学、细胞生物学、发育生物学、遗传学、基因组学、免疫学、微生物学、分子生物学、病理学、药理学、生理学、合成生物学和系统生物学。</p>
+<p>随后，我们将这些任务的范围缩小到大约 1,900 个常见的重复任务。我们进一步手动审查这些任务，以消除冗余，并排除那些琐碎或易于通过简单代码实现的任务。我们强调选择需要大量领域专业知识的高度专业化任务，例如湿实验室方案和高级 AI 模型。</p>
+<p>随后，人类科学家与配备网络搜索功能的软件工程代理合作，实现了每个专用工具。每个工具都经过了严格的验证，需要一个明确定义的测试用例来确保其成功通过。这一严格的流程最终催生了150个专用工具的精选集。此外，还包含了PubMed和Google Scholar等重要的文献检索工具，并为未来的迭代扩展做好了准备。</p>
+<p>每个工具都使用一份全面的清单进行严格定义，该清单要求：</p>
+<p>（1）清晰且具有描述性的名称，</p>
+<p>（2）详细的文档，</p>
+<p>（3）格式化为针对 LLM 解释优化的详细研究日志的输出，</p>
+<p>（4）包含并成功通过特定的测试用例，</p>
+<p>（5）专业化标准 - 如果可以通过简短的 LLM 生成的代码（例如，简单的数据库查询）轻松实现任务，则无需创建专门的工具。</p>
+<p>对数据库进行了分类，并使用统一的查询函数集成了可通过 Web API 访问的大量关系数据库（例如 PDB、OpenTargets、ClinVar）。该函数接受自然语言输入，并利用 LLM 动态解析数据库模式并执行相应的查询。缺少 Web API 的数据库会被下载并在本地预处理成结构化的 Pandas DataFrame，以便代理无缝访问。</p>
+<p>在软件集成方面，考虑到经常需要同时使用多个软件工具，我们构建了一个统一的容器化环境，并预装了一套完整的相关软件。此外，该环境还支持执行 R 包和命令行界面 (CLI) 工具。</p>
+<h5 id="biomni-a1"><a class="markdownIt-Anchor" href="#biomni-a1"></a> Biomni-A1</h5>
+<p>Biomni 智能体是一个基于 CodeAct 31框架构建的通用生物医学 AI 智能体，旨在通过将 LLM 与交互式编码环境相结合，系统地解决生物医学任务。</p>
+<p>当用户提出查询时，Biomni 首先会提示 LLM 生成一个清晰的、带编号的项目符号列表计划，详细说明解决给定问题所需的步骤，并持续跟踪进度和调整。由于工具、软件和数据库空间巨大，查询任务可能仅使用其中一小部分资源。为了避免冗长的上下文，我们使用了一个基于提示的检索器，该检索器由一个独立的 LLM 驱动，智能体会从可用资源中动态选择最相关的函数、数据集和软件库。在执行过程中，LLM 会生成代码，在编码环境（Python、R 或 Bash）中执行，并返回结果观察结果以指导后续推理。这种迭代方法持续进行，直到智能体收敛到一个准确且经过验证的解决方案。</p>
+<h4 id="代码地址"><a class="markdownIt-Anchor" href="#代码地址"></a> 代码地址</h4>
+<p><a target="_blank" rel="noopener" href="https://github.com/snap-stanford/biomni">https://github.com/snap-stanford/biomni</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2025/06/16/s02ypw9c/">https://luoying.netlify.app/2025/06/16/s02ypw9c/</a></p>
+    <p><strong>本文标题：</strong>Biomni：通用生物医学人工智能代理</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件12.jpg" data-sizes="auto" alt="CodeAct：代码即行动" class="lazyload">
+        
+      
+      <a href="/2025/06/15/cvalxpiq/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          CodeAct：代码即行动
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#biomni%E9%80%9A%E7%94%A8%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text"> Biomni：通用生物医学人工智能代理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text"> 链接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text"> 背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E6%8B%AC"><span class="toc-number">1.3.</span> <span class="toc-text"> 概括</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text"> 测试结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E7%BB%93%E6%9E%84"><span class="toc-number">1.5.</span> <span class="toc-text"> 代理结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%95%B4%E7%90%86%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E8%A1%8C%E5%8A%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">1.6.</span> <span class="toc-text"> 如何整理一个统一的生物医学行动空间？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E5%A4%9F%E5%A4%84%E7%90%86%E5%90%84%E7%A7%8D%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E4%BB%BB%E5%8A%A1%E7%9A%84%E9%80%9A%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-number">1.7.</span> <span class="toc-text"> 如何构建一个能够处理各种生物医学任务的通用代理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-number">1.8.</span> <span class="toc-text"> 效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#biomni-%E8%81%94%E5%90%88%E5%88%86%E6%9E%90-458-%E4%B8%AA%E5%8F%AF%E7%A9%BF%E6%88%B4%E4%BC%A0%E6%84%9F%E5%99%A8%E6%96%87%E4%BB%B6%E4%BB%A5%E7%94%9F%E6%88%90%E7%94%9F%E7%90%86%E5%81%87%E8%AE%BE"><span class="toc-number">1.9.</span> <span class="toc-text"> Biomni 联合分析 458 个可穿戴传感器文件以生成生理假设</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#biomni-%E8%87%AA%E5%8A%A8%E5%8C%96%E5%A4%8D%E6%9D%82%E7%9A%84%E5%A4%9A%E7%BB%84%E5%AD%A6%E5%88%86%E6%9E%90%E4%BB%A5%E6%8F%AD%E7%A4%BA%E9%AA%A8%E9%AA%BC%E8%B0%B1%E7%B3%BB%E7%9A%84%E8%BD%AC%E5%BD%95%E8%B0%83%E6%8E%A7"><span class="toc-number">1.10.</span> <span class="toc-text"> Biomni 自动化复杂的多组学分析，以揭示骨骼谱系的转录调控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">1.11.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.12.</span> <span class="toc-text"> 局限性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.13.</span> <span class="toc-text"> 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%8E%E6%96%87%E7%8C%AE%E4%B8%AD%E5%8F%91%E7%8E%B0%E8%A1%8C%E5%8A%A8"><span class="toc-number">1.13.1.</span> <span class="toc-text"> 从文献中发现行动</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD-biomni-%E7%8E%AF%E5%A2%83"><span class="toc-number">1.13.2.</span> <span class="toc-text"> 实施 Biomni 环境</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#biomni-a1"><span class="toc-number">1.13.3.</span> <span class="toc-text"> Biomni-A1</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9C%B0%E5%9D%80"><span class="toc-number">1.14.</span> <span class="toc-text"> 代码地址</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

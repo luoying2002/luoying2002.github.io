@@ -1,0 +1,939 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---重定向和管道 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="在 Linux 和 Unix 系统中，重定向和管道是两个非常重要的功能，用于控制命令的输入、输出和处理数据流。通过重定向和管道，可以将命令的输出保存到文件、作为另一个命令的输入，或进行更复杂的数据处理。   重定向命令 重定向用于将命令的标准输入（stdin）、标准输出（stdout）或标准错误输出（stderr）重定向到文件或其他设备。  重定向符号    符号 描述     &gt; 将标准输">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---重定向和管道">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/ie3o1mib/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="在 Linux 和 Unix 系统中，重定向和管道是两个非常重要的功能，用于控制命令的输入、输出和处理数据流。通过重定向和管道，可以将命令的输出保存到文件、作为另一个命令的输入，或进行更复杂的数据处理。   重定向命令 重定向用于将命令的标准输入（stdin）、标准输出（stdout）或标准错误输出（stderr）重定向到文件或其他设备。  重定向符号    符号 描述     &gt; 将标准输">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T15:21:37.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.814Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---重定向和管道">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---重定向和管道</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text"> 重定向命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E5%8F%B7"><span class="toc-number">1.1.</span> <span class="toc-text"> 重定向符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%94%A8%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text"> 重定向用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 将命令输出重定向到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%BE%93%E5%87%BA%E8%BF%BD%E5%8A%A0%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 将输出追加到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E4%BD%9C%E4%B8%BA%E5%91%BD%E4%BB%A4%E7%9A%84%E8%BE%93%E5%85%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text"> 将文件内容作为命令的输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.4.</span> <span class="toc-text"> 将错误输出重定向到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E9%87%8D%E5%AE%9A%E5%90%91%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA%E5%92%8C%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.5.</span> <span class="toc-text"> 同时重定向标准输出和错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.6.</span> <span class="toc-text"> 丢弃输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.7.</span> <span class="toc-text"> 丢弃错误输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E6%89%80%E6%9C%89%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.8.</span> <span class="toc-text"> 丢弃所有输出</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text"> 管道命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text"> 管道的基本语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text"> 管道示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E4%BC%A0%E9%80%92%E7%BB%99%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 将命令输出传递给另一个命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E7%9A%84%E8%A1%8C%E6%95%B0"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 统计命令输出的行数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E8%BF%9B%E7%A8%8B%E5%B9%B6%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 显示进程并过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E5%92%8C%E5%8E%BB%E9%87%8D"><span class="toc-number">2.2.4.</span> <span class="toc-text"> 排序和去重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%A4%A7%E6%96%87%E4%BB%B6%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="toc-number">2.2.5.</span> <span class="toc-text"> 查找大文件并排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93%E7%BB%93%E5%90%88"><span class="toc-number">3.</span> <span class="toc-text"> 重定向与管道结合</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1%E5%B0%86%E8%BE%93%E5%87%BA%E4%BF%9D%E5%AD%98%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> 示例 1：将输出保存到文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2%E5%90%8C%E6%97%B6%E5%A4%84%E7%90%86%E8%BE%93%E5%87%BA%E5%92%8C%E9%94%99%E8%AF%AF"><span class="toc-number">3.2.</span> <span class="toc-text"> 示例 2：同时处理输出和错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3%E7%BB%9F%E8%AE%A1%E9%94%99%E8%AF%AF%E8%A1%8C%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text"> 示例 3：统计错误行数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%BB%84%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text"> 常见组合示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1%E6%9F%A5%E6%89%BE%E6%97%A5%E5%BF%97%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E5%B9%B6%E4%BF%9D%E5%AD%98"><span class="toc-number">4.1.</span> <span class="toc-text"> 示例 1：查找日志中的错误并保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2%E7%9B%91%E6%8E%A7%E6%96%87%E4%BB%B6%E5%8F%98%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text"> 示例 2：监控文件变化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3%E8%BF%87%E6%BB%A4%E5%B9%B6%E7%BB%9F%E8%AE%A1%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E5%8D%95%E8%AF%8D"><span class="toc-number">4.3.</span> <span class="toc-text"> 示例 3：过滤并统计文件中出现最多的单词</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E5%8F%B7-2"><span class="toc-number">5.1.</span> <span class="toc-text"> 重定向符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6%E5%8F%B7"><span class="toc-number">5.2.</span> <span class="toc-text"> 管道符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%BB%84%E5%90%88"><span class="toc-number">5.3.</span> <span class="toc-text"> 常用命令组合</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-ie3o1mib" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/ie3o1mib/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T15:21:37.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p>在 Linux 和 Unix 系统中，<strong>重定向</strong>和<strong>管道</strong>是两个非常重要的功能，用于控制命令的输入、输出和处理数据流。通过重定向和管道，可以将命令的输出保存到文件、作为另一个命令的输入，或进行更复杂的数据处理。</p>
+<hr />
+<h1 id="重定向命令"><a class="markdownIt-Anchor" href="#重定向命令"></a> <strong>重定向命令</strong></h1>
+<p>重定向用于将命令的标准输入（<code>stdin</code>）、标准输出（<code>stdout</code>）或标准错误输出（<code>stderr</code>）重定向到文件或其他设备。</p>
+<h2 id="重定向符号"><a class="markdownIt-Anchor" href="#重定向符号"></a> <strong>重定向符号</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&gt;</code></td>
+<td>将标准输出（<code>stdout</code>）重定向到文件，<strong>覆盖</strong>文件内容。</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>将标准输出（<code>stdout</code>）重定向到文件，<strong>追加</strong>到文件末尾。</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>将文件的内容作为标准输入（<code>stdin</code>）。</td>
+</tr>
+<tr>
+<td><code>2&gt;</code></td>
+<td>将标准错误输出（<code>stderr</code>）重定向到文件，<strong>覆盖</strong>文件内容。</td>
+</tr>
+<tr>
+<td><code>2&gt;&gt;</code></td>
+<td>将标准错误输出（<code>stderr</code>）重定向到文件，<strong>追加</strong>到文件末尾。</td>
+</tr>
+<tr>
+<td><code>&amp;&gt;</code></td>
+<td>将标准输出和标准错误（<code>stdout</code> 和 <code>stderr</code>）<strong>同时重定向</strong>到文件，覆盖内容。</td>
+</tr>
+<tr>
+<td><code>&amp;&gt;&gt;</code></td>
+<td>将标准输出和标准错误（<code>stdout</code> 和 <code>stderr</code>）<strong>同时重定向</strong>到文件，追加内容。</td>
+</tr>
+<tr>
+<td><code>/dev/null</code></td>
+<td>丢弃输出或错误（相当于垃圾桶）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="重定向用法"><a class="markdownIt-Anchor" href="#重定向用法"></a> <strong>重定向用法</strong></h2>
+<h3 id="将命令输出重定向到文件"><a class="markdownIt-Anchor" href="#将命令输出重定向到文件"></a> <strong>将命令输出重定向到文件</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello, World!&quot;</span> &gt; output.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&gt;</code>：将输出写入文件 <code>output.txt</code>（覆盖文件内容）。</li>
+<li>如果 <code>output.txt</code> 不存在，会自动创建。</li>
+</ul>
+<h3 id="将输出追加到文件"><a class="markdownIt-Anchor" href="#将输出追加到文件"></a> <strong>将输出追加到文件</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Another line&quot;</span> &gt;&gt; output.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&gt;&gt;</code>：将输出追加到 <code>output.txt</code> 的末尾。</li>
+</ul>
+<h3 id="将文件内容作为命令的输入"><a class="markdownIt-Anchor" href="#将文件内容作为命令的输入"></a> <strong>将文件内容作为命令的输入</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt; input.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&lt;</code>：将文件 <code>input.txt</code> 的内容作为 <code>cat</code> 命令的输入。</li>
+</ul>
+<h3 id="将错误输出重定向到文件"><a class="markdownIt-Anchor" href="#将错误输出重定向到文件"></a> <strong>将错误输出重定向到文件</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> non_existent_file 2&gt; error.log</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>2&gt;</code>：将错误输出保存到 <code>error.log</code> 文件中。</li>
+</ul>
+<h3 id="同时重定向标准输出和错误"><a class="markdownIt-Anchor" href="#同时重定向标准输出和错误"></a> <strong>同时重定向标准输出和错误</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /etc &gt; output.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>2&gt;&amp;1</code>：将错误输出（<code>stderr</code>）重定向到标准输出（<code>stdout</code>），然后统一保存到 <code>output.log</code> 中。</li>
+</ul>
+<h3 id="丢弃输出"><a class="markdownIt-Anchor" href="#丢弃输出"></a> <strong>丢弃输出</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /etc &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>/dev/null</code>：将输出丢弃，不显示也不保存。</li>
+</ul>
+<h3 id="丢弃错误输出"><a class="markdownIt-Anchor" href="#丢弃错误输出"></a> <strong>丢弃错误输出</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> non_existent_file 2&gt; /dev/null</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>2&gt;</code>：仅将错误输出丢弃。</li>
+</ul>
+<h3 id="丢弃所有输出"><a class="markdownIt-Anchor" href="#丢弃所有输出"></a> <strong>丢弃所有输出</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /etc &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>同时丢弃标准输出和错误输出。</li>
+</ul>
+<hr />
+<h1 id="管道命令"><a class="markdownIt-Anchor" href="#管道命令"></a> <strong>管道命令</strong></h1>
+<p>管道（<code>|</code>）用于将一个命令的输出作为另一个命令的输入。它是连接多个命令的重要工具。</p>
+<h2 id="管道的基本语法"><a class="markdownIt-Anchor" href="#管道的基本语法"></a> <strong>管道的基本语法</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command1 | command2</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>command1</code> 的输出通过管道传递给 <code>command2</code> 作为输入。</li>
+</ul>
+<h2 id="管道示例"><a class="markdownIt-Anchor" href="#管道示例"></a> <strong>管道示例</strong></h2>
+<h3 id="将命令输出传递给另一个命令"><a class="markdownIt-Anchor" href="#将命令输出传递给另一个命令"></a> <strong>将命令输出传递给另一个命令</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l | grep <span class="string">&quot;.txt&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ls -l</code>：列出目录的详细内容。</li>
+<li><code>grep &quot;.txt&quot;</code>：过滤出包含 <code>.txt</code> 的行。</li>
+</ul>
+<h3 id="统计命令输出的行数"><a class="markdownIt-Anchor" href="#统计命令输出的行数"></a> <strong>统计命令输出的行数</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ls</code>：列出当前目录的文件。</li>
+<li><code>wc -l</code>：统计文件列表的行数。</li>
+</ul>
+<h3 id="显示进程并过滤关键字"><a class="markdownIt-Anchor" href="#显示进程并过滤关键字"></a> <strong>显示进程并过滤关键字</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep <span class="string">&quot;nginx&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ps aux</code>：显示所有运行中的进程。</li>
+<li><code>grep &quot;nginx&quot;</code>：过滤出包含 <code>nginx</code> 的进程。</li>
+</ul>
+<h3 id="排序和去重"><a class="markdownIt-Anchor" href="#排序和去重"></a> <strong>排序和去重</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> file.txt | <span class="built_in">sort</span> | <span class="built_in">uniq</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>cat file.txt</code>：显示文件内容。</li>
+<li><code>sort</code>：对文件内容排序。</li>
+<li><code>uniq</code>：去重，显示唯一的行。</li>
+</ul>
+<h3 id="查找大文件并排序"><a class="markdownIt-Anchor" href="#查找大文件并排序"></a> <strong>查找大文件并排序</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">du</span> -h | <span class="built_in">sort</span> -h</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>du -h</code>：显示目录和文件的大小。</li>
+<li><code>sort -h</code>：按人类可读格式（如 KB、MB 等）排序。</li>
+</ul>
+<hr />
+<h1 id="重定向与管道结合"><a class="markdownIt-Anchor" href="#重定向与管道结合"></a> <strong>重定向与管道结合</strong></h1>
+<p>重定向和管道可以结合使用，用于更复杂的数据处理。</p>
+<h2 id="示例-1将输出保存到文件"><a class="markdownIt-Anchor" href="#示例-1将输出保存到文件"></a> <strong>示例 1：将输出保存到文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l | grep <span class="string">&quot;.txt&quot;</span> &gt; txt_files.log</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ls -l</code>：列出目录内容。</li>
+<li><code>grep &quot;.txt&quot;</code>：过滤出包含 <code>.txt</code> 的文件。</li>
+<li><code>&gt;</code>：将结果保存到 <code>txt_files.log</code> 文件中。</li>
+</ul>
+<h2 id="示例-2同时处理输出和错误"><a class="markdownIt-Anchor" href="#示例-2同时处理输出和错误"></a> <strong>示例 2：同时处理输出和错误</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /etc -name <span class="string">&quot;*.conf&quot;</span> &gt; output.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>find /etc -name &quot;*.conf&quot;</code>：查找 <code>/etc</code> 下的 <code>.conf</code> 文件。</li>
+<li><code>&gt;</code>：将输出保存到 <code>output.log</code>。</li>
+<li><code>2&gt;&amp;1</code>：将错误输出一起保存。</li>
+</ul>
+<h2 id="示例-3统计错误行数"><a class="markdownIt-Anchor" href="#示例-3统计错误行数"></a> <strong>示例 3：统计错误行数</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /nonexistent 2&gt;&amp;1 | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ls /nonexistent</code>：尝试列出不存在的目录。</li>
+<li><code>2&gt;&amp;1</code>：将错误输出通过管道传递。</li>
+<li><code>wc -l</code>：统计错误消息的行数。</li>
+</ul>
+<hr />
+<h1 id="常见组合示例"><a class="markdownIt-Anchor" href="#常见组合示例"></a> <strong>常见组合示例</strong></h1>
+<h2 id="示例-1查找日志中的错误并保存"><a class="markdownIt-Anchor" href="#示例-1查找日志中的错误并保存"></a> <strong>示例 1：查找日志中的错误并保存</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;ERROR&quot;</span> /var/log/syslog | <span class="built_in">tee</span> error_log.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>grep &quot;ERROR&quot;</code>：查找日志中的错误行。</li>
+<li><code>tee</code>：将输出写入文件，同时打印到屏幕。</li>
+</ul>
+<hr />
+<h2 id="示例-2监控文件变化"><a class="markdownIt-Anchor" href="#示例-2监控文件变化"></a> <strong>示例 2：监控文件变化</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tail</span> -f /var/log/syslog | grep <span class="string">&quot;ERROR&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>tail -f</code>：实时查看文件变化。</li>
+<li><code>grep &quot;ERROR&quot;</code>：实时过滤包含 <code>ERROR</code> 的行。</li>
+</ul>
+<hr />
+<h2 id="示例-3过滤并统计文件中出现最多的单词"><a class="markdownIt-Anchor" href="#示例-3过滤并统计文件中出现最多的单词"></a> <strong>示例 3：过滤并统计文件中出现最多的单词</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> file.txt | <span class="built_in">tr</span> -s <span class="string">&#x27; &#x27;</span> <span class="string">&#x27;\n&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr | <span class="built_in">head</span> -10</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>tr -s ' ' '\n'</code>：将空格转换为换行符，将每个单词分行。</li>
+<li><code>sort</code>：对单词排序。</li>
+<li><code>uniq -c</code>：统计每个单词出现的次数。</li>
+<li><code>sort -nr</code>：按数字降序排序。</li>
+<li><code>head -10</code>：取出现次数最多的前 10 个单词。</li>
+</ul>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<h2 id="重定向符号-2"><a class="markdownIt-Anchor" href="#重定向符号-2"></a> <strong>重定向符号</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&gt;</code></td>
+<td>标准输出重定向到文件（覆盖）。</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>标准输出重定向到文件（追加）。</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>从文件读取输入。</td>
+</tr>
+<tr>
+<td><code>2&gt;</code></td>
+<td>错误输出重定向到文件（覆盖）。</td>
+</tr>
+<tr>
+<td><code>2&gt;&gt;</code></td>
+<td>错误输出重定向到文件（追加）。</td>
+</tr>
+<tr>
+<td><code>&amp;&gt;</code></td>
+<td>标准输出和错误同时重定向到文件。</td>
+</tr>
+<tr>
+<td><code>/dev/null</code></td>
+<td>丢弃输出或错误。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="管道符号"><a class="markdownIt-Anchor" href="#管道符号"></a> <strong>管道符号</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>`</td>
+<td>`</td>
+</tr>
+</tbody>
+</table>
+<h2 id="常用命令组合"><a class="markdownIt-Anchor" href="#常用命令组合"></a> <strong>常用命令组合</strong></h2>
+<ul>
+<li><strong>筛选</strong>：<code>ps aux | grep &quot;nginx&quot;</code></li>
+<li><strong>统计</strong>：<code>ls | wc -l</code></li>
+<li><strong>排序</strong>：<code>cat file.txt | sort | uniq -c | sort -nr</code></li>
+</ul>
+<p>通过灵活使用重定向和管道，可以大大提高 Linux 日常操作的效率和灵活性！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/ie3o1mib/">https://luoying.netlify.app/2024/10/08/ie3o1mib/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---重定向和管道</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件8.jpg" data-sizes="auto" alt="Linux命令详解---时间和日期" class="lazyload">
+          
+        
+        <a href="/2024/10/08/zxz9iq7w/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---时间和日期
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件43.jpg" data-sizes="auto" alt="Linux命令详解---find" class="lazyload">
+        
+      
+      <a href="/2024/10/08/rh586uhh/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---find
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text"> 重定向命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E5%8F%B7"><span class="toc-number">1.1.</span> <span class="toc-text"> 重定向符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%94%A8%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text"> 重定向用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 将命令输出重定向到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%BE%93%E5%87%BA%E8%BF%BD%E5%8A%A0%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 将输出追加到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E4%BD%9C%E4%B8%BA%E5%91%BD%E4%BB%A4%E7%9A%84%E8%BE%93%E5%85%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text"> 将文件内容作为命令的输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.4.</span> <span class="toc-text"> 将错误输出重定向到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E9%87%8D%E5%AE%9A%E5%90%91%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA%E5%92%8C%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.5.</span> <span class="toc-text"> 同时重定向标准输出和错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.6.</span> <span class="toc-text"> 丢弃输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.7.</span> <span class="toc-text"> 丢弃错误输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%BC%83%E6%89%80%E6%9C%89%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.8.</span> <span class="toc-text"> 丢弃所有输出</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text"> 管道命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text"> 管道的基本语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text"> 管道示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E4%BC%A0%E9%80%92%E7%BB%99%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 将命令输出传递给另一个命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E7%9A%84%E8%A1%8C%E6%95%B0"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 统计命令输出的行数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E8%BF%9B%E7%A8%8B%E5%B9%B6%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 显示进程并过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E5%92%8C%E5%8E%BB%E9%87%8D"><span class="toc-number">2.2.4.</span> <span class="toc-text"> 排序和去重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%A4%A7%E6%96%87%E4%BB%B6%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="toc-number">2.2.5.</span> <span class="toc-text"> 查找大文件并排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93%E7%BB%93%E5%90%88"><span class="toc-number">3.</span> <span class="toc-text"> 重定向与管道结合</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1%E5%B0%86%E8%BE%93%E5%87%BA%E4%BF%9D%E5%AD%98%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> 示例 1：将输出保存到文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2%E5%90%8C%E6%97%B6%E5%A4%84%E7%90%86%E8%BE%93%E5%87%BA%E5%92%8C%E9%94%99%E8%AF%AF"><span class="toc-number">3.2.</span> <span class="toc-text"> 示例 2：同时处理输出和错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3%E7%BB%9F%E8%AE%A1%E9%94%99%E8%AF%AF%E8%A1%8C%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text"> 示例 3：统计错误行数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%BB%84%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text"> 常见组合示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1%E6%9F%A5%E6%89%BE%E6%97%A5%E5%BF%97%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E5%B9%B6%E4%BF%9D%E5%AD%98"><span class="toc-number">4.1.</span> <span class="toc-text"> 示例 1：查找日志中的错误并保存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2%E7%9B%91%E6%8E%A7%E6%96%87%E4%BB%B6%E5%8F%98%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text"> 示例 2：监控文件变化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3%E8%BF%87%E6%BB%A4%E5%B9%B6%E7%BB%9F%E8%AE%A1%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E5%8D%95%E8%AF%8D"><span class="toc-number">4.3.</span> <span class="toc-text"> 示例 3：过滤并统计文件中出现最多的单词</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E5%8F%B7-2"><span class="toc-number">5.1.</span> <span class="toc-text"> 重定向符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6%E5%8F%B7"><span class="toc-number">5.2.</span> <span class="toc-text"> 管道符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%BB%84%E5%90%88"><span class="toc-number">5.3.</span> <span class="toc-text"> 常用命令组合</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

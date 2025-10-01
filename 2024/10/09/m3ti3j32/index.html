@@ -1,0 +1,954 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---scp |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="scp （Secure Copy Protocol）是 Linux&#x2F;Unix 系统中的命令行工具，用于在本地与远程主机之间，或两台远程主机之间安全地复制文件或目录。scp 使用 SSH（Secure Shell） 协议进行数据传输，确保数据在传输过程中加密。   基本语法 1scp [选项] 源路径 目标路径  源路径：指定需要复制的文件或目录，可以是本地路径或远程路径。 目标路径：指定文件复制的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---scp">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/m3ti3j32/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="scp （Secure Copy Protocol）是 Linux&#x2F;Unix 系统中的命令行工具，用于在本地与远程主机之间，或两台远程主机之间安全地复制文件或目录。scp 使用 SSH（Secure Shell） 协议进行数据传输，确保数据在传输过程中加密。   基本语法 1scp [选项] 源路径 目标路径  源路径：指定需要复制的文件或目录，可以是本地路径或远程路径。 目标路径：指定文件复制的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T12:15:22.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.541Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---scp">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---scp</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> 常见用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%9C%AC%E5%9C%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA"><span class="toc-number">2.1.</span> <span class="toc-text"> 从本地传输到远程主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%BC%A0%E8%BE%93%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">2.2.</span> <span class="toc-text"> 从远程主机传输到本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%B8%80%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%BC%A0%E8%BE%93%E5%88%B0%E5%8F%A6%E4%B8%80%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA"><span class="toc-number">2.3.</span> <span class="toc-text"> 从一台远程主机传输到另一台远程主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E5%A4%8D%E5%88%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">2.4.</span> <span class="toc-text"> 递归复制目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="toc-number">2.5.</span> <span class="toc-text"> 指定端口号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E4%BC%A0%E8%BE%93%E5%B8%A6%E5%AE%BD"><span class="toc-number">2.6.</span> <span class="toc-text"> 限制传输带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E4%BC%A0%E8%BE%93%E8%BF%9B%E5%BA%A6"><span class="toc-number">2.7.</span> <span class="toc-text"> 显示传输进度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">3.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text"> 示例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93"><span class="toc-number">4.1.</span> <span class="toc-text"> 基本文件传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%B9%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="toc-number">4.2.</span> <span class="toc-text"> 复制到远程主机并重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3%E4%BC%A0%E8%BE%93"><span class="toc-number">4.3.</span> <span class="toc-text"> 使用指定端口传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%95%B4%E4%B8%AA%E7%9B%AE%E5%BD%95"><span class="toc-number">4.4.</span> <span class="toc-text"> 复制整个目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="toc-number">4.5.</span> <span class="toc-text"> 从远程主机下载文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%B8%8B%E8%BD%BD%E7%9B%AE%E5%BD%95"><span class="toc-number">4.6.</span> <span class="toc-text"> 从远程主机下载目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8E%8B%E7%BC%A9%E5%8A%A0%E9%80%9F%E4%BC%A0%E8%BE%93"><span class="toc-number">4.7.</span> <span class="toc-text"> 使用压缩加速传输</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-m3ti3j32" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/m3ti3j32/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T12:15:22.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>scp</code> （<strong>Secure Copy Protocol</strong>）是 Linux/Unix 系统中的命令行工具，用于在本地与远程主机之间，或两台远程主机之间安全地复制文件或目录。<code>scp</code> 使用 <strong>SSH（Secure Shell）</strong> 协议进行数据传输，确保数据在传输过程中加密。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp [选项] 源路径 目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>源路径</strong>：指定需要复制的文件或目录，可以是本地路径或远程路径。</li>
+<li><strong>目标路径</strong>：指定文件复制的目标，可以是本地路径或远程路径。</li>
+<li><strong>选项</strong>：控制 <code>scp</code> 的行为（如显示进度、递归复制等）。</li>
+</ul>
+<hr />
+<h1 id="常见用法"><a class="markdownIt-Anchor" href="#常见用法"></a> <strong>常见用法</strong></h1>
+<h2 id="从本地传输到远程主机"><a class="markdownIt-Anchor" href="#从本地传输到远程主机"></a> <strong>从本地传输到远程主机</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp 本地文件 用户名@远程IP:远程路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将本地的 <code>file.txt</code> 文件复制到远程主机 <code>192.168.1.100</code> 的 <code>/home/user/</code> 目录。</li>
+</ul>
+<hr />
+<h2 id="从远程主机传输到本地"><a class="markdownIt-Anchor" href="#从远程主机传输到本地"></a> <strong>从远程主机传输到本地</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp 用户名@远程IP:远程文件 本地路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp user@192.168.1.100:/home/user/file.txt /local/directory/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将远程主机 <code>/home/user/file.txt</code> 文件复制到本地的 <code>/local/directory/</code> 目录。</li>
+</ul>
+<hr />
+<h2 id="从一台远程主机传输到另一台远程主机"><a class="markdownIt-Anchor" href="#从一台远程主机传输到另一台远程主机"></a> <strong>从一台远程主机传输到另一台远程主机</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp 用户1@远程IP1:远程文件 用户2@远程IP2:目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp user1@192.168.1.100:/home/user1/file.txt user2@192.168.1.101:/home/user2/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将远程主机 <code>192.168.1.100</code> 的 <code>/home/user1/file.txt</code> 复制到另一台远程主机 <code>192.168.1.101</code> 的 <code>/home/user2/</code> 目录。</li>
+</ul>
+<hr />
+<h2 id="递归复制目录"><a class="markdownIt-Anchor" href="#递归复制目录"></a> <strong>递归复制目录</strong></h2>
+<ul>
+<li>使用 <code>-r</code> 选项递归复制整个目录。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r 本地目录 用户名@远程IP:远程路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r /local/directory user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将本地的 <code>/local/directory</code> 整个目录复制到远程主机的 <code>/home/user/</code>。</li>
+</ul>
+<hr />
+<h2 id="指定端口号"><a class="markdownIt-Anchor" href="#指定端口号"></a> <strong>指定端口号</strong></h2>
+<ul>
+<li>使用 <code>-P</code> 选项指定远程主机的 SSH 端口号（注意：<code>P</code> 为大写）。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 端口号 源路径 目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 2222 file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：通过端口号 <code>2222</code> 将本地的 <code>file.txt</code> 复制到远程主机。</li>
+</ul>
+<hr />
+<h2 id="限制传输带宽"><a class="markdownIt-Anchor" href="#限制传输带宽"></a> <strong>限制传输带宽</strong></h2>
+<ul>
+<li>使用 <code>-l</code> 选项限制传输速率（单位为 Kbps）。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -l 带宽限制 源路径 目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -l 1000 file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将本地的 <code>file.txt</code> 复制到远程主机，并限制传输速率为 1000 Kbps。</li>
+</ul>
+<hr />
+<h2 id="显示传输进度"><a class="markdownIt-Anchor" href="#显示传输进度"></a> <strong>显示传输进度</strong></h2>
+<ul>
+<li>使用 <code>-v</code> 或 <code>-C</code> 选项显示传输过程中的详细信息。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -v 源路径 目标路径</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -v file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：显示传输过程中使用的 SSH 配置、文件大小、进度等信息。</li>
+</ul>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>选项</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-r</code></td>
+<td>递归复制目录。</td>
+</tr>
+<tr>
+<td><code>-P</code></td>
+<td>指定远程主机的 SSH 端口号（注意：<code>P</code> 为大写）。</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>限制传输带宽（单位为 Kbps）。</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>显示传输的详细信息（调试模式）。</td>
+</tr>
+<tr>
+<td><code>-C</code></td>
+<td>启用压缩，适用于慢速网络。</td>
+</tr>
+<tr>
+<td><code>-q</code></td>
+<td>静默模式，不显示任何信息。</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td>指定 SSH 配置选项（如密钥文件）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="示例说明"><a class="markdownIt-Anchor" href="#示例说明"></a> <strong>示例说明</strong></h1>
+<h2 id="基本文件传输"><a class="markdownIt-Anchor" href="#基本文件传输"></a> <strong>基本文件传输</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将本地 <code>file.txt</code> 复制到远程主机 <code>/home/user/</code> 目录。</li>
+</ul>
+<hr />
+<h2 id="复制到远程主机并重命名"><a class="markdownIt-Anchor" href="#复制到远程主机并重命名"></a> <strong>复制到远程主机并重命名</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp file.txt user@192.168.1.100:/home/user/newfile.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将本地 <code>file.txt</code> 复制到远程主机 <code>/home/user/</code> 并重命名为 <code>newfile.txt</code>。</li>
+</ul>
+<hr />
+<h2 id="使用指定端口传输"><a class="markdownIt-Anchor" href="#使用指定端口传输"></a> <strong>使用指定端口传输</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 2222 file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用端口号 <code>2222</code> 传输文件。</li>
+</ul>
+<hr />
+<h2 id="复制整个目录"><a class="markdownIt-Anchor" href="#复制整个目录"></a> <strong>复制整个目录</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r /local/directory user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>递归复制本地目录 <code>/local/directory</code> 到远程主机目录 <code>/home/user/</code>。</li>
+</ul>
+<hr />
+<h2 id="从远程主机下载文件"><a class="markdownIt-Anchor" href="#从远程主机下载文件"></a> <strong>从远程主机下载文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp user@192.168.1.100:/home/user/file.txt /local/directory/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>从远程主机 <code>/home/user/</code> 下载 <code>file.txt</code> 到本地的 <code>/local/directory/</code>。</li>
+</ul>
+<hr />
+<h2 id="从远程主机下载目录"><a class="markdownIt-Anchor" href="#从远程主机下载目录"></a> <strong>从远程主机下载目录</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r user@192.168.1.100:/home/user/directory /local/directory/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>从远程主机递归下载目录 <code>/home/user/directory</code> 到本地的 <code>/local/directory/</code>。</li>
+</ul>
+<hr />
+<h2 id="使用压缩加速传输"><a class="markdownIt-Anchor" href="#使用压缩加速传输"></a> <strong>使用压缩加速传输</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -C file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用压缩传输文件，提高慢速网络的传输效率。</li>
+</ul>
+<hr />
+<h1 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> <strong>注意事项</strong></h1>
+<ol>
+<li>
+<p><strong>权限问题</strong>：</p>
+<ul>
+<li>确保有足够的权限访问源文件和目标路径。</li>
+<li>如果远程主机需要密码，<code>scp</code> 会提示输入密码。</li>
+</ul>
+</li>
+<li>
+<p><strong>端口号</strong>：</p>
+<ul>
+<li>如果远程主机的 SSH 使用非默认端口（22），必须用 <code>-P</code> 指定端口号。</li>
+</ul>
+</li>
+<li>
+<p><strong>SSH 配置</strong>：</p>
+<ul>
+<li>如果需要使用密钥文件进行身份验证，可以通过 <code>-o</code> 指定。</li>
+<li>示例：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -i /path/to/private_key file.txt user@192.168.1.100:/home/user/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>网络性能</strong>：</p>
+<ul>
+<li>对于大文件传输，可以结合 <code>-C</code> 选项（压缩）和 <code>-l</code> 选项（限制带宽）优化传输。</li>
+</ul>
+</li>
+<li>
+<p><strong>文件路径</strong>：</p>
+<ul>
+<li>确保路径正确，远程路径需要以 <code>用户名@IP地址:路径</code> 格式指定。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>从本地复制到远程主机</td>
+<td><code>scp file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>从远程主机复制到本地</td>
+<td><code>scp user@192.168.1.100:/home/user/file.txt /local/directory/</code></td>
+</tr>
+<tr>
+<td>递归复制目录</td>
+<td><code>scp -r /local/directory user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>指定端口</td>
+<td><code>scp -P 2222 file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>限制带宽</td>
+<td><code>scp -l 1000 file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>开启压缩</td>
+<td><code>scp -C file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>显示详细信息</td>
+<td><code>scp -v file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+<tr>
+<td>使用密钥文件认证</td>
+<td><code>scp -i /path/to/key file.txt user@192.168.1.100:/home/user/</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>scp</code> 是一种简单高效的文件传输方式，但较大型传输任务推荐使用 <strong><code>rsync</code></strong>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/m3ti3j32/">https://luoying.netlify.app/2024/10/09/m3ti3j32/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---scp</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件37.jpg" data-sizes="auto" alt="Linux命令详解---pwd" class="lazyload">
+          
+        
+        <a href="/2024/10/09/imn8uma5/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---pwd
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件36.jpg" data-sizes="auto" alt="Linux命令详解---ssh" class="lazyload">
+        
+      
+      <a href="/2024/10/09/blqybpqn/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---ssh
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> 常见用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%9C%AC%E5%9C%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA"><span class="toc-number">2.1.</span> <span class="toc-text"> 从本地传输到远程主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%BC%A0%E8%BE%93%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-number">2.2.</span> <span class="toc-text"> 从远程主机传输到本地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%B8%80%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%BC%A0%E8%BE%93%E5%88%B0%E5%8F%A6%E4%B8%80%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA"><span class="toc-number">2.3.</span> <span class="toc-text"> 从一台远程主机传输到另一台远程主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E5%A4%8D%E5%88%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">2.4.</span> <span class="toc-text"> 递归复制目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="toc-number">2.5.</span> <span class="toc-text"> 指定端口号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E4%BC%A0%E8%BE%93%E5%B8%A6%E5%AE%BD"><span class="toc-number">2.6.</span> <span class="toc-text"> 限制传输带宽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E4%BC%A0%E8%BE%93%E8%BF%9B%E5%BA%A6"><span class="toc-number">2.7.</span> <span class="toc-text"> 显示传输进度</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">3.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text"> 示例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93"><span class="toc-number">4.1.</span> <span class="toc-text"> 基本文件传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%B9%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="toc-number">4.2.</span> <span class="toc-text"> 复制到远程主机并重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3%E4%BC%A0%E8%BE%93"><span class="toc-number">4.3.</span> <span class="toc-text"> 使用指定端口传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%95%B4%E4%B8%AA%E7%9B%AE%E5%BD%95"><span class="toc-number">4.4.</span> <span class="toc-text"> 复制整个目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="toc-number">4.5.</span> <span class="toc-text"> 从远程主机下载文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E4%B8%8B%E8%BD%BD%E7%9B%AE%E5%BD%95"><span class="toc-number">4.6.</span> <span class="toc-text"> 从远程主机下载目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8E%8B%E7%BC%A9%E5%8A%A0%E9%80%9F%E4%BC%A0%E8%BE%93"><span class="toc-number">4.7.</span> <span class="toc-text"> 使用压缩加速传输</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

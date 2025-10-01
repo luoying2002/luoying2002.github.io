@@ -1,0 +1,1140 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="一方小筑，与君共勉">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小小白的笔记屋">
+<meta property="og:url" content="https://luoying.netlify.app/page/5/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="一方小筑，与君共勉">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/banner.webp">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/banner.webp">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        <link rel="preload" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">小小白的笔记屋</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper ">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+      
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main">
+  
+    <div class="post-categories-wrapper" data-aos="fade-up">
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件39.jpg" data-sizes="auto" alt="算法基础" class="lazyload">
+              
+            
+            <h2>算法基础</h2>
+            <h3>1 篇文章</h3>
+          </div>
+        </div>
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件11.jpg" data-sizes="auto" alt="论文解读" class="lazyload">
+              
+            
+            <h2>论文解读</h2>
+            <h3>6 篇文章</h3>
+          </div>
+        </div>
+      
+    </div>
+  
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/gfmqsu2l/" aria-label="Linux命令详解---ifconfig"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件46.jpg" data-sizes="auto" alt="Linux命令详解---ifconfig" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.2k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---ifconfig</h2>
+      <article class="post-article">
+        
+          ifconfig（Interface Configuration）是一个用于查看和配置网络接口的命令。在 Linux 系统中，ifconfig 主要用于显示网络接口的状态信息（例如 IP 地址、子网掩码、广播地址等）以及配置网络接口。
+尽管在较新的 Linux 发行版中，ifconfig 已逐渐被 ip 命令所取代，但它仍然是许多网络工程师和管理员熟悉和使用的命令。
+
+ 基本语法
+1ifconfig [网络接口] [选项] [参数]
+
+网络接口：网络设备的名称，例如 eth0、wlan0、lo 等。
+选项和参数：用于配置或查看网络接口的功能。
+
+
+ 查看网络接口信息
+ 查看所有网络接口
+1if
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/o85pl50g/" aria-label="Linux命令详解---用户权限相关"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件44.jpg" data-sizes="auto" alt="Linux命令详解---用户权限相关" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.2k 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---用户权限相关</h2>
+      <article class="post-article">
+        
+          在 Linux/Unix 系统中，用户权限管理是非常重要的内容。以下是一些与用户权限相关的常用命令及其功能说明。这些命令主要用于管理用户、组、文件权限和特权操作。
+
+ 用户和组管理相关命令
+ 添加用户
+ useradd
+用于添加新用户。
+1sudo useradd 用户名
+
+
+常用选项：
+
+
+
+选项
+说明
+
+
+
+
+-m
+自动为用户创建主目录。
+
+
+-s /bin/bash
+指定用户的默认 Shell，例如 /bin/bash。
+
+
+-G 组名
+将用户添加到指定组。
+
+
+-u 用户ID
+指定用户 ID（UID）。
+
+
+
+
+
+示例：
+1sudo useradd -m -s /bin/bash -G
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/crbm8mfk/" aria-label="Linux命令详解---ln"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件44.jpg" data-sizes="auto" alt="Linux命令详解---ln" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---ln</h2>
+      <article class="post-article">
+        
+          ln 是 Linux 和 Unix 系统中用于创建链接文件的命令。链接文件分为两种类型：
+
+硬链接（Hard Link）：指向文件数据本身，链接与原文件共享相同的 inode。
+符号链接（Symbolic Link）：类似于 Windows 中的快捷方式，指向原文件的路径，而不是文件数据。
+
+
+ ln 命令的基本语法
+1ln [选项] 源文件 目标文件
+ 参数说明：
+
+源文件：需要创建链接的原文件或目录。
+目标文件：链接文件的名称或路径。
+选项：
+
+-s：创建符号链接（软链接）。
+-f：强制删除已有的目标链接文件。
+-v：显示详细信息。
+-n：在符号链接上创建新的符号链接（而不是覆盖符号链接指
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/fqhsjsca/" aria-label="Linux命令详解---bash脚本语法"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件7.jpg" data-sizes="auto" alt="Linux命令详解---bash脚本语法" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.1k 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---bash脚本语法</h2>
+      <article class="post-article">
+        
+          Bash 脚本是一种用于自动化任务、管理系统和运行命令的强大工具。以下是 Bash 脚本的基本语法、结构和常用功能的详细介绍。
+
+ Bash 脚本的基本结构
+ 脚本文件的格式
+
+文件开头指定解释器：使用 #!/bin/bash 告诉系统脚本应该由 Bash 解释器执行。
+
+123#!/bin/bash# 这是一个简单的 Bash 脚本echo &amp;quot;Hello, World!&amp;quot;
+
+保存文件：将文件保存为 .sh 后缀，例如 script.sh。
+赋予执行权限：
+
+1chmod +x script.sh
+
+运行脚本：
+
+1./script.sh
+
+ 注释
+
+单行注释：用 # 开头
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/fdkyicqe/" aria-label="Linux命令详解---grep"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件43.jpg" data-sizes="auto" alt="Linux命令详解---grep" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.2k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---grep</h2>
+      <article class="post-article">
+        
+          grep 是 Linux 和类 Unix 操作系统中一个强大的文本搜索工具，用于在文件或标准输入中查找与指定模式匹配的行。它支持正则表达式，可以快速定位文件中的特定内容。
+以下是对 grep 命令的详细介绍，包括基本用法、常用选项和示例。
+
+ 基本语法
+1grep [选项] &amp;quot;搜索模式&amp;quot; [文件...]
+
+搜索模式：指定要查找的文本模式（可以是字符串或正则表达式）。
+文件：要搜索的文件，可以是一个或多个文件。如果不指定文件，则从标准输入（stdin）读取数据。
+选项：控制搜索行为，例如忽略大小写、递归搜索、显示行号等。
+
+
+ 常用选项
+
+
+
+选项
+功能
+
+
+
+
+-i
+忽略大
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/xiou2s43/" aria-label="Linux命令详解---系统信息相关"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件5.png" data-sizes="auto" alt="Linux命令详解---系统信息相关" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---系统信息相关</h2>
+      <article class="post-article">
+        
+          在 Linux 和类 Unix 系统中，有许多命令可以用来查看和监控操作系统的基本信息、硬件配置和运行状态。这些命令通常用于系统管理、故障排查和性能优化。
+
+ 系统信息相关命令分类
+ 操作系统和内核信息
+这些命令用于查看操作系统的版本、内核版本和主机名等信息。
+
+
+
+命令
+功能
+
+
+
+
+uname
+显示系统名称和内核信息。
+
+
+hostname
+显示或设置主机名。
+
+
+cat /etc/os-release
+查看操作系统名称和版本（适用于大多数现代 Linux 发行版）。
+
+
+lsb_release
+显示发行版信息（需要安装 lsb-core）。
+
+
+uptime
+查看系统连续运行时间、当前用
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/w7hzn2bs/" aria-label="Linux命令详解---命令帮助信息"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件44.jpg" data-sizes="auto" alt="Linux命令详解---命令帮助信息" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1k 字</span>
+        <span><span class="icon-clock"></span>3 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---命令帮助信息</h2>
+      <article class="post-article">
+        
+          在 Linux/Unix 系统中，获取命令的帮助信息是常见的需求。以下是几种常用的方法，用于查看命令的帮助文档、参数说明和相关使用信息。
+
+ 使用 --help
+几乎所有命令都支持 --help 选项，用于简要地显示命令的使用方法和参数说明。
+1命令 --help
+
+示例：
+
+1ls --help
+
+
+输出：显示 ls 命令的所有选项及其功能。
+
+
+适用场景：快速查看命令的基本用法和选项。
+
+
+
+ 使用 man（手册页）
+man 命令用于查看命令的详细手册页，包括用法、参数、描述等。
+1man 命令
+
+示例：
+
+1man ls
+
+输出：显示 ls 命令的完整手册页。
+
+ man 的快捷键操作
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/3pjws2yl/" aria-label="Linux命令详解---crontab"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件7.jpg" data-sizes="auto" alt="Linux命令详解---crontab" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---crontab</h2>
+      <article class="post-article">
+        
+          crontab 是 Linux 和类 Unix 系统中用来管理定时任务的命令。通过 crontab，可以定期执行脚本或命令，比如每天备份、自动清理日志等。crontab 是基于 cron 服务的用户接口，每个用户都可以单独定义自己的定时任务。
+
+ 基本语法
+1crontab [选项]
+
+常用选项：
+
+
+
+
+选项
+功能
+
+
+
+
+-e
+编辑当前用户的 crontab 文件。
+
+
+-l
+列出当前用户的 crontab 内容。
+
+
+-r
+删除当前用户的 crontab 文件（清空定时任务）。
+
+
+-u 用户
+指定用户管理其 crontab（需要管理员权限）。
+
+
+
+
+ crontab 文件格式
+cro
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/fnb83o9t/" aria-label="Linux命令详解---echo"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件10.jpg" data-sizes="auto" alt="Linux命令详解---echo" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>884 字</span>
+        <span><span class="icon-clock"></span>3 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---echo</h2>
+      <article class="post-article">
+        
+          echo 是一个非常常用的命令，用于在终端打印文本或变量的值。它简单而强大，适用于脚本编写、调试和输出信息等场景。
+
+ 基本语法
+1echo [选项] [字符串]
+
+字符串：要输出的内容，可以是普通文本、变量值或转义字符。
+选项：控制 echo 的行为（如是否解析转义字符等）。
+
+
+ 常用选项
+
+
+
+选项
+作用
+
+
+
+
+-n
+输出内容后不换行。
+
+
+-e
+启用转义字符处理（默认不解析转义字符）。
+
+
+-E
+禁用转义字符处理（默认行为，通常不需要显式指定）。
+
+
+
+
+ 示例用法
+ 输出文本
+1echo &amp;quot;Hello, World!&amp;quot;
+
+
+输出：
+1Hello, World!
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/10/08/6s15w53k/" aria-label="Linux命令详解---curl"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件38.jpg" data-sizes="auto" alt="Linux命令详解---curl" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-10-08</span>
+        <span><span class="icon-pencil"></span>1.5k 字</span>
+        <span><span class="icon-clock"></span>6 分钟</span>
+      </div>
+      <h2 class="post-title">Linux命令详解---curl</h2>
+      <article class="post-article">
+        
+          curl 是 Linux 和类 Unix 系统中一个非常强大的命令行工具，用于发起 HTTP、HTTPS、FTP 等多种协议的请求。它的全名是 Client URL，主要用于从命令行与服务器交互，支持下载文件、上传数据、测试 API、发送 POST/GET 请求等功能。
+以下是 curl 命令的详细介绍，包括基本用法、常用选项和丰富的示例。
+
+ 基本语法
+1curl [选项] [URL]
+
+URL：目标地址，支持多种协议，如 HTTP、HTTPS、FTP 等。
+选项：用于控制请求的行为，例如头信息、数据传递、文件保存等。
+
+
+ 常用选项
+
+
+
+选项
+功能
+
+
+
+
+-X 或 --request
+
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+
+
+  <nav id="page-nav" data-aos="fade-up">
+    
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
+  </nav>
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+    
+  </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+    
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

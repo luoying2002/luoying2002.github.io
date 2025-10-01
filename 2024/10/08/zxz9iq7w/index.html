@@ -1,0 +1,1007 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---时间和日期 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="在 Linux&#x2F;Unix 系统中，与时间和日期相关的命令主要用于查看、设置和操作系统时间，以及格式化输出和处理日期数据。以下是常用的时间和日期管理命令及其详细用法。   查看当前时间和日期  date 用于显示和设置系统的当前时间和日期。  语法 1date [选项] [+格式]  常用示例  查看当前时间和日期  1date  输出示例：1Mon Dec  9 12:34:56 UTC 2024">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---时间和日期">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/zxz9iq7w/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="在 Linux&#x2F;Unix 系统中，与时间和日期相关的命令主要用于查看、设置和操作系统时间，以及格式化输出和处理日期数据。以下是常用的时间和日期管理命令及其详细用法。   查看当前时间和日期  date 用于显示和设置系统的当前时间和日期。  语法 1date [选项] [+格式]  常用示例  查看当前时间和日期  1date  输出示例：1Mon Dec  9 12:34:56 UTC 2024">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T15:32:26.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.751Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---时间和日期">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---时间和日期</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text"> 查看当前时间和日期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#date"><span class="toc-number">1.1.</span> <span class="toc-text"> date</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cal"><span class="toc-number">1.2.</span> <span class="toc-text"> cal</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-2"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#timedatectl"><span class="toc-number">1.3.</span> <span class="toc-text"> timedatectl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-3"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B-3"><span class="toc-number">1.3.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text"> 时间和日期操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%97%A5%E6%9C%9F"><span class="toc-number">2.1.</span> <span class="toc-text"> 计算日期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#date-%E5%91%BD%E4%BB%A4%E5%8A%A0%E5%87%8F%E6%97%B6%E9%97%B4"><span class="toc-number">2.1.1.</span> <span class="toc-text"> date 命令加减时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.2.</span> <span class="toc-text"> 格式化时间戳</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="toc-number">3.</span> <span class="toc-text"> 时间同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ntpdate"><span class="toc-number">3.1.</span> <span class="toc-text"> 使用 ntpdate</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-ntp-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A6%82%E6%9E%9C%E6%9C%AA%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 安装 NTP 客户端（如果未安装）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%90%8C%E6%AD%A5%E6%97%B6%E9%97%B4"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 手动同步时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-chronyc"><span class="toc-number">3.2.</span> <span class="toc-text"> 使用 chronyc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 查看时间同步状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.</span> <span class="toc-text"> 定时任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-crontab"><span class="toc-number">4.1.</span> <span class="toc-text"> 使用 crontab</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-at"><span class="toc-number">4.2.</span> <span class="toc-text"> 使用 at</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 时间和日期命令总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-zxz9iq7w" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/zxz9iq7w/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T15:32:26.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p>在 Linux/Unix 系统中，与时间和日期相关的命令主要用于查看、设置和操作系统时间，以及格式化输出和处理日期数据。以下是常用的时间和日期管理命令及其详细用法。</p>
+<hr />
+<h1 id="查看当前时间和日期"><a class="markdownIt-Anchor" href="#查看当前时间和日期"></a> <strong>查看当前时间和日期</strong></h1>
+<h2 id="date"><a class="markdownIt-Anchor" href="#date"></a> <strong><code>date</code></strong></h2>
+<p>用于显示和设置系统的当前时间和日期。</p>
+<h3 id="语法"><a class="markdownIt-Anchor" href="#语法"></a> <strong>语法</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> [选项] [+格式]</span><br></pre></td></tr></table></figure>
+<h3 id="常用示例"><a class="markdownIt-Anchor" href="#常用示例"></a> <strong>常用示例</strong></h3>
+<ol>
+<li><strong>查看当前时间和日期</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出示例</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mon Dec  9 12:34:56 UTC 2024</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<ol start="2">
+<li><strong>自定义日期和时间格式</strong></li>
+</ol>
+<p>通过 <code>+</code> 指定格式化输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-12-09 12:34:56</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>常用格式化符</strong>：</p>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>含义</strong></th>
+<th><strong>示例输出</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%Y</code></td>
+<td>年（四位数）</td>
+<td><code>2024</code></td>
+</tr>
+<tr>
+<td><code>%m</code></td>
+<td>月（两位数）</td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>%d</code></td>
+<td>日（两位数）</td>
+<td><code>09</code></td>
+</tr>
+<tr>
+<td><code>%H</code></td>
+<td>小时（24小时制）</td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>%I</code></td>
+<td>小时（12小时制）</td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>%M</code></td>
+<td>分钟</td>
+<td><code>34</code></td>
+</tr>
+<tr>
+<td><code>%S</code></td>
+<td>秒</td>
+<td><code>56</code></td>
+</tr>
+<tr>
+<td><code>%A</code></td>
+<td>星期几（全称）</td>
+<td><code>Monday</code></td>
+</tr>
+<tr>
+<td><code>%a</code></td>
+<td>星期几（缩写）</td>
+<td><code>Mon</code></td>
+</tr>
+<tr>
+<td><code>%B</code></td>
+<td>月份（全称）</td>
+<td><code>December</code></td>
+</tr>
+<tr>
+<td><code>%b</code></td>
+<td>月份（缩写）</td>
+<td><code>Dec</code></td>
+</tr>
+<tr>
+<td><code>%p</code></td>
+<td>显示 AM 或 PM</td>
+<td><code>PM</code></td>
+</tr>
+<tr>
+<td><code>%Z</code></td>
+<td>时区</td>
+<td><code>UTC</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<hr />
+<ol start="3">
+<li><strong>显示时间戳（秒级）</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> +%s</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1733741696</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：输出从 1970 年 1 月 1 日的 <strong>Epoch 时间</strong>（Unix 时间戳）。</p>
+</li>
+</ul>
+<hr />
+<h2 id="cal"><a class="markdownIt-Anchor" href="#cal"></a> <strong><code>cal</code></strong></h2>
+<p>用于显示日历。</p>
+<h3 id="语法-2"><a class="markdownIt-Anchor" href="#语法-2"></a> <strong>语法</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cal [选项] [月] [年]</span><br></pre></td></tr></table></figure>
+<h3 id="常用示例-2"><a class="markdownIt-Anchor" href="#常用示例-2"></a> <strong>常用示例</strong></h3>
+<ol>
+<li><strong>显示当前月的日历</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cal</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   December 2024</span><br><span class="line">Su Mo Tu We Th Fr Sa</span><br><span class="line"> 1  2  3  4  5  6  7</span><br><span class="line"> 8  9 10 11 12 13 14</span><br><span class="line">15 16 17 18 19 20 21</span><br><span class="line">22 23 24 25 26 27 28</span><br><span class="line">29 30 31</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<ol start="2">
+<li><strong>显示特定年份的日历</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cal 2024</span><br></pre></td></tr></table></figure>
+<hr />
+<ol start="3">
+<li><strong>显示特定月份的日历</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cal 12 2024</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="timedatectl"><a class="markdownIt-Anchor" href="#timedatectl"></a> <strong><code>timedatectl</code></strong></h2>
+<p>用于查看和管理系统时间设置。</p>
+<h3 id="语法-3"><a class="markdownIt-Anchor" href="#语法-3"></a> <strong>语法</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl [选项]</span><br></pre></td></tr></table></figure>
+<h3 id="常用示例-3"><a class="markdownIt-Anchor" href="#常用示例-3"></a> <strong>常用示例</strong></h3>
+<ol>
+<li><strong>查看当前时间和时区</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">             Local time: Mon 2024-12-09 12:34:56 UTC</span><br><span class="line">         Universal time: Mon 2024-12-09 12:34:56 UTC</span><br><span class="line">               RTC time: Mon 2024-12-09 12:34:56</span><br><span class="line">              Time zone: UTC (UTC, +0000)</span><br><span class="line">System clock synchronized: yes</span><br><span class="line">            NTP service: active</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<ol start="2">
+<li><strong>设置时区</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> timedatectl set-timezone America/New_York</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：将系统时区设置为 <code>America/New_York</code>。</li>
+</ul>
+<hr />
+<ol start="3">
+<li><strong>同步时间</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> timedatectl set-ntp <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：启用基于 NTP（网络时间协议）的时间同步。</li>
+</ul>
+<hr />
+<h1 id="时间和日期操作"><a class="markdownIt-Anchor" href="#时间和日期操作"></a> <strong>时间和日期操作</strong></h1>
+<h2 id="计算日期"><a class="markdownIt-Anchor" href="#计算日期"></a> <strong>计算日期</strong></h2>
+<h3 id="date-命令加减时间"><a class="markdownIt-Anchor" href="#date-命令加减时间"></a> <strong><code>date</code> 命令加减时间</strong></h3>
+<ol>
+<li><strong>计算未来或过去的日期</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -d <span class="string">&quot;+7 days&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mon Dec 16 12:34:56 UTC 2024</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><strong>计算过去的时间</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -d <span class="string">&quot;yesterday&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sun Dec  8 12:34:56 UTC 2024</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="3">
+<li><strong>指定特定日期加减时间</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -d <span class="string">&quot;2024-12-09 +2 months&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sat Feb  9 12:34:56 UTC 2025</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="格式化时间戳"><a class="markdownIt-Anchor" href="#格式化时间戳"></a> <strong>格式化时间戳</strong></h2>
+<ol>
+<li><strong>将时间戳转换为日期</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -d @1733741696</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mon Dec  9 12:34:56 UTC 2024</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><strong>将日期转换为时间戳</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -d <span class="string">&quot;2024-12-09 12:34:56&quot;</span> +%s</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1733741696</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h1 id="时间同步"><a class="markdownIt-Anchor" href="#时间同步"></a> <strong>时间同步</strong></h1>
+<h2 id="使用-ntpdate"><a class="markdownIt-Anchor" href="#使用-ntpdate"></a> <strong>使用 <code>ntpdate</code></strong></h2>
+<h3 id="安装-ntp-客户端如果未安装"><a class="markdownIt-Anchor" href="#安装-ntp-客户端如果未安装"></a> 安装 NTP 客户端（如果未安装）</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ntpdate    <span class="comment"># Debian/Ubuntu 系列</span></span><br><span class="line"><span class="built_in">sudo</span> yum install ntpdate    <span class="comment"># CentOS/RHEL 系列</span></span><br></pre></td></tr></table></figure>
+<h3 id="手动同步时间"><a class="markdownIt-Anchor" href="#手动同步时间"></a> 手动同步时间</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ntpdate pool.ntp.org</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：从 <code>pool.ntp.org</code> NTP 服务器同步时间。</li>
+</ul>
+<hr />
+<h2 id="使用-chronyc"><a class="markdownIt-Anchor" href="#使用-chronyc"></a> <strong>使用 <code>chronyc</code></strong></h2>
+<h3 id="查看时间同步状态"><a class="markdownIt-Anchor" href="#查看时间同步状态"></a> 查看时间同步状态</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chronyc tracking</span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="定时任务"><a class="markdownIt-Anchor" href="#定时任务"></a> <strong>定时任务</strong></h1>
+<h2 id="使用-crontab"><a class="markdownIt-Anchor" href="#使用-crontab"></a> <strong>使用 <code>crontab</code></strong></h2>
+<p><code>crontab</code> 是 Linux 定时任务的管理工具，可以用来定期执行脚本或命令。</p>
+<ol>
+<li><strong>编辑定时任务</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>示例任务</strong>：每天凌晨 2 点执行备份脚本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 2 * * * /path/to/backup.sh</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="使用-at"><a class="markdownIt-Anchor" href="#使用-at"></a> <strong>使用 <code>at</code></strong></h2>
+<p>用于执行一次性定时任务。</p>
+<ol>
+<li><strong>安装 <code>at</code> 命令</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install at</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>设置任务</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;backup.sh&quot;</span> | at now + 1 hour</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：1 小时后运行 <code>backup.sh</code>。</li>
+</ul>
+<hr />
+<h1 id="时间和日期命令总结"><a class="markdownIt-Anchor" href="#时间和日期命令总结"></a> <strong>时间和日期命令总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code></td>
+<td>显示或设置当前时间和日期</td>
+<td><code>date &quot;+%Y-%m-%d %H:%M:%S&quot;</code></td>
+</tr>
+<tr>
+<td><code>cal</code></td>
+<td>显示日历</td>
+<td><code>cal 2024</code></td>
+</tr>
+<tr>
+<td><code>timedatectl</code></td>
+<td>管理系统时间和时区</td>
+<td><code>timedatectl set-timezone UTC</code></td>
+</tr>
+<tr>
+<td><code>ntpdate</code></td>
+<td>手动同步时间</td>
+<td><code>sudo ntpdate pool.ntp.org</code></td>
+</tr>
+<tr>
+<td><code>chronyc</code></td>
+<td>查看时间同步状态</td>
+<td><code>chronyc tracking</code></td>
+</tr>
+<tr>
+<td><code>crontab</code></td>
+<td>创建周期性定时任务</td>
+<td><code>crontab -e</code></td>
+</tr>
+<tr>
+<td><code>at</code></td>
+<td>创建一次性定时任务</td>
+<td>`echo &quot;<a target="_blank" rel="noopener" href="http://backup.sh">backup.sh</a>&quot;</td>
+</tr>
+</tbody>
+</table>
+<p>通过这些命令，您可以轻松管理 Linux 系统的时间和日期，以及处理与时间相关的任务！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/zxz9iq7w/">https://luoying.netlify.app/2024/10/08/zxz9iq7w/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---时间和日期</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件42.jpg" data-sizes="auto" alt="Linux命令详解---cp" class="lazyload">
+          
+        
+        <a href="/2024/10/08/qhbiamjq/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---cp
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件7.jpg" data-sizes="auto" alt="Linux命令详解---重定向和管道" class="lazyload">
+        
+      
+      <a href="/2024/10/08/ie3o1mib/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---重定向和管道
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text"> 查看当前时间和日期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#date"><span class="toc-number">1.1.</span> <span class="toc-text"> date</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cal"><span class="toc-number">1.2.</span> <span class="toc-text"> cal</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-2"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#timedatectl"><span class="toc-number">1.3.</span> <span class="toc-text"> timedatectl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-3"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B-3"><span class="toc-number">1.3.2.</span> <span class="toc-text"> 常用示例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text"> 时间和日期操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%97%A5%E6%9C%9F"><span class="toc-number">2.1.</span> <span class="toc-text"> 计算日期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#date-%E5%91%BD%E4%BB%A4%E5%8A%A0%E5%87%8F%E6%97%B6%E9%97%B4"><span class="toc-number">2.1.1.</span> <span class="toc-text"> date 命令加减时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.2.</span> <span class="toc-text"> 格式化时间戳</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="toc-number">3.</span> <span class="toc-text"> 时间同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ntpdate"><span class="toc-number">3.1.</span> <span class="toc-text"> 使用 ntpdate</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-ntp-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A6%82%E6%9E%9C%E6%9C%AA%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 安装 NTP 客户端（如果未安装）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%90%8C%E6%AD%A5%E6%97%B6%E9%97%B4"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 手动同步时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-chronyc"><span class="toc-number">3.2.</span> <span class="toc-text"> 使用 chronyc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 查看时间同步状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.</span> <span class="toc-text"> 定时任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-crontab"><span class="toc-number">4.1.</span> <span class="toc-text"> 使用 crontab</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-at"><span class="toc-number">4.2.</span> <span class="toc-text"> 使用 at</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%92%8C%E6%97%A5%E6%9C%9F%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 时间和日期命令总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

@@ -1,0 +1,1005 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---tar |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="tar 是 Linux&#x2F;Unix 系统中用于创建、解压缩归档文件的工具。它常用于备份文件、打包文件夹以及解压归档文件。tar 支持多种压缩格式（如 .gz、.bz2 和 .xz），并且可以直接操作这些压缩文件。   基本语法 1tar [选项] [参数] [文件&#x2F;目录]  选项：指定操作类型（如打包、解压缩等）和附加功能（如显示详细信息）。 参数：指定目标文件或目录。 文件&#x2F;目录：操作的目标文件或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---tar">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/c8yrzjxg/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="tar 是 Linux&#x2F;Unix 系统中用于创建、解压缩归档文件的工具。它常用于备份文件、打包文件夹以及解压归档文件。tar 支持多种压缩格式（如 .gz、.bz2 和 .xz），并且可以直接操作这些压缩文件。   基本语法 1tar [选项] [参数] [文件&#x2F;目录]  选项：指定操作类型（如打包、解压缩等）和附加功能（如显示详细信息）。 参数：指定目标文件或目录。 文件&#x2F;目录：操作的目标文件或">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T07:21:30.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.582Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---tar">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---tar</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> 创建归档文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%93%E5%8C%85%E7%9B%AE%E5%BD%95%E6%88%96%E6%96%87%E4%BB%B6%E4%B8%8D%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 1) 打包目录或文件（不压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-gzip-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 2) 打包并使用 gzip 压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-bzip2-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.3.</span> <span class="toc-text"> 3) 打包并使用 bzip2 压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-xz-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.4.</span> <span class="toc-text"> 4) 打包并使用 xz 压缩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text"> 解压归档文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A7%A3%E5%8E%8B-tar-%E6%96%87%E4%BB%B6%E6%97%A0%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 1) 解压 .tar 文件（无压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%A3%E5%8E%8B-targz-%E6%96%87%E4%BB%B6gzip-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 2) 解压 .tar.gz 文件（gzip 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A7%A3%E5%8E%8B-tarbz2-%E6%96%87%E4%BB%B6bzip2-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.3.</span> <span class="toc-text"> 3) 解压 .tar.bz2 文件（bzip2 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%A7%A3%E5%8E%8B-tarxz-%E6%96%87%E4%BB%B6xz-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 4) 解压 .tar.xz 文件（xz 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A7%A3%E5%8E%8B%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">3.2.5.</span> <span class="toc-text"> 5) 解压到指定目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-number">3.3.</span> <span class="toc-text"> 列出归档文件内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E7%8E%B0%E6%9C%89%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E4%B8%AD%E8%BF%BD%E5%8A%A0%E6%96%87%E4%BB%B6"><span class="toc-number">3.4.</span> <span class="toc-text"> 向现有归档文件中追加文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.5.</span> <span class="toc-text"> 排除文件或目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="toc-number">3.6.</span> <span class="toc-text"> 检查归档文件完整性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E9%83%A8%E5%88%86%E6%96%87%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text"> 解压部分文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E7%9B%AE%E5%BD%95%E4%B8%BA-targz-%E7%9A%84%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="toc-number">3.8.</span> <span class="toc-text"> 压缩目录为 .tar.gz 的快捷方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text"> 常用示例总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text"> 常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%8E%8B%E7%BC%A9%E5%92%8C%E8%A7%A3%E5%8E%8B%E7%BC%A9%E7%9B%AE%E5%BD%95"><span class="toc-number">5.1.</span> <span class="toc-text"> 如何快速压缩和解压缩目录？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E9%99%A4%E6%9F%90%E4%BA%9B%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">5.2.</span> <span class="toc-text"> 如何排除某些文件或目录？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%8E%8B%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.</span> <span class="toc-text"> 如何解压到指定目录？</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-c8yrzjxg" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/c8yrzjxg/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T07:21:30.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>tar</code> 是 Linux/Unix 系统中用于创建、解压缩归档文件的工具。它常用于备份文件、打包文件夹以及解压归档文件。<code>tar</code> 支持多种压缩格式（如 <code>.gz</code>、<code>.bz2</code> 和 <code>.xz</code>），并且可以直接操作这些压缩文件。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar [选项] [参数] [文件/目录]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>选项</strong>：指定操作类型（如打包、解压缩等）和附加功能（如显示详细信息）。</li>
+<li><strong>参数</strong>：指定目标文件或目录。</li>
+<li><strong>文件/目录</strong>：操作的目标文件或目录。</li>
+</ul>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>选项</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-c</code></td>
+<td>创建归档文件（create）。</td>
+</tr>
+<tr>
+<td><code>-x</code></td>
+<td>解压归档文件（extract）。</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>指定归档文件的名称（file）。</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>显示操作过程的详细信息（verbose）。</td>
+</tr>
+<tr>
+<td><code>-z</code></td>
+<td>使用 gzip 压缩或解压（与 <code>.tar.gz</code> 或 <code>.tgz</code> 文件类型配合使用）。</td>
+</tr>
+<tr>
+<td><code>-j</code></td>
+<td>使用 bzip2 压缩或解压（与 <code>.tar.bz2</code> 文件类型配合使用）。</td>
+</tr>
+<tr>
+<td><code>-J</code></td>
+<td>使用 xz 压缩或解压（与 <code>.tar.xz</code> 文件类型配合使用）。</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>列出归档文件的内容（list）。</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>向现有的归档文件中追加内容（append）。</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>仅追加比归档文件中已有版本更新的文件（update）。</td>
+</tr>
+<tr>
+<td><code>--exclude</code></td>
+<td>排除指定的文件或目录。</td>
+</tr>
+<tr>
+<td><code>-C</code></td>
+<td>指定解压后文件存放的目录（change directory）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常用操作"><a class="markdownIt-Anchor" href="#常用操作"></a> <strong>常用操作</strong></h1>
+<h2 id="创建归档文件"><a class="markdownIt-Anchor" href="#创建归档文件"></a> <strong>创建归档文件</strong></h2>
+<h3 id="1-打包目录或文件不压缩"><a class="markdownIt-Anchor" href="#1-打包目录或文件不压缩"></a> <strong>1) 打包目录或文件（不压缩）</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf archive.tar 文件1 文件2 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -cvf backup.tar /home/user</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>/home/user</code> 目录打包为 <code>backup.tar</code> 文件。</li>
+<li><strong>选项</strong>：
+<ul>
+<li><code>-c</code>：创建归档文件。</li>
+<li><code>-v</code>：显示打包过程。</li>
+<li><code>-f</code>：指定归档文件名称。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="2-打包并使用-gzip-压缩"><a class="markdownIt-Anchor" href="#2-打包并使用-gzip-压缩"></a> <strong>2) 打包并使用 gzip 压缩</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf archive.tar.gz 文件1 文件2 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf backup.tar.gz /home/user</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>/home/user</code> 目录打包为 <code>backup.tar.gz</code> 文件（gzip 压缩）。</li>
+</ul>
+<hr />
+<h3 id="3-打包并使用-bzip2-压缩"><a class="markdownIt-Anchor" href="#3-打包并使用-bzip2-压缩"></a> <strong>3) 打包并使用 bzip2 压缩</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -jcvf archive.tar.bz2 文件1 文件2 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -jcvf backup.tar.bz2 /home/user</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>/home/user</code> 目录打包为 <code>backup.tar.bz2</code> 文件（bzip2 压缩）。</li>
+</ul>
+<hr />
+<h3 id="4-打包并使用-xz-压缩"><a class="markdownIt-Anchor" href="#4-打包并使用-xz-压缩"></a> <strong>4) 打包并使用 xz 压缩</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -Jcvf archive.tar.xz 文件1 文件2 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -Jcvf backup.tar.xz /home/user</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>/home/user</code> 目录打包为 <code>backup.tar.xz</code> 文件（xz 压缩）。</li>
+</ul>
+<hr />
+<h2 id="解压归档文件"><a class="markdownIt-Anchor" href="#解压归档文件"></a> <strong>解压归档文件</strong></h2>
+<h3 id="1-解压-tar-文件无压缩"><a class="markdownIt-Anchor" href="#1-解压-tar-文件无压缩"></a> <strong>1) 解压 <code>.tar</code> 文件（无压缩）</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf archive.tar</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf backup.tar</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：解压 <code>backup.tar</code> 文件到当前目录。</li>
+</ul>
+<hr />
+<h3 id="2-解压-targz-文件gzip-压缩"><a class="markdownIt-Anchor" href="#2-解压-targz-文件gzip-压缩"></a> <strong>2) 解压 <code>.tar.gz</code> 文件（gzip 压缩）</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf archive.tar.gz</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf backup.tar.gz</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：解压 <code>backup.tar.gz</code> 文件到当前目录。</li>
+</ul>
+<hr />
+<h3 id="3-解压-tarbz2-文件bzip2-压缩"><a class="markdownIt-Anchor" href="#3-解压-tarbz2-文件bzip2-压缩"></a> <strong>3) 解压 <code>.tar.bz2</code> 文件（bzip2 压缩）</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -jxvf archive.tar.bz2</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -jxvf backup.tar.bz2</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：解压 <code>backup.tar.bz2</code> 文件到当前目录。</li>
+</ul>
+<hr />
+<h3 id="4-解压-tarxz-文件xz-压缩"><a class="markdownIt-Anchor" href="#4-解压-tarxz-文件xz-压缩"></a> <strong>4) 解压 <code>.tar.xz</code> 文件（xz 压缩）</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -Jxvf archive.tar.xz</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -Jxvf backup.tar.xz</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：解压 <code>backup.tar.xz</code> 文件到当前目录。</li>
+</ul>
+<hr />
+<h3 id="5-解压到指定目录"><a class="markdownIt-Anchor" href="#5-解压到指定目录"></a> <strong>5) 解压到指定目录</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf archive.tar -C /目标/目录</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf backup.tar.gz -C /home/user/extracted</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：解压 <code>backup.tar.gz</code> 文件到 <code>/home/user/extracted</code> 目录。</li>
+</ul>
+<hr />
+<h2 id="列出归档文件内容"><a class="markdownIt-Anchor" href="#列出归档文件内容"></a> <strong>列出归档文件内容</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -tvf archive.tar</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -tvf backup.tar</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：列出 <code>backup.tar</code> 文件中的内容。</li>
+</ul>
+<hr />
+<h2 id="向现有归档文件中追加文件"><a class="markdownIt-Anchor" href="#向现有归档文件中追加文件"></a> <strong>向现有归档文件中追加文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -rvf archive.tar 新文件</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -rvf backup.tar newfile.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>newfile.txt</code> 追加到 <code>backup.tar</code> 文件中。</li>
+</ul>
+<hr />
+<h2 id="排除文件或目录"><a class="markdownIt-Anchor" href="#排除文件或目录"></a> <strong>排除文件或目录</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude=文件或目录 -zcvf archive.tar.gz 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude=/home/user/temp -zcvf backup.tar.gz /home/user</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：打包 <code>/home/user</code> 目录时，排除其中的 <code>temp</code> 子目录。</li>
+</ul>
+<hr />
+<h2 id="检查归档文件完整性"><a class="markdownIt-Anchor" href="#检查归档文件完整性"></a> <strong>检查归档文件完整性</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -tvf archive.tar</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：列出归档文件内容，检查文件是否被正确打包。</li>
+</ul>
+<hr />
+<h2 id="解压部分文件"><a class="markdownIt-Anchor" href="#解压部分文件"></a> <strong>解压部分文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf archive.tar 文件1 文件2</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf backup.tar file1.txt file2.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：从 <code>backup.tar</code> 中仅解压 <code>file1.txt</code> 和 <code>file2.txt</code>。</li>
+</ul>
+<hr />
+<h2 id="压缩目录为-targz-的快捷方式"><a class="markdownIt-Anchor" href="#压缩目录为-targz-的快捷方式"></a> <strong>压缩目录为 <code>.tar.gz</code> 的快捷方式</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -czvf archive.tar.gz 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -czvf mybackup.tar.gz /var/log</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>/var/log</code> 目录压缩为 <code>mybackup.tar.gz</code>。</li>
+</ul>
+<hr />
+<h1 id="常用示例总结"><a class="markdownIt-Anchor" href="#常用示例总结"></a> <strong>常用示例总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打包目录为 <code>.tar</code> 文件</td>
+<td><code>tar -cvf archive.tar 目录/</code></td>
+</tr>
+<tr>
+<td>打包并 gzip 压缩为 <code>.tar.gz</code></td>
+<td><code>tar -zcvf archive.tar.gz 目录/</code></td>
+</tr>
+<tr>
+<td>打包并 bzip2 压缩为 <code>.tar.bz2</code></td>
+<td><code>tar -jcvf archive.tar.bz2 目录/</code></td>
+</tr>
+<tr>
+<td>打包并 xz 压缩为 <code>.tar.xz</code></td>
+<td><code>tar -Jcvf archive.tar.xz 目录/</code></td>
+</tr>
+<tr>
+<td>解压 <code>.tar</code> 文件</td>
+<td><code>tar -xvf archive.tar</code></td>
+</tr>
+<tr>
+<td>解压 <code>.tar.gz</code> 文件</td>
+<td><code>tar -zxvf archive.tar.gz</code></td>
+</tr>
+<tr>
+<td>解压 <code>.tar.bz2</code> 文件</td>
+<td><code>tar -jxvf archive.tar.bz2</code></td>
+</tr>
+<tr>
+<td>解压 <code>.tar.xz</code> 文件</td>
+<td><code>tar -Jxvf archive.tar.xz</code></td>
+</tr>
+<tr>
+<td>解压到指定目录</td>
+<td><code>tar -xvf archive.tar.gz -C /目标/目录</code></td>
+</tr>
+<tr>
+<td>列出归档文件内容</td>
+<td><code>tar -tvf archive.tar</code></td>
+</tr>
+<tr>
+<td>向归档文件追加文件</td>
+<td><code>tar -rvf archive.tar 新文件</code></td>
+</tr>
+<tr>
+<td>排除某些文件或目录</td>
+<td><code>tar --exclude=文件 -zcvf archive.tar.gz 目录/</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常见问题"><a class="markdownIt-Anchor" href="#常见问题"></a> <strong>常见问题</strong></h1>
+<h2 id="如何快速压缩和解压缩目录"><a class="markdownIt-Anchor" href="#如何快速压缩和解压缩目录"></a> <strong>如何快速压缩和解压缩目录？</strong></h2>
+<ul>
+<li><strong>压缩目录</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf archive.tar.gz 目录/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>解压目录</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf archive.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="如何排除某些文件或目录"><a class="markdownIt-Anchor" href="#如何排除某些文件或目录"></a> <strong>如何排除某些文件或目录？</strong></h2>
+<ul>
+<li>使用 <code>--exclude</code> 选项：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar --exclude=/path/to/exclude -zcvf archive.tar.gz 目录/</span><br></pre></td></tr></table></figure>
+<h2 id="如何解压到指定目录"><a class="markdownIt-Anchor" href="#如何解压到指定目录"></a> <strong>如何解压到指定目录？</strong></h2>
+<ul>
+<li>使用 <code>-C</code> 选项：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf archive.tar.gz -C /目标/目录</span><br></pre></td></tr></table></figure>
+<hr />
+<p>通过熟练使用 <code>tar</code> 命令，可以高效地进行文件和目录的打包和压缩操作，是 Linux 系统中备份和传输文件的重要工具！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/c8yrzjxg/">https://luoying.netlify.app/2024/10/09/c8yrzjxg/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---tar</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件1.jpg" data-sizes="auto" alt="Linux命令详解---ssh" class="lazyload">
+          
+        
+        <a href="/2024/10/09/blqybpqn/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---ssh
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件43.jpg" data-sizes="auto" alt="Linux命令详解---ps" class="lazyload">
+        
+      
+      <a href="/2024/10/09/wf2j1m3e/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---ps
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> 创建归档文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%93%E5%8C%85%E7%9B%AE%E5%BD%95%E6%88%96%E6%96%87%E4%BB%B6%E4%B8%8D%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 1) 打包目录或文件（不压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-gzip-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 2) 打包并使用 gzip 压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-bzip2-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.3.</span> <span class="toc-text"> 3) 打包并使用 bzip2 压缩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%89%93%E5%8C%85%E5%B9%B6%E4%BD%BF%E7%94%A8-xz-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.1.4.</span> <span class="toc-text"> 4) 打包并使用 xz 压缩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text"> 解压归档文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A7%A3%E5%8E%8B-tar-%E6%96%87%E4%BB%B6%E6%97%A0%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 1) 解压 .tar 文件（无压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%A3%E5%8E%8B-targz-%E6%96%87%E4%BB%B6gzip-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 2) 解压 .tar.gz 文件（gzip 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A7%A3%E5%8E%8B-tarbz2-%E6%96%87%E4%BB%B6bzip2-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.3.</span> <span class="toc-text"> 3) 解压 .tar.bz2 文件（bzip2 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%A7%A3%E5%8E%8B-tarxz-%E6%96%87%E4%BB%B6xz-%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 4) 解压 .tar.xz 文件（xz 压缩）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A7%A3%E5%8E%8B%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">3.2.5.</span> <span class="toc-text"> 5) 解压到指定目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-number">3.3.</span> <span class="toc-text"> 列出归档文件内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E7%8E%B0%E6%9C%89%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E4%B8%AD%E8%BF%BD%E5%8A%A0%E6%96%87%E4%BB%B6"><span class="toc-number">3.4.</span> <span class="toc-text"> 向现有归档文件中追加文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.5.</span> <span class="toc-text"> 排除文件或目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%BD%92%E6%A1%A3%E6%96%87%E4%BB%B6%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="toc-number">3.6.</span> <span class="toc-text"> 检查归档文件完整性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E9%83%A8%E5%88%86%E6%96%87%E4%BB%B6"><span class="toc-number">3.7.</span> <span class="toc-text"> 解压部分文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E7%9B%AE%E5%BD%95%E4%B8%BA-targz-%E7%9A%84%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="toc-number">3.8.</span> <span class="toc-text"> 压缩目录为 .tar.gz 的快捷方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text"> 常用示例总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text"> 常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%8E%8B%E7%BC%A9%E5%92%8C%E8%A7%A3%E5%8E%8B%E7%BC%A9%E7%9B%AE%E5%BD%95"><span class="toc-number">5.1.</span> <span class="toc-text"> 如何快速压缩和解压缩目录？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E9%99%A4%E6%9F%90%E4%BA%9B%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">5.2.</span> <span class="toc-text"> 如何排除某些文件或目录？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%8E%8B%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.</span> <span class="toc-text"> 如何解压到指定目录？</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

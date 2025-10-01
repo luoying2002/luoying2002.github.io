@@ -1,0 +1,732 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    数据结构与算法之-----图（代码实现） |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 写在前面的话：数据结构与算法。    对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；   对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～     图的三大搜索算法构建 上一章我们介绍了图的拓扑排序以及拓扑序列，本章我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法之-----图（代码实现）">
+<meta property="og:url" content="https://luoying.netlify.app/2021/08/22/58nr6yi6/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 写在前面的话：数据结构与算法。    对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；   对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～     图的三大搜索算法构建 上一章我们介绍了图的拓扑排序以及拓扑序列，本章我">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-22T15:51:26.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.944Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="数据结构与算法之-----图（代码实现）">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">数据结构与算法之-----图（代码实现）</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E4%B8%89%E5%A4%A7%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E6%9E%84%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text"> 图的三大搜索算法构建</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-58nr6yi6" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/08/22/58nr6yi6/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-08-22T15:51:26.000Z" itemprop="datePublished">2021-08-22</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" data-aos="zoom-in">数据结构与算法</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>写在前面的话：数据结构与算法。</p>
+<blockquote>
+<ol>
+<li>
+<p>对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；</p>
+</li>
+<li>
+<p>对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～</p>
+</li>
+</ol>
+</blockquote>
+<h1 id="图的三大搜索算法构建"><a class="markdownIt-Anchor" href="#图的三大搜索算法构建"></a> 图的三大搜索算法构建</h1>
+<p>上一章我们介绍了图的<code>拓扑排序以及拓扑序列</code>，本章我们来了解如何用代码去实现图的三大算法：</p>
+<blockquote>
+<ol>
+<li>
+<p>广度优先搜索算法</p>
+</li>
+<li>
+<p>深度优先搜索算法</p>
+</li>
+<li>
+<p>拓扑排序算法</p>
+</li>
+</ol>
+</blockquote>
+<p>我们先新建一个<code>Graph.h</code>，本章依然从构建一个完整的图的角度来编写代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 作者：易果啥笔</span></span><br><span class="line"><span class="comment"> * 时间：2021.8.22</span></span><br><span class="line"><span class="comment"> * 内容：图的头文件</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> STACK_GRAPH_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STACK_GRAPH_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> hca(x) (fTime(x)) </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Stack.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Queue.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> VStatus = <span class="keyword">enum</span> &#123; UNDISCOVERED, DISCOVERED, VISITED &#125;; <span class="comment">//顶点状态</span></span><br><span class="line"><span class="keyword">using</span> EType = <span class="keyword">enum</span> &#123; UNDETERMINED, TREE, CROSS, FORWARD, BACKWARD &#125;; <span class="comment">//边在遍历树中所属的类型</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//顶点类型、边类型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span> &#123; <span class="comment">//图Graph模板类</span></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123; <span class="comment">//所有顶点、边的辅助信息复位</span></span><br><span class="line">               <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++ ) &#123; <span class="comment">//所有顶点的</span></span><br><span class="line">                      <span class="built_in">status</span> ( i ) = UNDISCOVERED; <span class="built_in">dTime</span> ( i ) = <span class="built_in">fTime</span> ( i ) = <span class="number">-1</span>; <span class="comment">//状态，时间标签</span></span><br><span class="line">                      <span class="built_in">parent</span> ( i ) = <span class="number">-1</span>; <span class="built_in">priority</span> ( i ) = INT_MAX; <span class="comment">//（在遍历树中的）父节点，优先级数</span></span><br><span class="line">                      <span class="keyword">for</span> ( <span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++ ) <span class="comment">//所有边的</span></span><br><span class="line">                             <span class="keyword">if</span> ( <span class="built_in">exists</span> ( i, j ) ) <span class="built_in">type</span> ( i, j ) = UNDETERMINED; <span class="comment">//类型</span></span><br><span class="line">                   &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">BFS</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>&amp;)</span></span>;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">DFS</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>&amp;)</span></span>;</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">TSort</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>&amp;,Stack&lt;Tv&gt;*)</span></span>;</span><br><span class="line">     <span class="keyword">public</span>:</span><br><span class="line">        <span class="comment">// 顶点</span></span><br><span class="line">        <span class="type">int</span> n; <span class="comment">//顶点总数</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">insert</span> <span class="params">( Tv <span class="type">const</span>&amp; )</span> </span>= <span class="number">0</span>; <span class="comment">//插入顶点，返回编号</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Tv <span class="title">remove</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//删除顶点及其关联边，返回该顶点信息</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Tv&amp; <span class="title">vertex</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的数据（该顶点的确存在）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">inDegree</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的入度（该顶点的确存在）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">outDegree</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的出度（该顶点的确存在）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">firstNbr</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的首个邻接顶点</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">nextNbr</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的（相对于顶点j的）下一邻接顶点</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> VStatus&amp; <span class="title">status</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的状态</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">dTime</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的时间标签dTime</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">fTime</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v的时间标签fTime</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">parent</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v在遍历树中的父亲</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">priority</span> <span class="params">( <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//顶点v在遍历树中的优先级数</span></span><br><span class="line">        <span class="comment">// 边：这里约定，无向边均统一转化为方向互逆的一对有向边，从而将无向图视作有向图的特例</span></span><br><span class="line">        <span class="type">int</span> e; <span class="comment">//边总数</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">exists</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//边(v, u)是否存在</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">insert</span> <span class="params">( Te <span class="type">const</span>&amp;, <span class="type">int</span>, <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//在顶点v和u之间插入权重为w的边e</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Te <span class="title">remove</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//删除顶点v和u之间的边e，返回该边信息</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> EType &amp; <span class="title">type</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//边(v, u)的类型</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Te&amp; <span class="title">edge</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//边(v, u)的数据（该边的确存在）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">weight</span> <span class="params">( <span class="type">int</span>, <span class="type">int</span> )</span> </span>= <span class="number">0</span>; <span class="comment">//边(v, u)的权重</span></span><br><span class="line">        <span class="comment">// 算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">bfs</span> <span class="params">( <span class="type">int</span> )</span></span>; <span class="comment">//广度优先搜索算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">dfs</span> <span class="params">( <span class="type">int</span> )</span></span>; <span class="comment">//深度优先搜索算法 </span></span><br><span class="line">        <span class="function">Stack&lt;Tv&gt;* <span class="title">tSort</span> <span class="params">( <span class="type">int</span> )</span> <span class="comment">//拓扑排序算法</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"> &#125;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//广度优先搜索BFS算法（全图）</span></span><br><span class="line"><span class="type">void</span> Graph&lt;Tv, Te&gt;::<span class="built_in">bfs</span> ( <span class="type">int</span> s ) &#123; <span class="comment">//assert: 0 &lt;= s &lt; n</span></span><br><span class="line">        <span class="built_in">reset</span>(); <span class="type">int</span> clock = <span class="number">0</span>; <span class="type">int</span> v = s; <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">do</span> <span class="comment">//逐一检查所有顶点</span></span><br><span class="line">               <span class="keyword">if</span> ( UNDISCOVERED == <span class="built_in">status</span> ( v ) ) <span class="comment">//一旦遇到尚未发现的顶点</span></span><br><span class="line">                  <span class="built_in">BFS</span> ( v, clock ); <span class="comment">//即从该顶点出发启动一次BFS</span></span><br><span class="line">        <span class="keyword">while</span> ( s != ( v = ( ++v % n ) ) ); <span class="comment">//按序号检查，故不漏不重</span></span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//广度优先搜索BFS算法（单个连通域）</span></span><br><span class="line"><span class="type">void</span> Graph&lt;Tv, Te&gt;::<span class="built_in">BFS</span> ( <span class="type">int</span> v, <span class="type">int</span>&amp; clock ) &#123; <span class="comment">//assert: 0 &lt;= v &lt; n</span></span><br><span class="line">     Queue&lt;<span class="type">int</span>&gt; Q; <span class="comment">//引入辅助队列</span></span><br><span class="line">     <span class="built_in">status</span> ( v ) = DISCOVERED; Q.<span class="built_in">enqueue</span> ( v ); <span class="comment">//初始化起点</span></span><br><span class="line">     <span class="keyword">while</span> ( !Q.<span class="built_in">empty</span>() ) &#123; <span class="comment">//在Q变空之前，不断</span></span><br><span class="line">           <span class="type">int</span> v = Q.<span class="built_in">dequeue</span>(); <span class="built_in">dTime</span> ( v ) = ++clock; <span class="comment">//取出队首顶点v</span></span><br><span class="line">           <span class="keyword">for</span> ( <span class="type">int</span> u = <span class="built_in">firstNbr</span> ( v ); <span class="number">-1</span> &lt; u; u = <span class="built_in">nextNbr</span> ( v, u ) ) <span class="comment">//枚举v的所有邻居u</span></span><br><span class="line">                 <span class="keyword">if</span> ( UNDISCOVERED == <span class="built_in">status</span> ( u ) ) &#123; <span class="comment">//若u尚未被发现，则</span></span><br><span class="line">                      <span class="built_in">status</span> ( u ) = DISCOVERED; Q.<span class="built_in">enqueue</span> ( u ); <span class="comment">//发现该顶点</span></span><br><span class="line">                      <span class="built_in">type</span> ( v, u ) = TREE; <span class="built_in">parent</span> ( u ) = v; <span class="comment">//引入树边拓展支撑树</span></span><br><span class="line">                 &#125; <span class="keyword">else</span> &#123; <span class="comment">//若u已被发现，或者甚至已访问完毕，则</span></span><br><span class="line">                      <span class="built_in">type</span> ( v, u ) = CROSS; <span class="comment">//将(v, u)归类于跨边</span></span><br><span class="line">                 &#125;</span><br><span class="line">                 <span class="built_in">status</span> ( v ) = VISITED; <span class="comment">//至此，当前顶点访问完毕</span></span><br><span class="line">           &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//深度优先搜索DFS算法（全图）</span></span><br><span class="line"><span class="type">void</span> Graph&lt;Tv, Te&gt;::<span class="built_in">dfs</span> ( <span class="type">int</span> s ) &#123; <span class="comment">//assert: 0 &lt;= s &lt; n</span></span><br><span class="line">        <span class="built_in">reset</span>(); <span class="type">int</span> clock = <span class="number">0</span>; <span class="type">int</span> v = s; <span class="comment">//初始化</span></span><br><span class="line">        <span class="keyword">do</span> <span class="comment">//逐一检查所有顶点</span></span><br><span class="line">               <span class="keyword">if</span> ( UNDISCOVERED == <span class="built_in">status</span> ( v ) ) <span class="comment">//一旦遇到尚未发现的顶点</span></span><br><span class="line">                  <span class="built_in">DFS</span> ( v, clock ); <span class="comment">//即从该顶点出发启动一次DFS</span></span><br><span class="line">        <span class="keyword">while</span> ( s != ( v = ( ++v % n ) ) ); <span class="comment">//按序号检查，故不漏不重</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//深度优先搜索DFS算法（单个连通域）</span></span><br><span class="line"><span class="type">void</span> Graph&lt;Tv, Te&gt;::<span class="built_in">DFS</span> ( <span class="type">int</span> v, <span class="type">int</span>&amp; clock ) &#123; <span class="comment">//assert: 0 &lt;= v &lt; n</span></span><br><span class="line">        <span class="built_in">dTime</span> ( v ) = ++clock; <span class="built_in">status</span> ( v ) = DISCOVERED; <span class="comment">//发现当前顶点v</span></span><br><span class="line">        <span class="keyword">for</span> ( <span class="type">int</span> u = <span class="built_in">firstNbr</span> ( v ); <span class="number">-1</span> &lt; u; u = <span class="built_in">nextNbr</span> ( v, u ) ) <span class="comment">//枚举v的所有邻居u</span></span><br><span class="line">               <span class="keyword">switch</span> ( <span class="built_in">status</span> ( u ) ) &#123; <span class="comment">//并视其状态分别处理</span></span><br><span class="line">                  <span class="keyword">case</span> UNDISCOVERED: <span class="comment">//u尚未发现，意味着支撑树可在此拓展</span></span><br><span class="line">                         <span class="built_in">type</span> ( v, u ) = TREE; <span class="built_in">parent</span> ( u ) = v; <span class="built_in">DFS</span> ( u, clock ); <span class="keyword">break</span>;</span><br><span class="line">                      <span class="keyword">case</span> DISCOVERED: <span class="comment">//u已被发现但尚未访问完毕，应属被后代指向的祖先</span></span><br><span class="line">                         <span class="built_in">type</span> ( v, u ) = BACKWARD; <span class="keyword">break</span>;</span><br><span class="line">                      <span class="keyword">default</span>: <span class="comment">//u已访问完毕（VISITED，有向图），则视承袭关系分为前向边或跨边</span></span><br><span class="line">                         <span class="built_in">type</span> ( v, u ) = ( <span class="built_in">dTime</span> ( v ) &lt; <span class="built_in">dTime</span> ( u ) ) ? FORWARD : CROSS; <span class="keyword">break</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">        <span class="built_in">status</span> ( v ) = VISITED; <span class="built_in">fTime</span> ( v ) = ++clock; <span class="comment">//至此，当前顶点v方告访问完毕</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//基于DFS的拓扑排序算法</span></span><br><span class="line">Stack&lt;Tv&gt;* Graph&lt;Tv, Te&gt;::<span class="built_in">tSort</span> ( <span class="type">int</span> s ) &#123; <span class="comment">//assert: 0 &lt;= s &lt; n</span></span><br><span class="line">        <span class="built_in">reset</span>(); <span class="type">int</span> clock = <span class="number">0</span>; <span class="type">int</span> v = s;</span><br><span class="line">        Stack&lt;Tv&gt;* S = <span class="keyword">new</span> Stack&lt;Tv&gt;; <span class="comment">//用栈记录排序顶点</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">               <span class="keyword">if</span> ( UNDISCOVERED == <span class="built_in">status</span> ( v ) )</span><br><span class="line">                      <span class="keyword">if</span> ( !<span class="built_in">TSort</span> ( v, clock, S ) ) &#123; <span class="comment">//clock并非必需</span></span><br><span class="line">                         <span class="keyword">while</span> ( !S-&gt;<span class="built_in">empty</span>() ) <span class="comment">//任一连通域（亦即整图）非DAG</span></span><br><span class="line">                                S-&gt;<span class="built_in">pop</span>(); <span class="keyword">break</span>; <span class="comment">//则不必继续计算，故直接返回</span></span><br><span class="line">                      &#125;</span><br><span class="line">            &#125; <span class="keyword">while</span> ( s != ( v = ( ++v % n ) ) );</span><br><span class="line">        <span class="keyword">return</span> S; <span class="comment">//若输入为DAG，则S内各顶点自顶向底排序；否则（不存在拓扑排序），S空</span></span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//基于DFS的拓扑排序算法（单趟）</span></span><br><span class="line"><span class="type">bool</span> Graph&lt;Tv, Te&gt;::<span class="built_in">TSort</span> ( <span class="type">int</span> v, <span class="type">int</span>&amp; clock, Stack&lt;Tv&gt;* S ) &#123; <span class="comment">//assert: 0 &lt;= v &lt; n</span></span><br><span class="line">        <span class="built_in">dTime</span> ( v ) = ++clock; <span class="built_in">status</span> ( v ) = DISCOVERED; <span class="comment">//发现顶点v</span></span><br><span class="line">        <span class="keyword">for</span> ( <span class="type">int</span> u = <span class="built_in">firstNbr</span> ( v ); <span class="number">-1</span> &lt; u; u = <span class="built_in">nextNbr</span> ( v, u ) ) <span class="comment">//枚举v的所有邻居u</span></span><br><span class="line">               <span class="keyword">switch</span> ( <span class="built_in">status</span> ( u ) ) &#123; <span class="comment">//并视u的状态分别处理</span></span><br><span class="line">                  <span class="keyword">case</span> UNDISCOVERED:</span><br><span class="line">                         <span class="built_in">parent</span> ( u ) = v; <span class="built_in">type</span> ( v, u ) = TREE;</span><br><span class="line">                         <span class="keyword">if</span> ( !<span class="built_in">TSort</span> ( u, clock, S ) ) <span class="comment">//从顶点u处出发深入搜索</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//若u及其后代不能拓扑排序（则全图亦必如此），故返回并报告</span></span><br><span class="line">                         <span class="keyword">break</span>;</span><br><span class="line">                      <span class="keyword">case</span> DISCOVERED:</span><br><span class="line">                         <span class="built_in">type</span> ( v, u ) = BACKWARD; <span class="comment">//一旦发现后向边（非DAG），则</span></span><br><span class="line">                         <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//不必深入，故返回并报告</span></span><br><span class="line">                      <span class="keyword">default</span>: <span class="comment">//VISITED (digraphs only)</span></span><br><span class="line">                         <span class="built_in">type</span> ( v, u ) = ( <span class="built_in">dTime</span> ( v ) &lt; <span class="built_in">dTime</span> ( u ) ) ? FORWARD : CROSS;</span><br><span class="line">                         <span class="keyword">break</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">        <span class="built_in">status</span> ( v ) = VISITED; S-&gt;<span class="built_in">push</span> ( <span class="built_in">vertex</span> ( v ) ); <span class="comment">//顶点被标记为VISITED时，随即入栈</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">//v及其后代可以拓扑排序</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">//STACK_GRAPH_H</span></span></span><br></pre></td></tr></table></figure>
+<p>代码中对各个算法都有比较详细的注释，请读者细细体会三大算法的实现。</p>
+<p>前面说过，图的结构为：<code>V和E集合</code>，其中，<code>V</code>是顶点，<code>E</code>是边。简单来说，可以用一个<code>一维数组</code>存放图中所有顶点数据；用一个<code>二维数组</code>存放顶点间关系（边或弧）的数据，这个二维数组称为<code>邻接矩阵</code>。</p>
+<p>下面我们通过邻接矩阵来构建一个完整的图结构，为了能够与三大算法联系起来，我们在下面的<code>GraphMatrix.h</code>文件中<code>include</code>上面的<code>Graph.h</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 作者：易果啥笔</span></span><br><span class="line"><span class="comment"> * 时间：2021.8.22</span></span><br><span class="line"><span class="comment"> * 内容：邻接矩阵的头文件</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> STACK_GRAPHMATRIX_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> STACK_GRAPHMATRIX_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Vector.h&quot;</span> <span class="comment">//引入向量</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Graph.h&quot;</span> <span class="comment">//引入图ADT</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv&gt; <span class="keyword">struct</span> <span class="title class_">Vertex</span> &#123; <span class="comment">//顶点对象（为简化起见，并未严格封装）</span></span><br><span class="line">        Tv data; <span class="type">int</span> inDegree, outDegree; VStatus status; <span class="comment">//数据、出入度数、状态</span></span><br><span class="line">        <span class="type">int</span> dTime, fTime; <span class="comment">//时间标签</span></span><br><span class="line">        <span class="type">int</span> parent; <span class="type">int</span> priority; <span class="comment">//在遍历树中的父节点、优先级数</span></span><br><span class="line">        <span class="built_in">Vertex</span> ( Tv <span class="type">const</span>&amp; d = ( Tv ) <span class="number">0</span> ) : <span class="comment">//构造新顶点</span></span><br><span class="line">           <span class="built_in">data</span> ( d ), <span class="built_in">inDegree</span> ( <span class="number">0</span> ), <span class="built_in">outDegree</span> ( <span class="number">0</span> ), <span class="built_in">status</span> ( UNDISCOVERED ),</span><br><span class="line">           <span class="built_in">dTime</span> ( <span class="number">-1</span> ), <span class="built_in">fTime</span> ( <span class="number">-1</span> ), <span class="built_in">parent</span> ( <span class="number">-1</span> ), <span class="built_in">priority</span> ( INT_MAX ) &#123;&#125; <span class="comment">//暂不考虑权重溢出</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Te&gt; <span class="keyword">struct</span> <span class="title class_">Edge</span> &#123; <span class="comment">//边对象（为简化起见，并未严格封装）</span></span><br><span class="line">        Te data; <span class="type">int</span> weight; EType type; <span class="comment">//数据、权重、类型</span></span><br><span class="line">        <span class="built_in">Edge</span> ( Te <span class="type">const</span>&amp; d, <span class="type">int</span> w ) : <span class="built_in">data</span> ( d ), <span class="built_in">weight</span> ( w ), <span class="built_in">type</span> ( UNDETERMINED ) &#123;&#125; <span class="comment">//构造</span></span><br><span class="line">     &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tv, <span class="keyword">typename</span> Te&gt; <span class="comment">//顶点类型、边类型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GraphMatrix</span> : <span class="keyword">public</span> Graph&lt;Tv, Te&gt; &#123; <span class="comment">//基于向量，以邻接矩阵形式实现的图</span></span><br><span class="line">     <span class="keyword">private</span>:</span><br><span class="line">        Vector&lt; Vertex&lt; Tv &gt; &gt; V; <span class="comment">//顶点集（向量）</span></span><br><span class="line">        Vector&lt; Vector&lt; Edge&lt; Te &gt; * &gt; &gt; E; <span class="comment">//边集（邻接矩阵）</span></span><br><span class="line">     <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">GraphMatrix</span>() &#123; n = e = <span class="number">0</span>; &#125; <span class="comment">//构造</span></span><br><span class="line">        ~<span class="built_in">GraphMatrix</span>() &#123; <span class="comment">//析构</span></span><br><span class="line">               <span class="keyword">for</span> ( <span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++ ) <span class="comment">//所有动态创建的</span></span><br><span class="line">                      <span class="keyword">for</span> ( <span class="type">int</span> k = <span class="number">0</span>; k &lt; n; k++ ) <span class="comment">//边记录</span></span><br><span class="line">                         <span class="keyword">delete</span> E[j][k]; <span class="comment">//逐条清除</span></span><br><span class="line">            &#125;</span><br><span class="line">     <span class="comment">// 顶点的基本操作：查询第i个顶点（0 &lt;= i &lt; n）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Tv&amp; <span class="title">vertex</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].data; &#125; <span class="comment">//数据</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">inDegree</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].inDegree; &#125; <span class="comment">//入度</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">outDegree</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].outDegree; &#125; <span class="comment">//出度</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">firstNbr</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">nextNbr</span> ( i, n ); &#125; <span class="comment">//首个邻接顶点</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">nextNbr</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> <span class="comment">//相对于顶点j的下一邻接顶点（改用邻接表可提高效率）</span></span></span><br><span class="line"><span class="function">        </span>&#123; <span class="keyword">while</span> ( ( <span class="number">-1</span> &lt; j ) &amp;&amp; ( !<span class="built_in">exists</span> ( i, --j ) ) ); <span class="keyword">return</span> j; &#125; <span class="comment">//逆向线性试探</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> VStatus&amp; <span class="title">status</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].status; &#125; <span class="comment">//状态</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">dTime</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].dTime; &#125; <span class="comment">//时间标签dTime</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">fTime</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].fTime; &#125; <span class="comment">//时间标签fTime</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">parent</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].parent; &#125; <span class="comment">//在遍历树中的父亲</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">priority</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="keyword">return</span> V[i].priority; &#125; <span class="comment">//在遍历树中的优先级数</span></span><br><span class="line">     <span class="comment">// 顶点的动态操作</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">insert</span> <span class="params">( Tv <span class="type">const</span>&amp; vertex )</span> </span>&#123; <span class="comment">//插入顶点，返回编号</span></span><br><span class="line">               <span class="keyword">for</span> ( <span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++ ) E[j].<span class="built_in">insert</span> ( <span class="literal">NULL</span> ); n++; <span class="comment">//各顶点预留一条潜在的关联边</span></span><br><span class="line">               E.<span class="built_in">insert</span> ( Vector&lt;Edge&lt;Te&gt;*&gt; ( n, n, ( Edge&lt;Te&gt;* ) <span class="literal">NULL</span> ) ); <span class="comment">//创建新顶点对应的边向量</span></span><br><span class="line">               <span class="keyword">return</span> V.<span class="built_in">insert</span> ( <span class="built_in">Vertex</span>&lt;Tv&gt; ( vertex ) ); <span class="comment">//顶点向量增加一个顶点</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Tv <span class="title">remove</span> <span class="params">( <span class="type">int</span> i )</span> </span>&#123; <span class="comment">//删除第i个顶点及其关联边（0 &lt;= i &lt; n）</span></span><br><span class="line">               <span class="keyword">for</span> ( <span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++ ) <span class="comment">//所有出边</span></span><br><span class="line">                      <span class="keyword">if</span> ( <span class="built_in">exists</span> ( i, j ) ) &#123; <span class="keyword">delete</span> E[i][j]; V[j].inDegree--; e--; &#125; <span class="comment">//逐条删除</span></span><br><span class="line">               E.<span class="built_in">remove</span> ( i ); n--; <span class="comment">//删除第i行</span></span><br><span class="line">               Tv vBak = <span class="built_in">vertex</span> ( i ); V.<span class="built_in">remove</span> ( i ); <span class="comment">//删除顶点i</span></span><br><span class="line">               <span class="keyword">for</span> ( <span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++ ) <span class="comment">//所有入边</span></span><br><span class="line">                      <span class="keyword">if</span> ( Edge&lt;Te&gt; * x = E[j].<span class="built_in">remove</span> ( i ) ) &#123; <span class="keyword">delete</span> x; V[j].outDegree--; e--; &#125; <span class="comment">//逐条删除</span></span><br><span class="line">               <span class="keyword">return</span> vBak; <span class="comment">//返回被删除顶点的信息</span></span><br><span class="line">            &#125;</span><br><span class="line">     <span class="comment">// 边的确认操作</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">exists</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> <span class="comment">//边(i, j)是否存在</span></span></span><br><span class="line"><span class="function">        </span>&#123; <span class="keyword">return</span> ( <span class="number">0</span> &lt;= i ) &amp;&amp; ( i &lt; n ) &amp;&amp; ( <span class="number">0</span> &lt;= j ) &amp;&amp; ( j &lt; n ) &amp;&amp; E[i][j] != <span class="literal">NULL</span>; &#125;</span><br><span class="line">     <span class="comment">// 边的基本操作：查询顶点i与j之间的联边（0 &lt;= i, j &lt; n且exists(i, j)）</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> EType &amp; <span class="title">type</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> </span>&#123; <span class="keyword">return</span> E[i][j]-&gt;type; &#125; <span class="comment">//边(i, j)的类型</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Te&amp; <span class="title">edge</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> </span>&#123; <span class="keyword">return</span> E[i][j]-&gt;data; &#125; <span class="comment">//边(i, j)的数据</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">int</span>&amp; <span class="title">weight</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> </span>&#123; <span class="keyword">return</span> E[i][j]-&gt;weight; &#125; <span class="comment">//边(i, j)的权重</span></span><br><span class="line">     <span class="comment">// 边的动态操作</span></span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">insert</span> <span class="params">( Te <span class="type">const</span>&amp; edge, <span class="type">int</span> w, <span class="type">int</span> i, <span class="type">int</span> j )</span> </span>&#123; <span class="comment">//插入权重为w的边e = (i, j)</span></span><br><span class="line">               <span class="keyword">if</span> ( <span class="built_in">exists</span> ( i, j ) ) <span class="keyword">return</span>; <span class="comment">//确保该边尚不存在</span></span><br><span class="line">               E[i][j] = <span class="keyword">new</span> <span class="built_in">Edge</span>&lt;Te&gt; ( edge, w ); <span class="comment">//创建新边</span></span><br><span class="line">               e++; V[i].outDegree++; V[j].inDegree++; <span class="comment">//更新边计数与关联顶点的度数</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> Te <span class="title">remove</span> <span class="params">( <span class="type">int</span> i, <span class="type">int</span> j )</span> </span>&#123; <span class="comment">//删除顶点i和j之间的联边（exists(i, j)）</span></span><br><span class="line">               Te eBak = <span class="built_in">edge</span> ( i, j ); <span class="keyword">delete</span> E[i][j]; E[i][j] = <span class="literal">NULL</span>; <span class="comment">//备份后删除边记录</span></span><br><span class="line">               e--; V[i].outDegree--; V[j].inDegree--; <span class="comment">//更新边计数与关联顶点的度数</span></span><br><span class="line">               <span class="keyword">return</span> eBak; <span class="comment">//返回被删除边的信息</span></span><br><span class="line">            &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">//STACK_GRAPHMATRIX_H</span></span></span><br></pre></td></tr></table></figure>
+<p>至此，一个完整的<code>图结构</code>就构建完毕了。</p>
+<p>图作为数学领域与计算机领域交汇的内容，不论是在数学领域，还是在计算机领域，都有着非常多的应用，这些应用不仅推动了数学和计算机的发展，更是体现着人类的独高智慧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/08/22/58nr6yi6/">https://luoying.netlify.app/2021/08/22/58nr6yi6/</a></p>
+    <p><strong>本文标题：</strong>数据结构与算法之-----图（代码实现）</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件39.jpg" data-sizes="auto" alt="Java连接MySQL数据库" class="lazyload">
+          
+        
+        <a href="/2021/08/24/j8s0eiwy/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Java连接MySQL数据库
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件47.jpg" data-sizes="auto" alt="数据结构与算法之-----图（拓扑排序）" class="lazyload">
+        
+      
+      <a href="/2021/08/22/hpat9fh6/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          数据结构与算法之-----图（拓扑排序）
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E4%B8%89%E5%A4%A7%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%E6%9E%84%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text"> 图的三大搜索算法构建</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

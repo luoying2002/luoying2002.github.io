@@ -1,0 +1,1176 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Enformer：通过整合长程相互作用从序列中有效预测基因表达 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="文章链接  Avsec, Ž., Agarwal, V., Visentin, D., Ledsam, J. R., Grabska-Barwinska, A., Taylor, K. R., Assael, Y., Jumper, J., Kohli, P., &amp; Kelley, D. R. (2021). Effective gene expression prediction fr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Enformer：通过整合长程相互作用从序列中有效预测基因表达">
+<meta property="og:url" content="https://luoying.netlify.app/2024/11/26/906k2592/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="文章链接  Avsec, Ž., Agarwal, V., Visentin, D., Ledsam, J. R., Grabska-Barwinska, A., Taylor, K. R., Assael, Y., Jumper, J., Kohli, P., &amp; Kelley, D. R. (2021). Effective gene expression prediction fr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/banner.webp">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212153414424.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212153504435.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212233856817.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212233945214.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212234057560.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212235659534.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212235748414.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241212235902773.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213000110438.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213000145412.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213005757016.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213005824711.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213005929510.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213005951132.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010020755.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010050142.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010123603.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010205858.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010222558.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241213010242362.png">
+<meta property="article:published_time" content="2024-11-26T13:44:35.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.430Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/banner.webp">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Enformer：通过整合长程相互作用从序列中有效预测基因表达">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Enformer：通过整合长程相互作用从序列中有效预测基因表达</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5"><span class="toc-number">1.</span> <span class="toc-text"> 文章链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text"> 摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text"> 创新点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text"> 主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%89%8D%E9%A1%BB%E7%9F%A5"><span class="toc-number">5.1.</span> <span class="toc-text"> 读前须知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">5.2.</span> <span class="toc-text"> 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9"><span class="toc-number">5.3.</span> <span class="toc-text"> 核心内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E6%9E%9C"><span class="toc-number">5.4.</span> <span class="toc-text"> 成果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer-%E6%94%B9%E8%BF%9B%E4%BA%86%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.1.</span> <span class="toc-text"> Enformer 改进了基因表达预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer-%E5%85%B3%E6%B3%A8%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E7%89%B9%E5%BC%82%E6%80%A7%E5%A2%9E%E5%BC%BA%E5%AD%90"><span class="toc-number">5.4.2.</span> <span class="toc-text"> Enformer 关注细胞类型特异性增强子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer%E6%94%B9%E8%BF%9B%E4%BA%86eqtl%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.3.</span> <span class="toc-text"> Enformer改进了eQTL数据的变异效应预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer%E6%94%B9%E8%BF%9B%E4%BA%86mpra%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.4.</span> <span class="toc-text"> Enformer改进了MPRA变异效应预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">5.5.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">5.6.</span> <span class="toc-text"> 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-number">5.6.1.</span> <span class="toc-text"> 模型架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%92%8C%E8%AF%84%E4%BC%B0"><span class="toc-number">5.6.2.</span> <span class="toc-text"> 模型训练和评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BA%E5%AD%90%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F"><span class="toc-number">5.6.3.</span> <span class="toc-text"> 增强子优先级排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gtex-sldp"><span class="toc-number">5.6.4.</span> <span class="toc-text"> GTEx SLDP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B2%BE%E7%BB%86%E5%AE%9A%E4%BD%8D%E7%9A%84gtex%E5%88%86%E7%B1%BB"><span class="toc-number">5.6.4.1.</span> <span class="toc-text"> 精细定位的GTEx分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%A5%B1%E5%92%8C%E7%AA%81%E5%8F%98%E6%95%B0%E6%8D%AE%E5%AF%B9%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B%E8%BF%9B%E8%A1%8C%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95"><span class="toc-number">5.6.4.2.</span> <span class="toc-text"> 基于饱和突变数据对变异效应预测进行基准测试</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text"> 数据可用性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="toc-number">7.</span> <span class="toc-text"> 代码可用性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%9B%BE"><span class="toc-number">8.</span> <span class="toc-text"> 扩展图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE1"><span class="toc-number">8.1.</span> <span class="toc-text"> 扩展数据图1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE2"><span class="toc-number">8.2.</span> <span class="toc-text"> 扩展数据图2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE3"><span class="toc-number">8.3.</span> <span class="toc-text"> 扩展数据图3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE4"><span class="toc-number">8.4.</span> <span class="toc-text"> 扩展数据图4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE5"><span class="toc-number">8.5.</span> <span class="toc-text"> 扩展数据图5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE6"><span class="toc-number">8.6.</span> <span class="toc-text"> 扩展数据图6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE7"><span class="toc-number">8.7.</span> <span class="toc-text"> 扩展数据图7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE8"><span class="toc-number">8.8.</span> <span class="toc-text"> 扩展数据图8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE9"><span class="toc-number">8.9.</span> <span class="toc-text"> 扩展数据图9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE10"><span class="toc-number">8.10.</span> <span class="toc-text"> 扩展数据图10</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">9.</span> <span class="toc-text"> 参考文献</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-906k2592" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/11/26/906k2592/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-11-26T13:44:35.000Z" itemprop="datePublished">2024-11-26</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" data-aos="zoom-in">论文解读</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="文章链接"><a class="markdownIt-Anchor" href="#文章链接"></a> 文章链接</h1>
+<blockquote>
+<p>Avsec, Ž., Agarwal, V., Visentin, D., Ledsam, J. R., Grabska-Barwinska, A., Taylor, K. R., Assael, Y., Jumper, J., Kohli, P., &amp; Kelley, D. R. (2021). Effective gene expression prediction from sequence by integrating long-range interactions. Nature Methods, 18, 1196–1203. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41592-021-01252-x">https://doi.org/10.1038/s41592-021-01252-x</a></p>
+</blockquote>
+<h1 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h1>
+<p><code>Enformer</code>：一个用于预测基因表达的深度学习架构。</p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
+<p><code>非编码DNA</code>如何在不同细胞类型中决定基因表达是一个重大的未解之谜，而在人类遗传学中的许多重要下游应用都依赖于对这个问题的深入理解。在此，我们报告通过使用一种称为<code>Enformer</code>的深度学习架构，显著提高了从DNA序列预测基因表达的准确性。该架构能够整合基因组中的长程相互作用信息（距离可达<code>100kb</code>）。这种改进使得对自然遗传变异和通过<code>大规模平行报告基因检测</code>（<code>massively parallel reporter assays</code>）测量的饱和突变对基因表达的影响预测更加准确。此外，<code>Enformer</code>学会直接从DNA序列预测增强子-启动子相互作用，其准确度可与直接使用实验数据作为输入的方法相媲美。我们预计这些进展将有助于更有效地精确定位人类疾病的相关性，并为解释<code>顺式调控元件</code>（<code>cis-regulatory</code>）的进化提供一个理论框架。</p>
+<h1 id="创新点"><a class="markdownIt-Anchor" href="#创新点"></a> 创新点</h1>
+<ol>
+<li>
+<p>使用<code>transformer架构</code>替代传统的卷积神经网络，能够整合长距离(<code>最远100kb</code>)的DNA序列信息。这比之前的模型(如<code>Basenji2</code>)的<code>20kb</code>范围更大。</p>
+</li>
+<li>
+<p>在基因表达预测方面取得显著提升:</p>
+<ul>
+<li>
+<p>皮尔逊相关系数从0.81提升至0.85</p>
+</li>
+<li>
+<p>在不同组织和细胞类型的预测准确度都有提高</p>
+</li>
+</ul>
+</li>
+<li>
+<p>模型可以有效识别和使用调控元件:</p>
+<ul>
+<li>
+<p>能够识别增强子及其与启动子的相互作用</p>
+</li>
+<li>
+<p>能够识别绝缘子元件和拓扑相关结构域(TAD)边界</p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><code>transformer架构</code>可参考这篇文章：<div class="post-link-card-wrap">
+    <div class="post-link-card">
+      <a href="/2024/11/04/skrzswes/" title="Transformer：Attention Is All You Need"></a>
+      <div class="post-link-card-cover-wrap"><img src="/images/banner.webp" class="no-lightbox" title="Transformer：Attention Is All You Need" alt="Transformer：Attention Is All You Need"/></div>
+      <div class="post-link-card-item-wrap">
+        <div class="post-link-card-title">Transformer：Attention Is All You Need</div>
+        <div class="post-link-card-excerpt">
+# 文章链接
+
+> Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). Attention is all you need. Advances in neural information processing syste</div>
+      </div>
+    </div>
+  </div></p>
+</blockquote>
+<h1 id="主要内容"><a class="markdownIt-Anchor" href="#主要内容"></a> 主要内容</h1>
+<h2 id="读前须知"><a class="markdownIt-Anchor" href="#读前须知"></a> 读前须知</h2>
+<ol>
+<li>论文解读尽可能的还原原文，若有不恰当之处，还请见谅；</li>
+<li>排版上，插图会尽量贴近出处，而扩展图之类的，会放置末尾处；</li>
+<li>左边👈有目录，可自行跳转至想看的部分；</li>
+<li>部分专业术语翻译成中文可能不太恰当，此时会用括号标明它的英文原文，如感受野（<code>Receptive field</code>）。请注意，仅首次出现会标明；</li>
+</ol>
+<h2 id="背景"><a class="markdownIt-Anchor" href="#背景"></a> 背景</h2>
+<p>从DNA序列预测基因表达和染色质状态的模型，有望更好地理解转录调控以及它如何受到与人类疾病和性状相关的众多非编码遗传变异的影响。这些模型补充了基于人群的关联研究，后者通常仅限于常见变异，并且由于连锁不平衡（<code>LD</code>）而难以区分因果关系和关联性。此外，人类遗传变异的实验验证工作量大，且仅限于可在实验室中重现的细胞类型或组织，这使得在相关生物环境中测试所有感兴趣的变异变得不可行。虽然基于序列的计算模型原则上可以克服这些挑战，但它们的准确性仍然有限，使得从序列预测基因表达成为一个关键的未解决问题。</p>
+<blockquote>
+<p>连锁不平衡：基因组中相邻位置的遗传变异倾向于一起遗传的现象。即某些等位基因或遗传变异在群体中共同出现的频率高于随机预期。</p>
+</blockquote>
+<p>深度卷积神经网络（<code>CNNs</code>）在预测人类和小鼠基因组的基因表达方面达到了目前的最高水平。然而，这些模型在做出预测时，只能考虑距转录起始位点（<code>TSS</code>）最远<code>20kb</code>的序列元件，因为卷积的局部性限制了网络中远距离元件之间的信息流动。许多经过深入研究的调控元件，包括增强子、抑制子和绝缘子，都可以从超过<code>20kb</code>的距离影响基因表达。因此，增加远距离元件之间的信息流动是提高预测准确性的一个有希望的途径。</p>
+<blockquote>
+<p><code>增强子(Enhancer)</code>：可以增强基因转录的DNA序列；</p>
+<p><code>抑制子(Repressor)</code>：能够降低或抑制基因表达的DNA序列；</p>
+<p><code>绝缘子(Insulator)</code>：位于拓扑相关结构域(TAD)的边界，主要功能是阻隔/隔离不同调控区域之间的相互作用，防止增强子错误调控非目标基因；</p>
+<p>这三种元件共同参与精确调控基因表达，形成复杂的调控网络。</p>
+</blockquote>
+<h2 id="核心内容"><a class="markdownIt-Anchor" href="#核心内容"></a> 核心内容</h2>
+<p>在这项工作中，我们引入了一种基于自注意力（<code>self-attention</code>）的神经网络架构来实现这一目标。我们将机器学习问题定义为在多任务设置下预测长DNA序列中的数千个表观遗传和转录数据集。在人类和小鼠基因组的大部分区域进行训练，并在保留的序列上进行测试，我们观察到相对于之前没有自注意力的最先进模型，预测与测量数据之间的相关性有所提高。我们证明了对长程信息的更有效利用，这一点通过<code>CRISPRi</code>增强子检测得到了验证。该模型还能产生更准确的突变效应预测，这一点通过直接突变检测和人群<code>eQTL</code>研究得到了验证。</p>
+<blockquote>
+<p><code>自注意力机制</code>：允许模型在处理序列时，让每个位置都能&quot;关注&quot;并整合来自所有其他位置的信息。在Enformer中，这使得模型能够将位于不同位置的调控元件(如<code>启动子</code>和<code>增强子</code>)的信息关联起来。</p>
+<p><code>eQTL</code>：表达数量性状位点，指能影响基因表达水平的DNA序列变异。这些变异可以位于基因内部或调控区域，通过影响转录调控或其他机制来改变基因的表达量。</p>
+<p><code>CRISPRi增强子检测</code>：利用CRISPR干扰（CRISPR interference, CRISPRi）技术研究增强子功能的一种方法。CRISPRi通过抑制特定基因组区域的活性，可以系统性地筛选和验证增强子对基因表达的调控作用。</p>
+</blockquote>
+<h2 id="成果"><a class="markdownIt-Anchor" href="#成果"></a> 成果</h2>
+<h3 id="enformer-改进了基因表达预测"><a class="markdownIt-Anchor" href="#enformer-改进了基因表达预测"></a> Enformer 改进了基因表达预测</h3>
+<p>我们开发了一个名为<code>Enformer</code>（<code>enhancer</code>和<code>transformer</code>的组合词）的新模型架构，用于预测人类和小鼠的基因表达和染色质状态（图1a和扩展数据图1）。</p>
+<p><img src="/images/assets//image-20241212153414424.png" alt="image-20241212153414424" /></p>
+<p><code>Transformer</code>是一类在自然语言处理（<code>NLP</code>）中取得重大突破的深度学习模型，最近也被应用于建模短DNA序列。它们由注意力层组成，这些层通过计算所有其他位置表征的<code>加权和</code>来转换输入序列中的每个位置。注意力权重取决于它们当前表征向量的嵌入和位置之间的距离。这使得模型能够，例如，<code>通过收集所有相关区域（如调控该基因的增强子）的信息来完善在转录起始位点的预测</code>。由于每个位置直接关注序列中的所有其他位置，它们能够实现远距离元件之间更好的信息流动。相比之下，卷积层由于其局部感受野，需要许多连续层才能到达远距离元件。使用<code>transformer</code>层使我们能够显著增加感受野，从而接触到距离达<code>100kb</code>的远距离调控元件，而之前最先进的模型<code>Basenji2</code>或<code>ExPecto</code>只能达到<code>20kb</code>（扩展数据图1）。这种感受野的增加很重要，因为它大大扩展了模型可见的相关增强子数量，从<code>&lt;20kb</code>的<code>47%</code>增加到<code>&lt;100kb</code>的<code>84%</code>（根据高置信度增强子-基因对的比例估计）。</p>
+<p><code>Enformer</code>在预测人类蛋白质编码基因转录起始位点的RNA表达（通过<code>CAGE</code>测量）方面显著优于之前最好的模型<code>Basenji2</code>，平均相关性从<code>0.81</code>提高到<code>0.85</code>（图1b左）。这种性能提升是<code>Basenji1</code>和<code>Basenji2</code>之间性能提升的两倍，并缩小了三分之一到实验水平精确度（估计为<code>0.94</code>）的差距（扩展数据图2）。基因表达预测也更好地捕捉到了组织或细胞类型特异性（图1b右），包括密切相关的样本（扩展数据图3）。这种性能改进在所有四种基因组广泛轨迹类型中都是一致的，包括在各种细胞类型和组织中测量转录活性的<code>CAGE</code>、组蛋白修饰、转录因子结合和DNA可及性（图1c）。对<code>CAGE</code>的性能改进最大，这可能是因为组织特异性基因表达强烈依赖于远距离元件。</p>
+<blockquote>
+<p><code>测量转录活性的CAGE</code>：CAGE（Cap Analysis of Gene Expression）是一种测量转录起始活性的方法。它通过捕获mRNA 5’端的帽结构（cap），结合高通量测序，能够精确定位转录起始位点（TSS），并定量转录本的表达水平。这种技术特别适合分析启动子活性、TSS使用的变化，以及基因表达调控。</p>
+<p><code>组蛋白修饰</code>：发生在组蛋白特定氨基酸残基上的共价化学修饰，这些修饰通过改变染色质的包装状态（紧致或松散），影响转录因子的结合，从而动态调控基因的活性。</p>
+<p><code>转录因子结合</code>：转录因子（Transcription Factors, TFs）与DNA特定序列（通常是启动子或增强子上的顺式作用元件）的结合过程，这是基因表达调控的关键步骤。</p>
+<p><code>DNA可及性</code>：DNA在染色质中的暴露程度，它决定了转录因子、RNA聚合酶等调控蛋白能否结合到特定的DNA区域。DNA可及性是基因表达调控的关键因素，受染色质结构的动态调节影响。</p>
+</blockquote>
+<p>在可视化基因组的观察和预测轨迹时，预测准确性的提高也是显而易见的（图1d）。<code>Enformer</code>在预测由<code>RNA-seq</code>测量的基因表达水平方面也优于<code>ExPecto</code>，在跨基因（<code>Spearman r</code>为<code>0.850</code>对<code>0.812</code>）和跨组织（<code>Spearman r</code>为<code>0.451</code>对<code>0.368</code>）评估中都表现更好（扩展数据图4）。这些结果证实<code>Enformer</code>架构在从DNA序列预测表观遗传标记和基因表达方面都提高了预测准确性。</p>
+<p><img src="/images/assets//image-20241212153504435.png" alt="image-20241212153504435" /></p>
+<p>为了确定相比于<code>Basenji2</code>中使用的扩张卷积，注意力层的具体优势，我们用扩张卷积替换了注意力层，并调整了学习率以获得最佳性能。注意力层在所有模型大小、层数和训练数据点数量上都优于扩张卷积（扩展数据图5a）。更大的感受野确实至关重要，因为当我们通过用局部注意力层替换全局注意力层，将<code>Enformer</code>的感受野限制为与<code>Basenji2</code>相同时，我们观察到性能显著下降（扩展数据图5b）。我们注意到，增加参数数量改善了模型性能，这与自然语言处理领域的最新进展一致。</p>
+<p><code>Enformer</code>在<code>transformer</code>层中使用自定义的相对位置基函数，以更容易区分近端和远端调控元件，并区分转录起始位点上游和下游的位置。这两个特性相比于自然语言处理文献中通常使用的相对基函数和绝对位置编码都提供了明显的性能改进（扩展数据图6a、b）。总的来说，这些结果证实<code>注意力层比扩张卷积更适合基因表达预测</code>。</p>
+<h3 id="enformer-关注细胞类型特异性增强子"><a class="markdownIt-Anchor" href="#enformer-关注细胞类型特异性增强子"></a> Enformer 关注细胞类型特异性增强子</h3>
+<p>为了更好地理解<code>Enformer</code>在进行预测时使用了哪些序列元件，我们为几个具有经<code>CRISPRi</code>验证的增强子的基因计算了两种不同的基因表达<code>贡献分数</code>——输入梯度（<code>梯度×输入</code>）和注意力权重（方法和补充图1）。贡献分数突出显示了对特定基因表达预测最重要的输入序列。<code>体内突变</code>和<code>梯度×输入</code>是组织或细胞类型特异的，因为它们是相对于特定输出<code>CAGE</code>样本（例如<code>K562</code>）计算的。相比之下，注意力权重是模型的内部特征，在所有组织和细胞类型的预测中共享。</p>
+<p>我们检查了几个基因的贡献分数，发现它们与组蛋白<code>H3</code>在<code>K27</code>位乙酰化（<code>H3K27ac</code>）相关，不仅突出了局部启动子区域，还突出了距离超过<code>20 kb</code>的远端增强子（图2a和补充图2、3）。相比之下，由于感受野有限，<code>Basenji2</code>的贡献分数在距转录起始位点<code>20kb</code>以外的序列为零，因此错过了几个增强子。这个例子表明，<code>Enformer</code>在进行预测时确实关注了生物学相关区域，如距离超过<code>20kb</code>的增强子，并且基因表达贡献分数可以用来优先考虑相关的增强子。</p>
+<p><img src="/images/assets//image-20241212233856817.png" alt="image-20241212233856817" /></p>
+<blockquote>
+<p><code>H3K27ac</code>：发生在组蛋白 H3 的第 27 位赖氨酸（lysine 27, K27）上的 <strong>乙酰化修饰</strong>。它是一种表观遗传标记，与基因表达活跃和增强子功能密切相关。</p>
+<p><code>K562</code>：一种来源于人慢性髓性白血病的永生化细胞系，常用于研究血液相关疾病、基因表达调控和分化机制。</p>
+</blockquote>
+<p>将通过生化注释识别的候选增强子链接到靶基因（通俗说：就是找出<strong>增强子和它实际调控的基因之间的关系</strong>）是一个重要但尚未解决的问题。由于标记的噪声和类别不平衡的组合，计算模型历来产生的准确性较低。为了系统地评估贡献分数在确定特定基因相关增强子方面的能力，我们比较了在<code>K562</code>细胞系上进行的两个大规模<code>CRISPRi</code>研究中测试的所有增强子-基因对的几种贡献分数。在这些实验中，使用<code>CRISPRi</code>抑制了超过<code>10,000</code>个候选增强子的活性，并测量其对基因表达的影响。</p>
+<p><code>Enformer</code>贡献分数在几乎所有相对距离和不同类型的贡献分数上，都比<code>Basenji2</code>贡献分数或随机分数更准确地优先考虑了经验证的增强子-基因对（图2b，<code>Enformer</code>对<code>Basenji2</code>对随机）。<code>Enformer</code>的性能可以与<code>ABC</code>评分（一种最近专门为增强子优先级提出的最先进方法）相媲美，在某些情况下甚至更好。这一点很显著，因为<code>ABC</code>评分依赖于实验数据作为输入，如基于<code>HiC</code>的相互作用频率和<code>H3K27ac</code>（图2b，蓝色对绿色，和扩展数据图7a），而<code>Enformer</code>只使用DNA序列作为输入，并且从未被明确训练来定位增强子。这使得<code>Enformer</code>也可以用于缺乏实验数据的任意序列变异。</p>
+<blockquote>
+<p>ABC评分：用于评估和优先排序基因组中增强子的功能性及其潜在靶基因。它基于增强子和靶基因之间的<strong>活性、可及性</strong>和<strong>三维接触</strong>数据，提出的一种定量化的评分体系。</p>
+</blockquote>
+<p><img src="/images/assets//image-20241212233945214.png" alt="image-20241212233945214" /></p>
+<p><img src="/images/assets//image-20241212234057560.png" alt="image-20241212234057560" /></p>
+<p>细胞类型特异的贡献分数比细胞类型非特异的贡献分数产生了更高的优先级性能，表明该模型按预期在不同细胞类型中使用不同的增强子序列（扩展数据图7c）。因此，<code>Enformer</code>贡献分数是一种有效的策略，可以在用于模型训练的细胞类型中确定<code>候选增强子的优先级</code>。</p>
+<p>接下来，我们探讨了模型是否学习了另一类重要的调控元件：绝缘子元件。这些元件将两个拓扑相关结构域（<code>TAD</code>）分开，并最小化两者之间的增强子-启动子串扰。我们检查了序列中心位于<code>TAD</code>边界处的注意力矩阵（相比于输入梯度，这些矩阵计算更有效，因为输出目标较多），并将其与没有特定对齐的序列的注意力矩阵进行比较。从查询位置的角度来看，<code>Enformer</code>对<code>TAD</code>边界的注意力比对随机位置的注意力更多（垂直红色条纹，图2c），而对边界另一侧区域的注意力更少（对角线外的蓝色区块，图2c），这与生物学上观察到的<code>TAD</code>间相互作用减少的现象一致。在<code>1,500</code>个测试序列中，这两种模式都具有统计学显著性（图2d，&quot;跨TAD&quot;和&quot;TAD边界处的关键位置&quot;）。在<code>TAD</code>边界处，模型用于做出<code>DNase</code>和<code>CAGE</code>预测的关键基序之一是<code>CTCF</code>，这种基序被发现与正负贡献分数都有关（扩展数据图8）。总的来说，这些结果表明，该模型不仅学习了组织特异性增强子和启动子的作用，还学习了绝缘子元件及其在抑制基因组区室间信息流动中的作用。</p>
+<blockquote>
+<p><code>拓扑相关结构域</code>（TAD, Topologically Associating Domains）：染色质三维结构中的功能性单位，指的是基因组中形成相对独立的空间区域，区域内的 DNA 片段更倾向于彼此互作，而与区域外的片段的互作较少。这种分区结构在基因表达调控中扮演重要角色。</p>
+<p><code>DNase（脱氧核糖核酸酶）</code>：一种酶，能够催化DNA分子的水解反应，将DNA切割成较小的片段。DNase常用于研究染色质的开放状态和基因调控区域，特别是在染色质免疫沉淀（ChIP-Seq）和DNase-seq技术中，帮助识别活跃的基因调控元件。</p>
+<p><code>CTCF（CCCTC-binding factor）</code>：一种高度保守的转录因子，广泛存在于真核生物中，尤其在基因调控和染色质结构中扮演重要角色。CTCF主要通过结合DNA上的特定序列（CCCTC）来调控基因的表达。</p>
+</blockquote>
+<h3 id="enformer改进了eqtl数据的变异效应预测"><a class="markdownIt-Anchor" href="#enformer改进了eqtl数据的变异效应预测"></a> Enformer改进了eQTL数据的变异效应预测</h3>
+<p>这项研究的一个核心目标是预测遗传变异对细胞类型特异性基因表达的影响，以帮助解释从<code>全基因组关联研究</code>中发现的数千个与表型相关的非编码关联。计算模型可以处理不同的等位基因并比较预测来评分遗传变异。一个成功的模型应该能够在不需要测量数百到数千个个体基因表达谱的情况下，产生基因表达数量性状位点（<code>eQTL</code>）研究的结果。</p>
+<blockquote>
+<p><code>eQTL（表达数量性状位点）</code>：指在基因组中与基因表达水平变异相关的遗传区域。eQTL分析研究的是特定基因的表达水平如何受到基因组变异（如SNPs）的影响。通过这种分析，可以识别与某些疾病、性状或生物学过程相关的基因调控区域。</p>
+</blockquote>
+<p>因此，我们研究了<code>GTEx</code>项目在数十个人类组织中发现的<code>eQTL</code>来验证模型预测。这种验证的主要挑战在于所研究人群中变异的共现（即连锁不平衡）会将因果<code>eQTL</code>的效应转移到邻近共现变异的测量值上。有向连锁不平衡谱（<code>SLDP</code>）回归是一种技术，它可以在考虑连锁不平衡的情况下，测量有向变异注释（如我们的模型预测）和<code>GWAS</code>汇总统计数据（如<code>GTEx eQTL</code>）之间的全基因组统计一致性（见方法）。在<code>648</code>个<code>CAGE</code>数据集（提供转录本的定量信息）中，有<code>379</code>个（<code>59.4%</code>）数据集中，跨<code>GTEx</code>组织的最大<code>SLDP Z</code>得分（代表最可能的最接近样本匹配）在<code>Enformer</code>预测中相比<code>Basenji2</code>有所增加。相比<code>Basenji2</code>，有<code>228</code>个<code>Enformer</code>最大<code>Z</code>得分增加超过一个标准差，而只有<code>46</code>个减少超过一个标准差。最大<code>Z</code>得分平均从<code>6.3</code>增加到<code>6.9</code>（图3a）。</p>
+<blockquote>
+<p><code>GTEx（Genotype-Tissue Expression）项目</code>：一个旨在研究<code>基因型与基因表达之间关系</code>的大型国际合作项目。该项目的目标是通过收集来自不同组织的样本，分析基因型（遗传变异）如何影响基因的表达，并探索这些变异如何与健康和疾病相关。GTEx项目收集了来自数百名个体的多种人体组织样本（例如大脑、肝脏、心脏等），对其进行基因组学分析，构建了一个基因型与基因表达的关系数据库。</p>
+</blockquote>
+<p><img src="/images/assets//image-20241212235659534.png" alt="image-20241212235659534" /></p>
+<p>需要注意的是，我们并不期望没有相关<code>GTEx</code>组织匹配的<code>CAGE</code>样本会出现增加的<code>SLDP Z</code>得分。在研究<code>GTEx</code>骨骼肌和皮下脂肪组织的<code>SLDP</code>时，我们观察到生物学相关的<code>CAGE</code>数据集（显示为蓝色）在从<code>Basenji2</code>到<code>Enformer</code>的过程中有所改善（图3b、c）。我们还发现，<code>Enformer</code>对<code>DNase</code>超敏感性的变异效应预测与<code>GTEx</code>的<code>SLDP</code>一致性高于<code>DeepSEA Beluga</code>（在<code>ExPecto</code>中使用）的替代方法（扩展数据图9）。因此，<code>Enformer</code>对非编码变异活性的预测似乎主要在样本具有相似细胞类型组成时得到改善，这与我们观察到的对保留序列的组织和细胞类型特异性改善一致。</p>
+<p>虽然连锁不平衡通常导致<code>GTEx eQTL</code>关联只能归因于频繁共现的变异集，但最新的<code>GTEx</code>版本包括了许多具有简单连锁模式的位点中的数千个关联，这些位点已经被精细定位到单个高概率的因果变异。</p>
+<blockquote>
+<p>因果变异：直接引起特定生物学性状或疾病的遗传变异。这些变异不仅与性状或疾病相关联，而且在遗传上具有因果关系，即它们直接影响性状或疾病的发生或发展。</p>
+</blockquote>
+<p>为了评估<code>Enformer</code>预测在识别因果变异方面的效用，我们为每个组织定义了一个分类任务，以区分可能的因果变异（因果概率<code>&gt;0.9</code>，由基于人群的精细定位模型<code>SuSiE</code>确定）和可能的假阳性<code>eQTL</code>（因果概率<code>&lt;0.01</code>），这些变异在可能的情况下与<code>eGene</code>相匹配（见方法）。我们通过计算参考和替代等位基因之间的预测差异向量（即评估参考减去替代等位基因，在序列上求和）来表示每个变异，为所有<code>5,313</code>个人类数据集产生特征。我们训练随机森林分类器。<code>Enformer</code>的预测使得分类器在<code>48</code>个<code>GTEx</code>组织中的<code>47</code>个组织中更加准确（图3d），平均<code>auROC</code>从<code>0.729</code>增加到<code>0.747</code>。这种改进在所有与转录起始位点的距离上都是一致的（图3e），这表明该模型不仅能更好地表示可能重叠长程增强子的变异（通过更大的感受野实现），而且还能更有效地解析启动子和短程增强子。在这些精细定位的<code>eQTL</code>中，<code>Enformer</code>模型在预测表达变化方向方面也比<code>Basenji2</code>更准确（扩展数据图10）。</p>
+<p><img src="/images/assets//image-20241212235748414.png" alt="image-20241212235748414" /></p>
+<p>一个<code>Enformer eQTL</code>概率预测相对于<code>Basenji2</code>有所增加的变异示例是<code>rs11644125</code>，它位于<code>NLRC5</code>基因转录起始位点下游约<code>35kb</code>的内含子中，该基因参与病毒免疫和细胞因子反应（图3f）。该变异已经在统计学上被精细定位为可能导致单核细胞和淋巴细胞血细胞计数变化。根据<code>GTEx</code>的数据，相对于主要等位基因<code>C</code>，次要等位基因<code>T</code>降低了全血中<code>NLRC5</code>的基因表达。<code>Enformer</code>正确预测了许多相关<code>CAGE</code>样本（包括外周血单个核细胞）中上游转录起始位点的<code>NLRC5</code>表达降低。使用局部区域的体内突变（见方法），我们观察到变异<code>rs11644125</code>调节了转录因子<code>SP1</code>的已知基序。<code>Enformer</code>预测表明，在造血细胞中<code>SP1</code>结合的扰动改变了<code>NLRC5</code>表达，这是这些性状的一个机制。</p>
+<p><img src="/images/assets//image-20241212235902773.png" alt="image-20241212235902773" /></p>
+<h3 id="enformer改进了mpra变异效应预测"><a class="markdownIt-Anchor" href="#enformer改进了mpra变异效应预测"></a> Enformer改进了MPRA变异效应预测</h3>
+<blockquote>
+<p><code>MPRA（Massively Parallel Reporter Assays）</code>：一种用于高通量评估基因调控元件功能的实验技术。MPRA结合了报告基因系统和高通量测序技术，能够同时评估大量潜在的基因调控元件（如增强子、启动子等）的活动。</p>
+</blockquote>
+<p>最后，我们使用第二个独立的变异效应预测任务评估了<code>Enformer</code>的性能，这个任务使用了一个数据集，其中大规模平行报告基因检测（<code>MPRAs</code>）通过对几个增强子和启动子在各种细胞类型中进行饱和突变，直接测量了遗传变异的功能效应。我们使用了与<code>CAGI5</code>竞赛相同的训练和测试集，使我们能够直接将<code>Enformer</code>的性能与其他团队提交的结果进行基准比较。其他团队采用的方法包括多种不同的方法，从使用<code>deltaSVM</code>策略、<code>CADD</code>框架，到使用结合了保守性信息和来自<code>DeepBind</code>和<code>DeepSEA</code>的深度学习预测的特征的回归模型（第3组、第5组和第7组）。对于每个变异，我们通过计算参考和替代等位基因之间的预测差异来评估其效应，获得了<code>5,313</code>个特征。接下来，我们比较了两种方法：</p>
+<ol>
+<li>我们使用这些特征在每个基因提供的训练集上训练<code>lasso</code>回归模型；</li>
+<li>我们预先选择了与细胞类型匹配和细胞类型非特异的<code>CAGE</code>和<code>DNase</code>变化预测相对应的特征子集，并生成了特征的统计摘要（即无需额外训练）。</li>
+</ol>
+<p>在每个基因的测试集上评估这两种方法揭示，使用<code>Enformer</code>预测作为特征的<code>lasso</code>回归在所有位点中平均具有最佳相关性，超过了七种替代方法（图4a）。</p>
+<p><img src="/images/assets//image-20241213000110438.png" alt="image-20241213000110438" /></p>
+<p>此外，无需训练的<code>Enformer</code>预测直接用作评分时，其性能与经过<code>lasso</code>训练的模型相当，同时也优于其他提交的方法。这包括基于序列的预测器<code>deltaSVM</code>，该预测器是在来自匹配细胞类型的独立<code>DNase</code>和组蛋白<code>H3</code>在<code>K4</code>位单甲基化（<code>H3K4me1</code>）数据上训练的。经过<code>lasso</code>训练的<code>Enformer</code>超过了<code>CAGI5</code>获胜团队第3组的性能（<code>P=0.002</code>，配对、单侧<code>Mann-Whitney U</code>检验，图4b）。对不需要额外训练的预测进行可视化表明，<code>Enformer</code>忠实地捕捉到了<code>LDLR</code>位点中四个转录因子结合位点中的两个的效应（图4c）。</p>
+<p><code>Enformer</code>突出显示了一个额外的结合位点，虽然它的效应大小较小，但仍显示出显著差异。相比之下，<code>deltaSVM</code>只成功预测了一个结合位点但错过了其他三个，总体上相对于<code>Enformer</code>表现出<code>50%</code>降低的<code>Pearson</code>和<code>Spearman</code>相关性。对于这个位点，细胞类型匹配的预测反映了细胞类型非特异的预测，表明检测到的结合位点可能对应于大多数细胞类型中存在的一般转录因子。</p>
+<p><img src="/images/assets//image-20241213000145412.png" alt="image-20241213000145412" /></p>
+<h2 id="讨论"><a class="markdownIt-Anchor" href="#讨论"></a> 讨论</h2>
+<p>监管基因组学中一个长期存在的问题是如何仅从DNA序列预测基因表达。通过一种新颖的<code>transformer</code>架构，我们通过大大扩展感受野并增加远距离元件之间的信息流动，取得了重要进展。通过这种方式，该模型可以更好地捕捉生物学现象，例如增强子调控启动子，即使两者之间存在较长的DNA序列距离。这导致组织和细胞类型特异性基因表达预测相关性显著提高，从<code>0.81</code>提高到<code>0.85</code>，向实验水平精确度<code>0.94</code>（从重复实验估计）迈进了三分之一的距离。</p>
+<p>这种预测准确性的提高转化为两个具有生物学相关性的关键问题的改进模型：增强子-启动子预测和非编码变异效应预测。我们观察到模型在做出基因表达预测时关注增强子并考虑绝缘子，这表明它已经学会了典型的远距离调控模式。使用<code>Enformer</code>模型，我们可以比以前的方法更准确地预测自然变异或<code>CRISPR</code>干扰的增强子是否会导致显著的表达变化。通过仅依赖DNA序列作为输入，<code>Enformer</code>相比替代的变异效应预测方法具有几个优势：</p>
+<ol>
+<li>与大多数方法不同，它能够对激活或抑制性突变进行有向预测；</li>
+<li>由于不明确依赖核苷酸保守性统计数据（大多数工具都依赖），其预测不限于保守的增强子，而保守的增强子仅占所有增强子的一小部分；</li>
+<li>它可以对任意序列进行预测，这使得可以合成设计具有细胞类型特异性的增强子。</li>
+</ol>
+<p>总的来说，这些进展和优势为研究与疾病相关的遗传变异不断扩大的目录以及发育和进化中的增强子生物学开辟了令人兴奋的途径。</p>
+<p>有几条路径可以进一步提高模型准确性，这些路径看起来很有希望。机器学习的成功取决于训练数据，因此提高目标轨迹的分辨率和质量，以及收集来自其他生物体的数据，可能会提升性能。最近的工作表明，高度结构化的3D DNA接触（对长程基因调控有重大影响）可以从基础DNA序列预测。巧妙地将这些模型与我们的模型结合可能会改善<code>Enformer</code>对绝缘子和远距离调控的建模。</p>
+<p>当前方法的一个限制是我们只能为训练数据中的细胞类型和检测方法进行建模和预测，而无法推广到新的细胞类型或检测方法。并行研究已经开始通过细胞类型和检测方法的表征学习来解决这个缺点，并可能在未来使用<code>Enformer</code>架构。该模型对遗传变异的敏感性可以通过在越来越多的功能基因组数据集（如来自<code>CRISPR</code>干扰和大规模平行报告基因检测的数据集）上进行训练来进一步改善。目前，这些数据集的小规模限制了它们仅用于模型评估。最后，我们预计<code>transformer</code>模型最近在计算效率方面的改进以及更好的硬件将使我们能够进一步扩展模型规模。</p>
+<p>未来，<code>Enformer</code>可以被系统地应用于精细定位现有的<code>GWAS</code>研究，优先考虑罕见疾病中观察到的罕见或从头突变，并跨物种推断调控活性以研究顺式调控进化。为了促进这些下游应用，我们已经公开发布了预训练的<code>Enformer</code>模型，并提供了演示其使用方法的代码示例。此外，我们已经预先计算了<code>1000</code>个基因组数据集中所有常见变异的效应预测，并公开发布。我们希望我们的模型将促进对基因调控架构的更好理解，并推动改进用于基因起源疾病诊断工具的开发。</p>
+<h2 id="方法"><a class="markdownIt-Anchor" href="#方法"></a> 方法</h2>
+<h3 id="模型架构"><a class="markdownIt-Anchor" href="#模型架构"></a> 模型架构</h3>
+<p><code>Enformer</code>架构由三个部分组成：</p>
+<ul>
+<li>带有池化的7个卷积块；</li>
+<li>11个<code>transformer</code>块；</li>
+<li>1个裁剪层，后跟最终的逐点卷积，分支成2个生物体特异的网络头（扩展数据图1）。</li>
+</ul>
+<p><code>Enformer</code>接受长度为<code>196,608 bp</code>的独热编码DNA序列作为输入（<code>A = [1,0,0,0]</code>，<code>C = [0,1,0,0]</code>，<code>G = [0,0,1,0]</code>，<code>T = [0,0,0,1]</code>，<code>N = [0,0,0,0]</code>），预测人类基因组的<code>5,313</code>个基因组轨迹和小鼠基因组的<code>1,643</code>个轨迹，每个长度为<code>896</code>，对应于聚合成<code>128 bp</code>区块的<code>114,688 bp</code>。带有池化的卷积块首先将空间维度从<code>196,608 bp</code>减少到<code>1,536</code>，使得每个序列位置向量代表<code>128bp</code>（尽管卷积也观察相邻池化区域中的核苷酸）。</p>
+<p><code>transformer</code>块然后捕获序列中的长程相互作用。裁剪层在每侧修剪<code>320</code>个位置，以避免在远端计算损失，因为这些区域处于不利地位，它们只能观察一侧（朝向序列中心）而不能观察另一侧（序列边界以外的区域）的调控元件。</p>
+<p>最后，两个输出头预测生物体特异的轨迹。<code>Enformer</code>架构与最先进的模型<code>Basenji2</code>类似。然而，以下改变帮助我们改进并超越了其性能：<code>Enformer</code>使用<code>transformer</code>块而不是扩张卷积，使用注意力池化而不是最大池化，使用两倍的通道数，以及1.5倍长的输入序列（<code>197kb</code>而不是<code>131kb</code>）。</p>
+<p>详细的模型架构，包括选定的超参数，如扩展数据图1所示。</p>
+<p>注意力池化通过以下方式总结输入序列 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="bold">x</mi><mrow><mi>k</mi><mo>:</mo><mi>k</mi><mo>+</mo><msub><mi>L</mi><mi>p</mi></msub></mrow><mrow><mi>f</mi><mi>u</mi><mi>l</mi><mi>l</mi></mrow></msubsup><mo>=</mo><mi mathvariant="bold">x</mi><mo>∈</mo><msup><mi>R</mi><mrow><msub><mi>L</mi><mi>p</mi></msub><mo>×</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">{\mathbf{x}}_{k:k + L_p}^{full} = {\mathbf{x}} \in R^{L_p \times C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.4656439999999997em;vertical-align:-0.4986279999999999em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord mathbf">x</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9670159999999999em;"><span style="top:-2.398692em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">:</span><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285716em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2818857142857143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4986279999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">x</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.841331em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.841331em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16454285714285716em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2818857142857143em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span> 在<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">L_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>个位置上的连续块，对于 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span></span></span></span> 个通道中的每一个返回输出值 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>∈</mo><msup><mi>R</mi><mi>C</mi></msup></mrow><annotation encoding="application/x-tex">h∈R^C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.73354em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span> ：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>h</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mi>i</mi></munder><mi>exp</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mi mathvariant="bold">x</mi><mi>i</mi></msub><mo>⋅</mo><msub><mi mathvariant="bold">w</mi><mi>j</mi></msub><mo fence="true">)</mo></mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><mi>exp</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><msub><mi mathvariant="bold">x</mi><mi>i</mi></msub><mo>⋅</mo><msub><mi mathvariant="bold">w</mi><mi>j</mi></msub><mo fence="true">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">h_j = \frac{\sum_i \exp\left( \mathbf{x}_i \cdot \mathbf{w}_j \right) x_{ij}}{\sum_i \exp\left( \mathbf{x}_i \cdot \mathbf{w}_j \right)}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.46042em;vertical-align:-0.9857100000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4747100000000002em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16195399999999993em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">exp</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathbf">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span><span style="top:-3.225em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.05em;"></span></span><span style="top:-3.72471em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.16195399999999993em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">exp</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord"><span class="mord mathbf">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9857100000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathnormal">i</span></span></span></span> 索引池化窗口中的序列位置，由指数化的点积 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">x</mi><mi>i</mi></msub><mo separator="true">⋅</mo><msub><mi mathvariant="bold">w</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf x_i ·\mathbf w_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.730558em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathbf">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.01597em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 加权，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">w</mi><mo>∈</mo><msup><mi>R</mi><mrow><mi>C</mi><mo>×</mo><mi>K</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\boldsymbol{w} ∈ R^{C×K}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.02778em;">w</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span></span></span></span></span>是学习的权重矩阵。我们对原始输入序列的连续块应用注意力池化，使用窗口大小 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>p</mi></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">L_p=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span> 和步长为2。我们将 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">w</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{w}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.02778em;">w</span></span></span></span></span></span> 初始化为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn mathvariant="bold">1</mn></mrow><annotation encoding="application/x-tex">2×\mathbf 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord mathbf">1</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn mathvariant="bold">1</mn></mrow><annotation encoding="application/x-tex">\mathbf 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord mathbf">1</span></span></span></span>是单位矩阵，以优先考虑较大的值，使该操作类似于最大池化。这种初始化比随机初始化或用零初始化（表示平均池化）的性能略好。</p>
+<p>我们使用多头注意力（<code>MHA</code>）层在序列中共享信息并模拟长程相互作用，例如启动子和增强子之间的相互作用。每个头都有一组独立的权重 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>w</mi><mi>q</mi></msup><mo>∈</mo><msup><mi>R</mi><mrow><mi>C</mi><mo>×</mo><mi>K</mi></mrow></msup></mrow><annotation encoding="application/x-tex">w^q∈R^{C×K}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.703492em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>w</mi><mi>k</mi></msup><mo>∈</mo><msup><mi>R</mi><mrow><mi>C</mi><mo>×</mo><mi>K</mi></mrow></msup></mrow><annotation encoding="application/x-tex">w^k∈R^{C×K}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.888208em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>w</mi><mi>v</mi></msup><mo>∈</mo><msup><mi>R</mi><mrow><mi>C</mi><mo>×</mo><mi>V</mi></mrow></msup></mrow><annotation encoding="application/x-tex">w^v∈R^{C×V}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.703492em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span></span></span></span>，它们将输入序列 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi>R</mi><mrow><mi>L</mi><mo>×</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">x∈R^{L×C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span> 转换为查询<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><msup><mi>w</mi><mi>q</mi></msup></mrow><annotation encoding="application/x-tex">q_i=x_i w^q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.814392em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span></span></span></span></span></span></span></span></span></span></span>、键<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>j</mi></msub><mo>=</mo><msub><mi>x</mi><mi>j</mi></msub><msup><mi>w</mi><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">k_j=x_j w^k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.135216em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span></span></span>和值<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>j</mi></msub><mo>=</mo><msub><mi>x</mi><mi>j</mi></msub><msup><mi>w</mi><mi>v</mi></msup></mrow><annotation encoding="application/x-tex">v_j=x_j w^v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9504999999999999em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span></span></span></span></span></span></span></span></span></span></span>。查询表示每个位置的当前信息，键表示每个位置将寻找的信息。它们的点积加上相对位置编码 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 形成注意力矩阵，计算如下：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mrow><mi mathvariant="bold">s</mi><mi mathvariant="bold">o</mi><mi mathvariant="bold">f</mi><mi mathvariant="bold">t</mi><mi mathvariant="bold">m</mi><mi mathvariant="bold">a</mi><mi mathvariant="bold">x</mi></mrow><mo stretchy="false">(</mo><msub><mi>q</mi><mi>i</mi></msub><msubsup><mi>k</mi><mi>j</mi><mi>T</mi></msubsup><mi mathvariant="normal">/</mi><msqrt><mi>K</mi></msqrt><mo>+</mo><msub><mi>R</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_{ij} = \mathbf {softmax}(q_i k_j^T/\sqrt{K} + R_{ij})
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.378648em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathbf">s</span><span class="mord mathbf">o</span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mord mathbf">t</span><span class="mord mathbf">m</span><span class="mord mathbf">a</span><span class="mord mathbf">x</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.891331em;"><span style="top:-2.4530000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9955400000000001em;"><span class="svg-align" style="top:-3.01em;"><span class="pstrut" style="height:3.01em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span></span></span><span style="top:-2.94554em;"><span class="pstrut" style="height:3.01em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.09em;"><svg width='400em' height='1.09em' viewBox='0 0 400000 1090' preserveAspectRatio='xMinYMin slice'><path d='M95,712
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l4.819277108433735 -10.000000000000002
+c5.3,-9.3,12,-14,20,-14
+H400000v50H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M844 80h400000v50h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.06445999999999996em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>其中条目 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">a_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 表示位置<code>i</code>处的查询对位置<code>j</code>处的键的权重。值表示每个位置将传播给关注它的位置的信息。每个单独的注意力头计算其输出为跨所有输入位置的加权和：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">a</mi><mi>v</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf a_v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.59444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。这允许每个查询位置使用整个序列的信息。多个头使用独立的参数进行计算，我们将每个头的输出连接起来形成最终的层输出，然后是一个线性层来组合它们。我们的层使用8个头，值大小为192，键/查询大小为64。</p>
+<p>在自然语言处理中的<code>MHA</code>应用通常直接在输入序列上操作，将其标记为单词并嵌入到更丰富的嵌入空间中。<code>Enformer</code>模型中位于<code>MHA</code>之前的卷积塔用于执行类似的操作，即嵌入核苷酸片段，并为相邻核苷酸在基序中一起工作提供了令人信服的归纳偏置。我们选择在<code>128bp</code>分辨率下计算，因为它大致代表了一个包含几个基序的调控元件的研究长度，并且是聚合实验数据进行预测的适当区块大小。更精细的分辨率在数据支持时可能有潜在的好处，但会延长进入二次复杂度<code>MHA</code>的序列长度，使模型工程在当前可用的硬件上变得难以处理。</p>
+<p>为了注入位置信息，我们按照<code>Transformer-XL</code>论文中的公式，将相对位置编码 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">R</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathbf R_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.972218em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathbf">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span> 添加到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">q</mi><mi>i</mi></msub><msubsup><mi mathvariant="bold">k</mi><mi>j</mi><mi>T</mi></msubsup></mrow><annotation encoding="application/x-tex">\mathbf q_i \mathbf k_j^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.236103em;vertical-align:-0.394772em;"></span><span class="mord"><span class="mord mathbf">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.394772em;"><span></span></span></span></span></span></span></span></span></span> 注意力项中。具体来说，我们使用：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold">R</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi mathvariant="bold">q</mi><mi>i</mi></msub><msubsup><mi mathvariant="bold">r</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow><mi>T</mi></msubsup><mo>+</mo><mi mathvariant="bold">u</mi><msubsup><mi mathvariant="bold">k</mi><mi>j</mi><mi>T</mi></msubsup><mo>+</mo><mi mathvariant="bold">v</mi><msubsup><mi mathvariant="bold">r</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow><mi>T</mi></msubsup></mrow><annotation encoding="application/x-tex">\mathbf R_{ij} = \mathbf q_i \mathbf r_{i-j}^T + \mathbf u \mathbf k_j^T + \mathbf v \mathbf r_{i-j}^T
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.972218em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathbf">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.274439em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathbf">q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathbf">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.891331em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.274439em;vertical-align:-0.383108em;"></span><span class="mord mathbf">u</span><span class="mord"><span class="mord mathbf">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.891331em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.274439em;vertical-align:-0.383108em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span><span class="mord"><span class="mord mathbf">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.891331em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">r</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow></msub><mo>=</mo><msup><mi mathvariant="bold">w</mi><mi mathvariant="bold">R</mi></msup><mi mathvariant="bold">f</mi><mo stretchy="false">(</mo><mi mathvariant="bold">i</mi><mo>−</mo><mi mathvariant="bold">j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf r_{i-j} = \mathbf w^\mathbf R\mathbf f(\mathbf i-\mathbf j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.730548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathbf">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.093277em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8432769999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathbf mtight">R</span></span></span></span></span></span></span></span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mopen">(</span><span class="mord mathbf">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">j</span><span class="mclose">)</span></span></span></span> 是不同相对基函数 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">f</mi><mo stretchy="false">(</mo><mi mathvariant="bold">i</mi><mo>−</mo><mi mathvariant="bold">j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf f(\mathbf i-\mathbf j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mopen">(</span><span class="mord mathbf">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">j</span><span class="mclose">)</span></span></span></span> 的线性函数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">u</mi></mrow><annotation encoding="application/x-tex">\mathbf u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord mathbf">u</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">v</mi></mrow><annotation encoding="application/x-tex">\mathbf v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span></span></span></span>是用于评估对特定键（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">u</mi></mrow><annotation encoding="application/x-tex">\mathbf u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord mathbf">u</span></span></span></span>）或相对距离（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">v</mi></mrow><annotation encoding="application/x-tex">\mathbf v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span></span></span></span>）偏好的位置无关嵌入。我们使用三种不同的基函数类用于 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">f</mi><mo stretchy="false">(</mo><mi mathvariant="bold">i</mi><mo>−</mo><mi mathvariant="bold">j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf f(\mathbf i-\mathbf j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mopen">(</span><span class="mord mathbf">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">j</span><span class="mclose">)</span></span></span></span> ，如扩展数据图5b所示。</p>
+<ol>
+<li>
+<p>指数函数：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>f</mi><mi>i</mi><mtext>exponential</mtext></msubsup><mrow><mo fence="true">(</mo><mi>r</mi><mo fence="true">)</mo></mrow><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mn>2</mn><mo fence="true">)</mo></mrow><mfrac><mi>r</mi><msub><mi>r</mi><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>2</mn><mo separator="true">,</mo><mi>i</mi></mrow></msub></mfrac></mrow></msup></mrow><annotation encoding="application/x-tex">f_i^{\text{exponential}}\left( r \right) = e^{ - \log \left( 2 \right) \frac{r}{r_{1/2,i}} }
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2438799999999999em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9670159999999998em;"><span style="top:-2.4231360000000004em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.180908em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">exponential</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose delimcenter" style="top:0em;">)</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20115em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.20115em;"><span style="top:-3.6761500000000003em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mspace mtight" style="margin-right:0.19516666666666668em;"></span><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.01389em;">g</span></span><span class="minner mtight"><span class="mopen mtight delimcenter" style="top:0em;"><span class="mtight">(</span></span><span class="mord mtight">2</span><span class="mclose mtight delimcenter" style="top:0em;"><span class="mtight">)</span></span></span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6915428571428572em;"><span style="top:-2.6559999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3448em;margin-left:-0.02778em;margin-right:0.1em;"><span class="pstrut" style="height:2.75em;"></span><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">/</span><span class="mord mtight">2</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6552em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.225em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.05em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.812em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>2</mn><mo separator="true">,</mo><mi>i</mi></mrow></msub></mrow><annotation encoding="application/x-tex">r_{1/2,i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7857599999999999em;vertical-align:-0.3551999999999999em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.34480000000000005em;"><span style="top:-2.5198em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">/</span><span class="mord mtight">2</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3551999999999999em;"><span></span></span></span></span></span></span></span></span></span> 在对数空间中在3和序列长度之间线性放置。</p>
+</li>
+<li>
+<p>中心掩码函数：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>f</mi><mi>i</mi><mtext>central mask</mtext></msubsup><mrow><mo fence="true">(</mo><mi>r</mi><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.15999999999999992em" columnalign="left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn><mo separator="true">,</mo><mspace width="1em"/><mtext>if </mtext><mi>r</mi><mo>≤</mo><msup><mn>2</mn><mi>i</mi></msup></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn><mo separator="true">,</mo><mspace width="1em"/><mtext>otherwise</mtext></mrow></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">f_i^{\text{central mask}}\left( r \right) = 
+\left\{ 
+\begin{array}{l}
+1, \quad \text{if } r \le 2^i \\
+0, \quad \text{otherwise}
+\end{array}
+\right.
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1491079999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999998em;"><span style="top:-2.4530000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">central mask</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose delimcenter" style="top:0em;">)</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">{</span></span><span class="mord"><span class="mtable"><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord text"><span class="mord">otherwise</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+</li>
+<li>
+<p>伽马函数：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>f</mi><mi>i</mi><mi>γ</mi></msubsup><mrow><mo fence="true">(</mo><mi>r</mi><mo fence="true">)</mo></mrow><mo>=</mo><mi mathvariant="normal">Γ</mi><mrow><mo fence="true">(</mo><mi>r</mi><mo>∣</mo><mi>α</mi><mo>=</mo><mfrac><msub><mi>μ</mi><mi>i</mi></msub><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo separator="true">,</mo><mi>β</mi><mo>=</mo><mfrac><msubsup><mi>μ</mi><mi>i</mi><mn>2</mn></msubsup><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f_i^{\gamma}\left( r \right) = \Gamma\left( r \mid \alpha = \frac{\mu_i}{\sigma^2}, \beta = \frac{\mu_i^2}{\sigma^2} \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.059164em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7822999999999999em;"><span style="top:-2.4231360000000004em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.180908em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose delimcenter" style="top:0em;">)</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.4478020000000003em;vertical-align:-0.95003em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.10756em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.225em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.05em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.497772em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.225em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.05em;"></span></span><span style="top:-3.683664em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span></p>
+</li>
+</ol>
+<p>其中 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Γ</mi><mo stretchy="false">(</mo><mi>r</mi><mi mathvariant="normal">∣</mi><mi>α</mi><mo separator="true">,</mo><mi mathvariant="bold">β</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\Gamma(r|α,\mathbf β)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Γ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mclose">)</span></span></span></span> 是伽马概率分布函数。<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">μ_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 在（序列长度/特征数量）到序列长度之间线性放置，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">σ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span>=序列长度/（2 × 特征数量）。</p>
+<p>对于每个基函数，我们使用对称 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">f</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi mathvariant="bold">x</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf f(|\mathbf x|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathbf">x</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span> 和非对称 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="bold">s</mi><mi mathvariant="bold">i</mi><mi mathvariant="bold">g</mi><mi mathvariant="bold">n</mi><mo stretchy="false">(</mo><mi mathvariant="bold">x</mi><mo stretchy="false">)</mo></mrow><mo>×</mo><mi mathvariant="bold">f</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi mathvariant="bold">x</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf {sign(x)} × \mathbf f(|\mathbf x|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">s</span><span class="mord mathbf">i</span><span class="mord mathbf" style="margin-right:0.01597em;">g</span><span class="mord mathbf">n</span><span class="mopen">(</span><span class="mord mathbf">x</span><span class="mclose">)</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.10903em;">f</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathbf">x</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span> 版本来引入方向性。我们使用与<code>MHA</code>的值大小相同数量的相对位置基函数（192）。这192个基函数在基函数类和对称与非对称版本之间平均分配。对于3个基函数类，每个基函数类提供64个位置特征（32个对称和32个非对称）。</p>
+<p>在<code>MHA</code>中，位置编码特征和最终注意力矩阵的丢弃率分别为0.01和0.05。所有其他丢弃率都在扩展数据图1a中注明。</p>
+<h3 id="模型训练和评估"><a class="markdownIt-Anchor" href="#模型训练和评估"></a> 模型训练和评估</h3>
+<p>模型在与<code>Basenji2</code>相同的目标、基因组区间和泊松负对数似然损失函数上进行训练、评估和测试。简而言之，跨物种训练/验证/测试集是通过以下程序构建的，以将同源序列划分到相同的集合中。首先，我们将人类和小鼠基因组分成<code>1Mb</code>区域。我们构建了一个二分图，其中顶点表示这些区域。接下来，如果两个区域在从<code>UCSC Genome Browser</code>下载的<code>hg38-mm10</code>同源网格格式对齐中具有超过<code>100kb</code>的对齐序列，我们就在它们之间放置边。最后，我们将二分图中的连通分量随机划分为训练集、验证集和测试集。</p>
+<p>数据集包含人类基因组的34021个训练序列、2213个验证序列和1937个测试序列，以及小鼠基因组的29295个训练序列、2209个验证序列和2017个测试序列。对于人类基因组，每个样本包含2131个转录因子（<code>TF</code>）染色质免疫沉淀测序（<code>ChIP-seq</code>）、1860个组蛋白修饰<code>ChIP-seq</code>、684个<code>DNase-seq</code>或<code>ATAC-seq</code>和638个<code>CAGE</code>轨迹（总计5313个，补充表<code>2</code>）。对于小鼠基因组，每个样本包含308个<code>TF ChIP-seq</code>、750个组蛋白修饰<code>ChIP-seq</code>、228个<code>DNase-seq</code>或<code>ATAC-seq</code>和357个<code>CAGE</code>轨迹（总计1643个，补充表<code>3</code>）。我们修改了<code>Basenji2</code>数据集，使用<code>hg38</code>参考基因组将输入序列从原来的<code>131072bp</code>扩展到<code>196608bp</code>。</p>
+<p>为了在人类和小鼠基因组上同时训练模型，我们在包含人类基因组数据的批次和包含小鼠基因组数据的批次之间交替。主要的<code>Enformer</code>模型具有1536个通道，使用<code>Sonnet v2</code>、<code>TensorFlow</code>（<code>v2.4.0</code>）实现，并在64个<code>TPU v3</code>核心上进行训练，批量大小为64（每核心1个），训练150000步（约3天），在每一步中使用全归约梯度聚合。批量归一化统计数据也使用<code>0.9</code>动量在多个副本之间聚合。我们使用来自<code>Sonnet v2</code>的<code>Adam</code>优化器，学习率为<code>0.0005</code>，其他超参数使用默认设置：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">β</mi><mn>1</mn></msub><mo>=</mo><mn>0.9</mn><mtext>、</mtext><msub><mi mathvariant="bold">β</mi><mn>2</mn></msub><mo>=</mo><mn>0.999</mn><mtext>、</mtext><mi mathvariant="bold">ε</mi><mo>=</mo><mn>1</mn><mo>×</mo><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf β_1=0.9、\mathbf β_2=0.999、\mathbf ε=1×10^{-8}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">9</span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">9</span><span class="mord">9</span><span class="mord">9</span><span class="mord cjk_fallback">、</span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">8</span></span></span></span></span></span></span></span></span></span></span></span>。</p>
+<p>通过网格搜索在验证集上获得最高性能来发现最佳学习率。我们在训练的前5000步中将学习率从0线性增加到目标值。我们将梯度裁剪到最大全局范数<code>0.2</code>。在训练期间，我们使用与<code>Basenji2</code>相同的数据增强，通过随机移动输入序列最多<code>3bp</code>并反向互补输入序列的同时反转目标。最后，我们使用较低的学习率<code>0.0001</code>在人类数据上对<code>Enformer</code>模型进行了30000步的微调。</p>
+<p>我们使用预训练的<code>Basenji2</code>模型进行所有主要的模型比较，并重新训练了一个等效模型用于消融实验和超参数扫描（如扩展数据图5所示）。在这些比较分析中，我们使用了768个通道（原始<code>Enformer</code>模型的<code>1/2</code>，在<code>MHA</code>中使用值大小96）、<code>131kb</code>输入序列，以及批量大小32在32个<code>TPU v3</code>核心上训练。我们没有在人类数据上对这些模型进行微调。</p>
+<p>对于使用扩张卷积而不是<code>transformer</code>块的模型，我们使用了更高的学习率<code>0.02</code>，且不进行学习率预热。与<code>Enformer</code>一样，最佳学习率是通过网格搜索在验证集上获得最高性能来确定的。所有模型都训练了500000步，每1000步在验证集上计算一次<code>CAGE TSS</code>基因表达的<code>Spearman</code>相关性（跨基因平均，跨实验平均），只保存具有最高相关性的模型。</p>
+<p>我们使用验证集进行超参数选择，使用测试集进行<code>Basenji2</code>比较。我们考虑了两个评估指标：</p>
+<ol>
+<li>
+<p>对于每个输出轨迹，在验证/测试集中所有<code>128bp</code>分箱基因组位置上计算的<code>Pearson</code>相关性；</p>
+</li>
+<li>
+<p>验证/测试集中所有蛋白质编码基因的<code>CAGE</code>基因表达值（ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">l</mi><mi mathvariant="bold">o</mi><mi mathvariant="bold">g</mi><mo stretchy="false">(</mo><mn mathvariant="bold">1</mn><mo>+</mo><mi mathvariant="bold">x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf {log(1+x)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">l</span><span class="mord mathbf">o</span><span class="mord mathbf" style="margin-right:0.01597em;">g</span><span class="mopen">(</span><span class="mord mathbf">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathbf">x</span><span class="mclose">)</span></span></span></span></span> 转换并在每个实验的基因间标准化）的<code>Pearson</code>相关性，可以是每个<code>CAGE</code>实验跨基因计算（主要指标），也可以是跨<code>CAGE</code>实验为每个基因计算（如图<code>1b</code>所示）。</p>
+</li>
+</ol>
+<p>观察到的和预测的基因表达值是通过在基因的所有唯一<code>TSS</code>位置上对观察到/预测的<code>CAGE</code>读数进行求和获得的。对于每个<code>TSS</code>位置，我们使用与<code>TSS</code>重叠的<code>128bp</code>分箱以及两个相邻分箱（总共<code>3</code>个分箱）。</p>
+<p>在模型评估期间，我们使用测试时增强：我们平均了8个随机增强序列的预测，增强方式与训练期间相同（<code>≤3bp</code>移位和反向互补）。我们仅在生成图1时在测试集上评估了模型性能一次，在模型开发期间未使用测试集。</p>
+<p>为了选择一个具有代表性的例子，我们将<code>Enformer</code>和<code>Basenji2</code>在&quot;跨<code>CAGE</code>实验&quot;指标上表现差异最大的前<code>10</code>个转录本可视化，该指标用于测量<code>33%</code>组织特异性最强的基因的组织特异性。我们选择了列表中的第六个转录本（<code>ENST00000524922</code>），因为它清晰地显示了所有三类基因组轨迹（<code>DNA</code>可及性、组蛋白修饰和基因表达）的差异。</p>
+<h3 id="增强子优先级排序"><a class="markdownIt-Anchor" href="#增强子优先级排序"></a> 增强子优先级排序</h3>
+<p>我们从两项研究中获得了一组增强子-基因对，这些研究使用<code>CRISPRi</code>测定方法扰动目标增强子并测量<code>K562</code>细胞中基因表达变化：<code>Gasperini</code>等人使用<code>scRNA-seq</code>测量表达变化，以及<code>Fulco</code>等人使用<code>Flow-FISH</code>。</p>
+<p>我们使用<code>UCSC liftOver</code>网络工具将增强子和基因坐标从<code>hg19</code>转换到<code>hg38</code>。每个增强子-基因对都包含一个标签，表明在<code>CRISPRi</code>处理后是否诱导了显著的表达变化。我们将所有增强子集合表示为&quot;候选&quot;增强子，将那些显示表达变化的增强子表示为&quot;验证&quot;增强子。</p>
+<p>我们使用精确度-召回曲线下面积（<code>auPRC</code>）评估不同方法对表现出显著表达变化的增强子-基因对进行分类或优先级排序的能力。</p>
+<p>要使用基于序列的模型对增强子-基因对进行优先级排序，我们计算了三种不同的得分：梯度×输入、注意力和体外突变（<code>ISM</code>）。对于每个增强子-基因对，我们通过取<code>Enformer</code>在<code>K562</code>中预测的最高<code>CAGE</code>值来确定基因的主要<code>TSS</code>。我们提取以主要<code>TSS</code>为中心的<code>DNA</code>序列，并计算以下不同的增强子-基因得分：</p>
+<ol>
+<li>
+<p><code>梯度×输入</code>：我们计算<code>CAGE</code>目标（使用<code>K562</code>特异性<code>CAGE</code>目标或所有<code>CAGE</code>目标，扩展数据图<code>7c</code>）在<code>TSS</code>处相对于输入参考序列核苷酸的梯度的绝对值。注意，由于我们的输入序列是独热编码的，取非零通道（参考核苷酸）的输入梯度，等同于计算梯度×输入归因。我们注意到&quot;<code>TSS</code>处的<code>CAGE</code>&quot;始终意味着从三个相邻分箱中求和绝对梯度值，这在基因聚焦的模型评估中也是如此。三个分箱包括与<code>TSS</code>重叠的分箱和两侧各一个相邻分箱。增强子-基因得分是通过在以增强子为中心的<code>2kb</code>窗口中求和绝对梯度×输入得分获得的。</p>
+</li>
+<li>
+<p><code>注意力</code>：我们首先在所有头部和层之间平均<code>transformer</code>注意力矩阵。我们提取与位于<code>TSS</code>的查询索引对应的行，这样键就对应于不同的空间位置，注意力值指定模型在为<code>TSS</code>做预测时对这些位置的关注程度。我们仅为<code>Enformer</code>计算此贡献得分。增强子-基因得分是通过在以增强子为中心的<code>2kb</code>窗口中求和注意力得分获得的。</p>
+</li>
+<li>
+<p><code>ISM</code>：体外突变增强子-基因得分是通过比较参考序列与修改序列（其中<code>2kb</code>增强子序列被随机序列替换）在<code>TSS</code>处的<code>K562 CAGE</code>预测来计算的：<code>|f(modified) – f(reference)|</code>。</p>
+</li>
+</ol>
+<p>为了复现<code>Fulco</code>等人引入的<code>ABC</code>得分，我们从<code>ENCODE</code>获取了<code>K562</code>中的<code>H3K27ac ChIP-seq</code>数据（文件访问号<code>ENCFF779QTH</code>）和<code>DNase</code>数据（文件访问号<code>ENCFF413AHU</code>和<code>ENCFF936BDN</code>）的<code>BigWig</code>文件。我们对重复样本的归一化读数进行求和。对于每个轨迹和增强子，我们在以增强子为中心的固定<code>2kb</code>窗口中求和信号。与原始<code>ABC</code>得分使用的约<code>500 bp</code>可变窗口大小相比，这种固定且更宽的窗口产生了更好的性能（扩展数据图4a）。</p>
+<h3 id="gtex-sldp"><a class="markdownIt-Anchor" href="#gtex-sldp"></a> GTEx SLDP</h3>
+<p>我们通过使用参考等位基因和替代等位基因对模型进行正向传递，计算它们的差异，并在序列上求和以获得每个训练数据集的带符号得分，来预测遗传变异对各种注释的影响。我们对使用正向和反向互补序列以及向左和向右的小序列移动计算的得分进行平均。我们计算了所有<code>1000 Genomes SNP</code>的得分。</p>
+<p>我们使用<code>SLDP</code>来估计这些得分与<code>GTEx v7a</code>的48个组织的汇总统计数据之间的功能相关性，同时考虑了人群连锁不平衡结构（补充信息）。</p>
+<h4 id="精细定位的gtex分类"><a class="markdownIt-Anchor" href="#精细定位的gtex分类"></a> 精细定位的<code>GTEx</code>分类</h4>
+<p>为了在不需要考虑<code>LD</code>的情况下研究特定的<code>eQTL</code>，我们使用<code>SuSiE</code>方法研究了<code>GTEx v8</code>的统计精细作图。我们关注在可信因果集合中后验包含概率（<code>PIP</code>）大于<code>0.9</code>的变异，从黑质的最少<code>166</code>个变异到胫骨神经的<code>2740</code>个变异不等。我们安排了一个分类任务，以区分这些阳性因果变异和匹配的阴性变异集。</p>
+<p>在可用时，我们为每个因果变异从同一基因中测试的<code>PIP&lt;0.01</code>但|<code>Z-score</code>| &gt; <code>4</code>的集合中选择匹配的阴性变异。当在同一基因中不可用时，我们从全基因组范围内<code>PIP&lt;0.01</code>且|<code>Z-score</code>| &gt; <code>6</code>的集合中选择。</p>
+<p>为了确定不同变异注释的信息量，我们为每个组织训练了单独的随机森林分类器，使用八折交叉验证来区分因果和非因果变异。我们选择了<code>scikit-learn 0.22</code>实现的默认超参数，因为修改它们后准确性提升可以忽略不计。然而，由于来自训练数据集的特征数量庞大，将每个决策树分裂时考虑的最大特征数设置为特征总数的<code>log2</code>大大提高了计算效率。我们进行了<code>100</code>次随机交叉验证洗牌和随机森林拟合迭代，以描绘模型准确性的低方差估计。我们通过比较<code>8×100</code>个不同测试集<code>auROC</code>来对两个不同模型特征集进行统计检验。</p>
+<p>对于带符号的<code>GTEx</code>分析，我们基于模型预测区分增加和降低基因表达的因果变异的能力来进行基准测试。在这个分析中，我们去除了对不同顺式基因的基因表达影响方向相反的变异。我们手动将<code>FANTOM5 CAGE</code>样本描述与<code>GTEx</code>组织匹配。我们跳过了具有超过三个可能匹配的情况。在有两个或三个可能匹配的情况下，我们选择了<code>Basenji2</code>和<code>Enformer</code>预测之间平均一致性最好的<code>CAGE</code>样本。我们通过根据该样本的带符号预测对因果变异进行排序来计算<code>auROC</code>统计量。</p>
+<h4 id="基于饱和突变数据对变异效应预测进行基准测试"><a class="markdownIt-Anchor" href="#基于饱和突变数据对变异效应预测进行基准测试"></a> 基于饱和突变数据对变异效应预测进行基准测试</h4>
+<p>我们从<code>CAGI5</code>竞赛获得了训练集和测试集以及各参赛者的预测准确性（<code>M.Kircher</code>，个人通信，<a target="_blank" rel="noopener" href="https://genomeinterpretation.org/content/expression-variants">https://genomeinterpretation.org/content/expression-variants</a>）。对于每个变异和位点，我们将其效应评估为参考等位基因和替代等位基因之间的预测差异，在代表<code>512bp</code>的四个相邻分箱中求和，基于人类数据集生成<code>5313</code>个特征。</p>
+<p>在计算这个差异之前，所有<code>CAGE</code>特征都在添加伪计数<code>1</code>后进行对数转换。对于每个等位基因，我们对正向和反向互补序列的预测进行平均。我们使用训练集特征计算的缩放因子对测试集的特征进行缩放，使训练特征具有均值<code>0</code>和标准差<code>1</code>。遵循我们之前的工作，我们然后使用这些特征和相应的训练集为每个位点训练一个<code>lasso</code>回归模型。正则化强度由单个<code>λ</code>参数控制，使用<code>R</code>语言中<code>glmnet</code>库的<code>cv.glmnet</code>函数通过对每个训练集进行十折交叉验证来优化。</p>
+<p>对于我们的免训练比较，我们选择了对应于细胞类型匹配和细胞类型无关的<code>CAGE</code>和<code>DNase</code>变化预测的特征子集。对于细胞类型无关模型，我们使用了所有<code>638</code>个<code>CAGE</code>或<code>674</code>个<code>DNase</code>特征的子集（补充表<code>2</code>）。对于细胞类型匹配模型，我们还要求<code>CAGE/DNase</code>特征包含以下子字符串：</p>
+<ul>
+<li>对于<code>F9</code>、<code>LDLR</code>和<code>SORT1</code>使用&quot;<code>HepG2</code>&quot;；</li>
+<li>对于<code>GP1BB</code>、<code>HBB</code>、<code>HBG1</code>和<code>PKLR</code>使用&quot;<code>K562</code>&quot;；</li>
+<li>对于<code>HNF4A</code>、<code>MSMB</code>、<code>TERT</code>（在<code>HEK293T</code>细胞中进行）和<code>MYCrs6983267</code>使用&quot;<code>HEK293</code>&quot;；</li>
+</ul>
+<p>对于几个位点，并不存在完全匹配的<code>DNase</code>或<code>CAGE</code>样本。因此，我们根据以下子字符串选择最接近的匹配特征：</p>
+<ul>
+<li>对于<code>ZFAND3</code>使用&quot;胰腺&quot;；</li>
+<li>对于<code>TERT</code>（在<code>GBM</code>细胞中进行）使用&quot;胶质母细胞瘤&quot;；</li>
+<li>对于<code>IRF6</code>使用&quot;角质形成细胞&quot;；</li>
+<li>对于<code>IRF4</code>使用&quot;<code>SK-MEL</code>&quot;；</li>
+</ul>
+<p>对于每个位点，我们提取匹配上述子字符串的特征，并使用所示特征的第一主成分（<code>PC</code>）作为我们的汇总统计量，如果<code>PC</code>与特征均值负相关则反转其符号。</p>
+<h1 id="数据可用性"><a class="markdownIt-Anchor" href="#数据可用性"></a> 数据可用性</h1>
+<p>基因注释从<a target="_blank" rel="noopener" href="https://www.gencodegenes.org/">https://www.gencodegenes.org/</a>（<code>v32</code>）获取。<code>Basenji2</code>训练、验证和测试数据从<a target="_blank" rel="noopener" href="https://console.cloud.google.com/storage/browser/basenji_barnyard/data">https://console.cloud.google.com/storage/browser/basenji_barnyard/data</a>获取。</p>
+<p><code>Fulco</code>等人<code>2019</code>的处理后的<code>CRISPRi</code>数据从补充材料获取，<code>Gasperini</code>等人<code>2019</code>的数据从<code>GEO</code>登录号<code>GSE120861</code>获取。用于图2分析的<code>K562</code>中的<code>H3K27ac ChIP-seq</code>数据从<a target="_blank" rel="noopener" href="https://www.encodeproject.org/">https://www.encodeproject.org/</a>获取，文件登录号为<code>ENCFF779QTH</code>，<code>DNase</code>数据的文件登录号为<code>ENCFF413AHU</code>和<code>ENCFF936BDN</code>。由<code>Fudenberg</code>等人2020处理的<code>TAD</code>边界从<a target="_blank" rel="noopener" href="https://console.cloud.google.com/storage/browser/basenji_hic/insulation">https://console.cloud.google.com/storage/browser/basenji_hic/insulation</a>获取。精细定位的<code>eQTL</code>可从<code>Wang</code>等人2021的补充材料获取，阴性集从<a target="_blank" rel="noopener" href="https://console.cloud.google.com/storage/browser/dm-enformer/data/gtex_fine">https://console.cloud.google.com/storage/browser/dm-enformer/data/gtex_fine</a>获取。我们从<code>CAGI5</code>竞赛获得了训练集和测试集以及各参赛者的预测准确性（<code>M.Kircher</code>个人通信，<a target="_blank" rel="noopener" href="https://genomeinterpretation.org/content/expression-variants">https://genomeinterpretation.org/content/expression-variants</a>）。为了与<code>ExPecto</code>进行比较，我们使用了来自<a target="_blank" rel="noopener" href="https://github.com/FunctionLab/ExPecto/tree/master/resources">https://github.com/FunctionLab/ExPecto/tree/master/resources</a>提供的数据。</p>
+<h1 id="代码可用性"><a class="markdownIt-Anchor" href="#代码可用性"></a> 代码可用性</h1>
+<p>我们的核心算法的所有组件，包括完整的模型架构和用于训练和评估模型的示例代码，均可在以下URL下以开源<code>Apache 2.0</code>许可证获取：<a target="_blank" rel="noopener" href="https://github.com/deepmind/deepmind-research/tree/master/enformer">https://github.com/deepmind/deepmind-research/tree/master/enformer</a>。该代码也已存档在<code>Zenodo</code>：<a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.5098375">https://doi.org/10.5281/zenodo.5098375</a>。此外，模型的层组件现在可在现有的生物序列深度学习<code>Basenji</code>代码库中获取：<a target="_blank" rel="noopener" href="https://github.com/calico/basenji">https://github.com/calico/basenji</a>，同样采用开源<code>Apache 2.0</code>许可证。</p>
+<p>预训练的<code>Enformer</code>模型可在<code>TF-Hub</code>上获取，使用者可以轻松地在新数据上运行它：<a target="_blank" rel="noopener" href="https://tfhub.dev/deepmind/enformer/1">https://tfhub.dev/deepmind/enformer/1</a>。我们还计划在<code>Kipoi</code>模型库中发布它。我们提供代码示例（<code>enformer-usage.ipynb</code>）说明如何使用该模型对遗传变异进行评分。</p>
+<p>最后，我们在这里提供了<code>1000</code>个基因组队列中所有常见变异（在任何人群中<code>MAF&gt;0.5%</code>）的变异效应预测，采用开放的创作共用<code>CC-BY 4.0</code>许可证。为了使这些预测更易获取，我们使用<code>PCA</code>将<code>5313</code>个特征提炼为<code>20</code>个高度信息量的变异得分，以保持发布文件大小可控（总共<code>10M</code>个变异小于<code>1GB</code>，而不是<code>100GB</code>），同时保持较高的预测准确性（使用所有特征的<code>GTEx</code>精细定位分类<code>auROC</code>为<code>0.747</code>，而使用提炼后的特征为<code>0.743</code>）。</p>
+<h1 id="扩展图"><a class="markdownIt-Anchor" href="#扩展图"></a> 扩展图</h1>
+<h2 id="扩展数据图1"><a class="markdownIt-Anchor" href="#扩展数据图1"></a> 扩展数据图1</h2>
+<p><img src="/images/assets//image-20241213005757016.png" alt="image-20241213005757016" /></p>
+<h2 id="扩展数据图2"><a class="markdownIt-Anchor" href="#扩展数据图2"></a> 扩展数据图2</h2>
+<p><img src="/images/assets//image-20241213005824711.png" alt="image-20241213005824711" /></p>
+<h2 id="扩展数据图3"><a class="markdownIt-Anchor" href="#扩展数据图3"></a> 扩展数据图3</h2>
+<p><img src="/images/assets//image-20241213005929510.png" alt="image-20241213005929510" /></p>
+<h2 id="扩展数据图4"><a class="markdownIt-Anchor" href="#扩展数据图4"></a> 扩展数据图4</h2>
+<p><img src="/images/assets//image-20241213005951132.png" alt="image-20241213005951132" /></p>
+<h2 id="扩展数据图5"><a class="markdownIt-Anchor" href="#扩展数据图5"></a> 扩展数据图5</h2>
+<p><img src="/images/assets//image-20241213010020755.png" alt="image-20241213010020755" /></p>
+<h2 id="扩展数据图6"><a class="markdownIt-Anchor" href="#扩展数据图6"></a> 扩展数据图6</h2>
+<p><img src="/images/assets//image-20241213010050142.png" alt="image-20241213010050142" /></p>
+<h2 id="扩展数据图7"><a class="markdownIt-Anchor" href="#扩展数据图7"></a> 扩展数据图7</h2>
+<p><img src="/images/assets//image-20241213010123603.png" alt="image-20241213010123603" /></p>
+<h2 id="扩展数据图8"><a class="markdownIt-Anchor" href="#扩展数据图8"></a> 扩展数据图8</h2>
+<p><img src="/images/assets//image-20241213010205858.png" alt="image-20241213010205858" /></p>
+<h2 id="扩展数据图9"><a class="markdownIt-Anchor" href="#扩展数据图9"></a> 扩展数据图9</h2>
+<p><img src="/images/assets//image-20241213010222558.png" alt="image-20241213010222558" /></p>
+<h2 id="扩展数据图10"><a class="markdownIt-Anchor" href="#扩展数据图10"></a> 扩展数据图10</h2>
+<p><img src="/images/assets//image-20241213010242362.png" alt="image-20241213010242362" /></p>
+<h1 id="参考文献"><a class="markdownIt-Anchor" href="#参考文献"></a> 参考文献</h1>
+<ol>
+<li>
+<p>Zhou, J. et al. Deep learning sequence-based ab initio prediction of variant effects on expression and disease risk. Nat. Genet. 50, 1171-1179 (2018).</p>
+</li>
+<li>
+<p>Kelley, D. R. Cross-species regulatory sequence activity prediction. PLoS Comput. Biol. 16, e1008050 (2020).</p>
+</li>
+<li>
+<p>Kelley, D. R. et al. Sequential regulatory activity prediction across chromosomes with convolutional neural networks. Genome Res. 28, 739-750 (2018).</p>
+</li>
+<li>
+<p>Agarwal, V. &amp; Shendure, J. Predicting mRNA abundance directly from genomic sequence using deep convolutional neural networks. Cell Rep. 31, 107663 (2020).</p>
+</li>
+<li>
+<p>Gasperini, M., Tome, J. M. &amp; Shendure, J. Towards a comprehensive catalogue of validated and target-linked human enhancers. Nat. Rev. Genet. 21, 292-310 (2020).</p>
+</li>
+<li>
+<p>Vaswani, A. et al. Attention is all you need, in Advances in Neural Information Processing Systems 5998-6008 (2017).</p>
+</li>
+<li>
+<p>Brown, T. B. et al. Language models are few-shot learners. in Advances in Neural Information Processing Systems (2020).</p>
+</li>
+<li>
+<p>Ji, Y., Zhou, Z., Liu, H. &amp; Davuluri, R. V. DNABERT: pre-trained bidirectional encoder representations from transformers model for DNA-language in genome. Bioinformatics <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btab083">https://doi.org/10.1093/bioinformatics/btab083</a> (2021).</p>
+</li>
+<li>
+<p>Gasperini, M. et al. A genome-wide framework for mapping gene regulation via cellular genetic screens. Cell 176, 377-390 (2019).</p>
+</li>
+<li>
+<p>FANTOM Consortium and the RIKEN PMI and CLST (DGT). A promoter-level mammalian expression atlas. Nature 507, 462-470 (2014).</p>
+</li>
+<li>
+<p>Heinz, S., Romanoski, C. E., Benner, C. &amp; Glass, C. K. The selection and function of cell type-specific enhancers. Nat. Rev. Mol. Cell Biol. 16, 144-154 (2015).</p>
+</li>
+<li>
+<p>Shrikumar, A., Greenside, P. &amp; Kundaje, A. Learning important features through propagating activation differences. in International Conference on Machine Learning 3145-3153 (PMLR, 2017).</p>
+</li>
+<li>
+<p>Fulco, C. P. et al. Activity-by-contact model of enhancer-promoter regulation from thousands of CRISPR perturbations. Nat. Genet. 51, 1664-1669 (2019).</p>
+</li>
+<li>
+<p>Eraslan, G., Avsec, Ž., Gagneur, J. &amp; Theis, F. J. Deep learning: new computational modelling techniques for genomics. Nat. Rev. Genet. 20, 389-403 (2019).</p>
+</li>
+<li>
+<p>Avsec, Ž. et al. Base-resolution models of transcription-factor binding reveal soft motif syntax. Nat. Genet. <a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41588-021-00782-6">https://doi.org/10.1038/s41588-021-00782-6</a> (2021).</p>
+</li>
+<li>
+<p>ENCODE Project Consortium et al. Expanded encyclopaedias of DNA elements in the human and mouse genomes. Nature 583, 699-710 (2020).</p>
+</li>
+<li>
+<p>Ghandi, M. et al. gkmSVM: an R package for gapped-kmer SVM. Bioinformatics 32, 2205-2207 (2016).</p>
+</li>
+<li>
+<p>Zhou, J. &amp; Troyanskaya, O. G. Predicting effects of noncoding variants with deep learning-based sequence model. Nat. Methods 12, 931-934 (2015).</p>
+</li>
+<li>
+<p>Kelley, D. R., Snoek, J. &amp; Rinn, J. L. Basset: learning the regulatory code of the accessible genome with deep convolutional neural networks. Genome Res. 26, 990-999 (2016).</p>
+</li>
+<li>
+<p>Consortium, T. G., The GTEx Consortium. The GTEx Consortium atlas of genetic regulatory effects across human tissues. Science 369, 1318-1330 (2020).</p>
+</li>
+<li>
+<p>Reshef, Y. A. et al. Detecting genome-wide directional effects of transcription factor binding on polygenic disease risk. Nat. Genet. 50, 1483-1493 (2018).</p>
+</li>
+<li>
+<p>Wang, Q. S. et al. Leveraging supervised learning for functionally informed fine-mapping of cis-eQTLs identifies an additional 20,913 putative causal eQTLs. Nat. Commun. 12, 3394 (2021).</p>
+</li>
+<li>
+<p>Wang, G., Sarkar, A., Carbonetto, P. &amp; Stephens, M. A simple new approach to variable selection in regression, with application to genetic fine mapping. J. R. Stat. Soc. 82, 1273-1300 (2020).</p>
+</li>
+<li>
+<p>Weissbrod, O. et al. Functionally informed fine-mapping and polygenic localization of complex trait heritability. Nat. Genet. 52, 1355-1363 (2020).</p>
+</li>
+<li>
+<p>Kircher, M., Xiong, C., Martin, B. &amp; Schubach, M. Saturation mutagenesis of twenty disease-associated regulatory elements at single base-pair resolution. Nature 10, 3583 (2019).</p>
+</li>
+<li>
+<p>Shigaki, D. et al. Integration of multiple epigenomic marks improves prediction of variant impact in saturation mutagenesis reporter assay. Hum. Mutat. 40, 1280-1291 (2019).</p>
+</li>
+<li>
+<p>Lee, D. et al. A method to predict the impact of regulatory variants from DNA sequence. Nat. Genet. 47, 955-961 (2015).</p>
+</li>
+<li>
+<p>Rentzsch, P., Witten, D., Cooper, G. M., Shendure, J. &amp; Kircher, M. CADD: predicting the deleteriousness of variants throughout the human genome. Nucleic Acids Res. 47, D886-D894 (2019).</p>
+</li>
+<li>
+<p>Alipanahi, B., Delong, A., Weirauch, M. T. &amp; Frey, B. J. Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning. Nat. Biotechnol. 33, 831-838 (2015).</p>
+</li>
+<li>
+<p>Villar, D. et al. Enhancer evolution across 20 mammalian species. Cell 160, 554 (2015).</p>
+</li>
+<li>
+<p>Linder, J. et al. A generative neural network for maximizing fitness and diversity of synthetic DNA and protein sequences. Cell Syst. 11, 49-62 (2020).</p>
+</li>
+<li>
+<p>Fudenberg, G., Kelley, D. R. &amp; Pollard, K. S. Predicting 3D genome folding from DNA sequence with Akita. Nat. Methods 17, 1111-1117 (2020).</p>
+</li>
+<li>
+<p>Schwessinger, R. et al. DeepC: predicting 3D genome folding using megabase-scale transfer learning. Nat. Methods 17, 1118-1124 (2020).</p>
+</li>
+<li>
+<p>Schreiber, J., Durham, T., Bilmes, J. &amp; Noble, W. S. Avocado: a multi-scale deep tensor factorization method learns a latent representation of the human epigenome. Genome Biol. 21, 81 (2020).</p>
+</li>
+<li>
+<p>Nair, S., Kim, D. S., Perricone, J. &amp; Kundaje, A. Integrating regulatory DNA sequence and gene expression to predict genome-wide chromatin accessibility across cellular contexts. Bioinformatics 35, i108-i116 (2019).</p>
+</li>
+<li>
+<p>Tay, Y., Dehghani, M., Bahri, D. &amp; Metzler, D. Efficient transformers: a survey. Preprint at <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2009.06732">https://arxiv.org/abs/2009.06732</a> (2020).</p>
+</li>
+<li>
+<p>Richter, F. et al. Genomic analyses implicate noncoding de novo variants in congenital heart disease. Nat. Genet. 52, 769-777 (2020).</p>
+</li>
+<li>
+<p>Zhou, J. et al. Whole-genome deep-learning analysis identifies contribution of noncoding mutations to autism risk. Nat. Genet. 51, 973-980 (2019).</p>
+</li>
+<li>
+<p>Gupta, S., Stamatoyannpoulos, J. A., Bailey, T. L. &amp; Noble, W. Quantifying similarity between motifs. Genome Biology 8, R24 (2007).</p>
+</li>
+<li>
+<p>Shaw, P., Uszkoreit, J. &amp; Vaswani, A. Self-attention with relative position representations. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers) 464-468 (2018).</p>
+</li>
+<li>
+<p>Dai, Z. et al. Transformer-XL: Attentive language models beyond a fixed-length context. In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics 2978-2988 (2019).</p>
+</li>
+<li>
+<p>Kent, W. J. The Human Genome Browser at UCSC. Genome Research 12, 996-1006 (2002).</p>
+</li>
+<li>
+<p>Reynolds, M. et al. Open sourcing Sonnet — a new library for constructing neural networks. <a target="_blank" rel="noopener" href="https://deepmind.com/blog/open-sourcing-sonnet">https://deepmind.com/blog/open-sourcing-sonnet</a> (2017).</p>
+</li>
+<li>
+<p>Pedregosa, F. et al. Scikit-learn: machine learning in Python. J. Mach. Learn. Res. 12, 2825-2830 (2011).</p>
+</li>
+<li>
+<p>Klein, J. C. et al. A systematic evaluation of the design and context dependencies of massively parallel reporter assays. Nat. Methods 17, 1083-1091 (2020).</p>
+</li>
+<li>
+<p>Avsec, Žiga et al. Enformer (Version 3.0) (Zenodo, 2021); <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.5098375">https://doi.org/10.5281/zenodo.5098375</a></p>
+</li>
+<li>
+<p>Avsec, Ž. et al. The Kipoi repository accelerates community exchange and reuse of predictive models for genomics. Nat. Biotechnol. 37, 592-600 (2019).</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/11/26/906k2592/">https://luoying.netlify.app/2024/11/26/906k2592/</a></p>
+    <p><strong>本文标题：</strong>Enformer：通过整合长程相互作用从序列中有效预测基因表达</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件49.jpg" data-sizes="auto" alt="scGPT：利用生成式AI构建单细胞多组学基础模型" class="lazyload">
+          
+        
+        <a href="/2024/12/16/vazgz0k2/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            scGPT：利用生成式AI构建单细胞多组学基础模型
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件47.jpg" data-sizes="auto" alt="最强AI+最强Prompt=？！！" class="lazyload">
+        
+      
+      <a href="/2024/11/22/5ihfxsje/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          最强AI+最强Prompt=？！！
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5"><span class="toc-number">1.</span> <span class="toc-text"> 文章链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text"> 摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text"> 创新点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text"> 主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%89%8D%E9%A1%BB%E7%9F%A5"><span class="toc-number">5.1.</span> <span class="toc-text"> 读前须知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">5.2.</span> <span class="toc-text"> 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9"><span class="toc-number">5.3.</span> <span class="toc-text"> 核心内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E6%9E%9C"><span class="toc-number">5.4.</span> <span class="toc-text"> 成果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer-%E6%94%B9%E8%BF%9B%E4%BA%86%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.1.</span> <span class="toc-text"> Enformer 改进了基因表达预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer-%E5%85%B3%E6%B3%A8%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E7%89%B9%E5%BC%82%E6%80%A7%E5%A2%9E%E5%BC%BA%E5%AD%90"><span class="toc-number">5.4.2.</span> <span class="toc-text"> Enformer 关注细胞类型特异性增强子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer%E6%94%B9%E8%BF%9B%E4%BA%86eqtl%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.3.</span> <span class="toc-text"> Enformer改进了eQTL数据的变异效应预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enformer%E6%94%B9%E8%BF%9B%E4%BA%86mpra%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B"><span class="toc-number">5.4.4.</span> <span class="toc-text"> Enformer改进了MPRA变异效应预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">5.5.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">5.6.</span> <span class="toc-text"> 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-number">5.6.1.</span> <span class="toc-text"> 模型架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%92%8C%E8%AF%84%E4%BC%B0"><span class="toc-number">5.6.2.</span> <span class="toc-text"> 模型训练和评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BA%E5%AD%90%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F"><span class="toc-number">5.6.3.</span> <span class="toc-text"> 增强子优先级排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gtex-sldp"><span class="toc-number">5.6.4.</span> <span class="toc-text"> GTEx SLDP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B2%BE%E7%BB%86%E5%AE%9A%E4%BD%8D%E7%9A%84gtex%E5%88%86%E7%B1%BB"><span class="toc-number">5.6.4.1.</span> <span class="toc-text"> 精细定位的GTEx分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%A5%B1%E5%92%8C%E7%AA%81%E5%8F%98%E6%95%B0%E6%8D%AE%E5%AF%B9%E5%8F%98%E5%BC%82%E6%95%88%E5%BA%94%E9%A2%84%E6%B5%8B%E8%BF%9B%E8%A1%8C%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95"><span class="toc-number">5.6.4.2.</span> <span class="toc-text"> 基于饱和突变数据对变异效应预测进行基准测试</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text"> 数据可用性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="toc-number">7.</span> <span class="toc-text"> 代码可用性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%9B%BE"><span class="toc-number">8.</span> <span class="toc-text"> 扩展图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE1"><span class="toc-number">8.1.</span> <span class="toc-text"> 扩展数据图1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE2"><span class="toc-number">8.2.</span> <span class="toc-text"> 扩展数据图2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE3"><span class="toc-number">8.3.</span> <span class="toc-text"> 扩展数据图3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE4"><span class="toc-number">8.4.</span> <span class="toc-text"> 扩展数据图4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE5"><span class="toc-number">8.5.</span> <span class="toc-text"> 扩展数据图5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE6"><span class="toc-number">8.6.</span> <span class="toc-text"> 扩展数据图6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE7"><span class="toc-number">8.7.</span> <span class="toc-text"> 扩展数据图7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE8"><span class="toc-number">8.8.</span> <span class="toc-text"> 扩展数据图8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE9"><span class="toc-number">8.9.</span> <span class="toc-text"> 扩展数据图9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%95%B0%E6%8D%AE%E5%9B%BE10"><span class="toc-number">8.10.</span> <span class="toc-text"> 扩展数据图10</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">9.</span> <span class="toc-text"> 参考文献</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

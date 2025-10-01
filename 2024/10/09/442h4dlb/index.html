@@ -1,0 +1,1261 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---vim |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="vim 是 Linux&#x2F;Unix 系统中功能强大的文本编辑器，支持多种模式（如普通模式、插入模式、命令模式），并提供丰富的命令操作，用于编辑、查找、替换、保存等任务。以下是 vim 常用命令及其用法的详解。   启动 vim  打开文件 1vim 文件名  示例：  1vim example.txt  作用：打开 example.txt 文件。如果文件不存在，则创建一个新文件。    打开多个文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---vim">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/442h4dlb/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="vim 是 Linux&#x2F;Unix 系统中功能强大的文本编辑器，支持多种模式（如普通模式、插入模式、命令模式），并提供丰富的命令操作，用于编辑、查找、替换、保存等任务。以下是 vim 常用命令及其用法的详解。   启动 vim  打开文件 1vim 文件名  示例：  1vim example.txt  作用：打开 example.txt 文件。如果文件不存在，则创建一个新文件。    打开多个文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T14:06:13.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.645Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---vim">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---vim</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-vim"><span class="toc-number">1.</span> <span class="toc-text"> 启动 vim</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text"> 打开文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text"> 打开多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%B9%B6%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E8%A1%8C"><span class="toc-number">1.3.</span> <span class="toc-text"> 打开文件并跳转到指定行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text"> 模式切换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 三种主要模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text"> 普通模式命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%85%89%E6%A0%87"><span class="toc-number">3.1.</span> <span class="toc-text"> 移动光标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text"> 删除文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6-%E5%89%AA%E5%88%87%E5%92%8C%E7%B2%98%E8%B4%B4"><span class="toc-number">3.3.</span> <span class="toc-text"> 复制、剪切和粘贴</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E9%87%8D%E5%81%9A"><span class="toc-number">3.4.</span> <span class="toc-text"> 撤销与重做</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">3.5.</span> <span class="toc-text"> 查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2"><span class="toc-number">3.6.</span> <span class="toc-text"> 替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">3.7.</span> <span class="toc-text"> 行操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text"> 插入模式命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text"> 命令模式命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98%E4%B8%8E%E9%80%80%E5%87%BA"><span class="toc-number">5.1.</span> <span class="toc-text"> 文件保存与退出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">5.2.</span> <span class="toc-text"> 打开新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%96%87%E4%BB%B6%E4%BF%A1%E6%81%AF"><span class="toc-number">5.3.</span> <span class="toc-text"> 显示文件信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E8%A1%8C"><span class="toc-number">5.4.</span> <span class="toc-text"> 跳转到指定行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">6.</span> <span class="toc-text"> 搜索与替换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2"><span class="toc-number">6.1.</span> <span class="toc-text"> 搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-2"><span class="toc-number">6.2.</span> <span class="toc-text"> 替换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">7.</span> <span class="toc-text"> 总结常用命令</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-442h4dlb" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/442h4dlb/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T14:06:13.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>vim</code> 是 Linux/Unix 系统中功能强大的文本编辑器，支持多种模式（如普通模式、插入模式、命令模式），并提供丰富的命令操作，用于编辑、查找、替换、保存等任务。以下是 <code>vim</code> 常用命令及其用法的详解。</p>
+<hr />
+<h1 id="启动-vim"><a class="markdownIt-Anchor" href="#启动-vim"></a> <strong>启动 <code>vim</code></strong></h1>
+<h2 id="打开文件"><a class="markdownIt-Anchor" href="#打开文件"></a> <strong>打开文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：打开 <code>example.txt</code> 文件。如果文件不存在，则创建一个新文件。</li>
+</ul>
+<hr />
+<h2 id="打开多个文件"><a class="markdownIt-Anchor" href="#打开多个文件"></a> <strong>打开多个文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim 文件1 文件2</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim file1.txt file2.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：同时打开 <code>file1.txt</code> 和 <code>file2.txt</code>，可以在多个文件之间切换。</li>
+</ul>
+<hr />
+<h2 id="打开文件并跳转到指定行"><a class="markdownIt-Anchor" href="#打开文件并跳转到指定行"></a> <strong>打开文件并跳转到指定行</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim +行号 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim +10 example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：打开 <code>example.txt</code> 并直接跳转到第 10 行。</li>
+</ul>
+<hr />
+<h1 id="模式切换"><a class="markdownIt-Anchor" href="#模式切换"></a> <strong>模式切换</strong></h1>
+<h2 id="三种主要模式"><a class="markdownIt-Anchor" href="#三种主要模式"></a> <strong>三种主要模式</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>模式</strong></th>
+<th><strong>进入方式</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>普通模式</strong></td>
+<td>默认进入</td>
+<td>用于浏览文件、删除文本、复制粘贴等（按 <code>Esc</code> 可回到普通模式）。</td>
+</tr>
+<tr>
+<td><strong>插入模式</strong></td>
+<td>按 <code>i</code>、<code>a</code> 或 <code>o</code></td>
+<td>用于编辑文本内容。</td>
+</tr>
+<tr>
+<td><strong>命令模式</strong></td>
+<td>按 <code>:</code></td>
+<td>用于执行命令（如保存、退出、查找、替换等）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="普通模式命令"><a class="markdownIt-Anchor" href="#普通模式命令"></a> <strong>普通模式命令</strong></h1>
+<p>普通模式用于文件的浏览、编辑、操作等。</p>
+<h2 id="移动光标"><a class="markdownIt-Anchor" href="#移动光标"></a> <strong>移动光标</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h</code></td>
+<td>左移光标。</td>
+</tr>
+<tr>
+<td><code>l</code></td>
+<td>右移光标。</td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td>下移光标。</td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>上移光标。</td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>移动到下一个单词的开头。</td>
+</tr>
+<tr>
+<td><code>e</code></td>
+<td>移动到当前单词的结尾。</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>移动到上一个单词的开头。</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td>移动到行首。</td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>移动到当前行第一个非空字符处。</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>移动到行尾。</td>
+</tr>
+<tr>
+<td><code>gg</code></td>
+<td>移动到文件开头。</td>
+</tr>
+<tr>
+<td><code>G</code></td>
+<td>移动到文件末尾。</td>
+</tr>
+<tr>
+<td><code>数字G</code></td>
+<td>跳转到指定行（如 <code>10G</code> 跳到第 10 行）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="删除文本"><a class="markdownIt-Anchor" href="#删除文本"></a> <strong>删除文本</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>删除当前光标所在字符。</td>
+</tr>
+<tr>
+<td><code>dd</code></td>
+<td>删除当前行。</td>
+</tr>
+<tr>
+<td><code>ndd</code></td>
+<td>删除从当前行开始的 <strong>n</strong> 行（如 <code>3dd</code> 删除 3 行）。</td>
+</tr>
+<tr>
+<td><code>d$</code></td>
+<td>删除从光标处到行尾的内容。</td>
+</tr>
+<tr>
+<td><code>d0</code></td>
+<td>删除从光标处到行首的内容。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="复制-剪切和粘贴"><a class="markdownIt-Anchor" href="#复制-剪切和粘贴"></a> <strong>复制、剪切和粘贴</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>yy</code></td>
+<td>复制当前行。</td>
+</tr>
+<tr>
+<td><code>nyy</code></td>
+<td>复制从当前行开始的 <strong>n</strong> 行（如 <code>3yy</code> 复制 3 行）。</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td>在光标后粘贴内容。</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>在光标前粘贴内容。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="撤销与重做"><a class="markdownIt-Anchor" href="#撤销与重做"></a> <strong>撤销与重做</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>u</code></td>
+<td>撤销上一次操作。</td>
+</tr>
+<tr>
+<td><code>Ctrl + r</code></td>
+<td>重做撤销的操作。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="查找"><a class="markdownIt-Anchor" href="#查找"></a> <strong>查找</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/关键词</code></td>
+<td>向下查找 <code>关键词</code>。</td>
+</tr>
+<tr>
+<td><code>?关键词</code></td>
+<td>向上查找 <code>关键词</code>。</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>查找下一个匹配项。</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>查找上一个匹配项。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="替换"><a class="markdownIt-Anchor" href="#替换"></a> <strong>替换</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:s/旧文本/新文本</code></td>
+<td>替换当前行第一个匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:s/旧文本/新文本/g</code></td>
+<td>替换当前行所有匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:%s/旧文本/新文本/g</code></td>
+<td>替换整个文件中所有匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:%s/旧文本/新文本/gc</code></td>
+<td>替换整个文件中所有匹配的文本，替换前确认。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="行操作"><a class="markdownIt-Anchor" href="#行操作"></a> <strong>行操作</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dd</code></td>
+<td>删除当前行（剪切）。</td>
+</tr>
+<tr>
+<td><code>yy</code></td>
+<td>复制当前行。</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td>粘贴到当前行下方。</td>
+</tr>
+<tr>
+<td><code>o</code></td>
+<td>在当前行下方插入一行并进入插入模式。</td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>在当前行上方插入一行并进入插入模式。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="插入模式命令"><a class="markdownIt-Anchor" href="#插入模式命令"></a> <strong>插入模式命令</strong></h1>
+<p>插入模式用于编辑和输入文本内容。</p>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>i</code></td>
+<td>在光标前插入文本。</td>
+</tr>
+<tr>
+<td><code>I</code></td>
+<td>在行首插入文本。</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>在光标后插入文本。</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>在行尾插入文本。</td>
+</tr>
+<tr>
+<td><code>o</code></td>
+<td>在当前行下方新建一行并进入插入模式。</td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>在当前行上方新建一行并进入插入模式。</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>退出插入模式，返回普通模式。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="命令模式命令"><a class="markdownIt-Anchor" href="#命令模式命令"></a> <strong>命令模式命令</strong></h1>
+<p>命令模式用于保存文件、退出编辑器、打开新文件等操作。进入命令模式的方法是按 <code>:</code>。</p>
+<h2 id="文件保存与退出"><a class="markdownIt-Anchor" href="#文件保存与退出"></a> <strong>文件保存与退出</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:w</code></td>
+<td>保存当前文件。</td>
+</tr>
+<tr>
+<td><code>:w 文件名</code></td>
+<td>另存为指定文件名。</td>
+</tr>
+<tr>
+<td><code>:q</code></td>
+<td>退出编辑器。</td>
+</tr>
+<tr>
+<td><code>:q!</code></td>
+<td>强制退出（不保存修改）。</td>
+</tr>
+<tr>
+<td><code>:wq</code> 或 <code>:x</code></td>
+<td>保存并退出。</td>
+</tr>
+<tr>
+<td><code>ZZ</code></td>
+<td>保存并退出（普通模式下）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="打开新文件"><a class="markdownIt-Anchor" href="#打开新文件"></a> <strong>打开新文件</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:e 文件名</code></td>
+<td>打开指定文件。</td>
+</tr>
+<tr>
+<td><code>:e! 文件名</code></td>
+<td>放弃当前修改，强制打开指定文件。</td>
+</tr>
+<tr>
+<td><code>:n</code></td>
+<td>切换到下一个文件（多文件模式）。</td>
+</tr>
+<tr>
+<td><code>:prev</code> 或 <code>:N</code></td>
+<td>切换到上一个文件（多文件模式）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="显示文件信息"><a class="markdownIt-Anchor" href="#显示文件信息"></a> <strong>显示文件信息</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:f</code></td>
+<td>显示当前文件名、行号、总行数等信息。</td>
+</tr>
+<tr>
+<td><code>:set number</code></td>
+<td>显示行号。</td>
+</tr>
+<tr>
+<td><code>:set nonumber</code></td>
+<td>隐藏行号。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="跳转到指定行"><a class="markdownIt-Anchor" href="#跳转到指定行"></a> <strong>跳转到指定行</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:数字</code></td>
+<td>跳转到指定行（如 <code>:10</code> 跳转到第 10 行）。</td>
+</tr>
+<tr>
+<td><code>gg</code></td>
+<td>跳转到文件开头。</td>
+</tr>
+<tr>
+<td><code>G</code></td>
+<td>跳转到文件末尾。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="搜索与替换"><a class="markdownIt-Anchor" href="#搜索与替换"></a> <strong>搜索与替换</strong></h1>
+<h2 id="搜索"><a class="markdownIt-Anchor" href="#搜索"></a> <strong>搜索</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/关键词</code></td>
+<td>向下查找 <code>关键词</code>。</td>
+</tr>
+<tr>
+<td><code>?关键词</code></td>
+<td>向上查找 <code>关键词</code>。</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>查找下一个匹配项。</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>查找上一个匹配项。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="替换-2"><a class="markdownIt-Anchor" href="#替换-2"></a> <strong>替换</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:s/旧文本/新文本</code></td>
+<td>替换当前行第一个匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:s/旧文本/新文本/g</code></td>
+<td>替换当前行所有匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:%s/旧文本/新文本/g</code></td>
+<td>替换整个文件中所有匹配的文本。</td>
+</tr>
+<tr>
+<td><code>:%s/旧文本/新文本/gc</code></td>
+<td>替换整个文件中所有匹配的文本，并在替换前确认。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="总结常用命令"><a class="markdownIt-Anchor" href="#总结常用命令"></a> <strong>总结常用命令</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保存文件</td>
+<td><code>:w</code></td>
+</tr>
+<tr>
+<td>退出编辑器</td>
+<td><code>:q</code></td>
+</tr>
+<tr>
+<td>强制退出</td>
+<td><code>:q!</code></td>
+</tr>
+<tr>
+<td>保存并退出</td>
+<td><code>:wq</code> 或 <code>:x</code></td>
+</tr>
+<tr>
+<td>删除当前行</td>
+<td><code>dd</code></td>
+</tr>
+<tr>
+<td>复制当前行</td>
+<td><code>yy</code></td>
+</tr>
+<tr>
+<td>粘贴</td>
+<td><code>p</code></td>
+</tr>
+<tr>
+<td>查找文本</td>
+<td><code>/关键词</code></td>
+</tr>
+<tr>
+<td>替换文本</td>
+<td><code>:%s/旧/新/gc</code></td>
+</tr>
+<tr>
+<td>显示行号</td>
+<td><code>:set number</code></td>
+</tr>
+<tr>
+<td>跳转到指定行</td>
+<td><code>:数字</code> 或 <code>数字G</code></td>
+</tr>
+</tbody>
+</table>
+<p>通过熟练掌握 <code>vim</code> 的基本命令和模式切换，可以高效地编辑和管理文本文件！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/442h4dlb/">https://luoying.netlify.app/2024/10/09/442h4dlb/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---vim</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件43.jpg" data-sizes="auto" alt="Linux命令详解---yum" class="lazyload">
+          
+        
+        <a href="/2024/10/09/jneaca9h/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---yum
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件12.jpg" data-sizes="auto" alt="Linux命令详解---rsync" class="lazyload">
+        
+      
+      <a href="/2024/10/09/zr2olwm8/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---rsync
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-vim"><span class="toc-number">1.</span> <span class="toc-text"> 启动 vim</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text"> 打开文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text"> 打开多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%B9%B6%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E8%A1%8C"><span class="toc-number">1.3.</span> <span class="toc-text"> 打开文件并跳转到指定行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F%E5%88%87%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text"> 模式切换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 三种主要模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text"> 普通模式命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%85%89%E6%A0%87"><span class="toc-number">3.1.</span> <span class="toc-text"> 移动光标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text"> 删除文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6-%E5%89%AA%E5%88%87%E5%92%8C%E7%B2%98%E8%B4%B4"><span class="toc-number">3.3.</span> <span class="toc-text"> 复制、剪切和粘贴</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E4%B8%8E%E9%87%8D%E5%81%9A"><span class="toc-number">3.4.</span> <span class="toc-text"> 撤销与重做</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">3.5.</span> <span class="toc-text"> 查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2"><span class="toc-number">3.6.</span> <span class="toc-text"> 替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">3.7.</span> <span class="toc-text"> 行操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text"> 插入模式命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text"> 命令模式命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98%E4%B8%8E%E9%80%80%E5%87%BA"><span class="toc-number">5.1.</span> <span class="toc-text"> 文件保存与退出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">5.2.</span> <span class="toc-text"> 打开新文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%96%87%E4%BB%B6%E4%BF%A1%E6%81%AF"><span class="toc-number">5.3.</span> <span class="toc-text"> 显示文件信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E8%A1%8C"><span class="toc-number">5.4.</span> <span class="toc-text"> 跳转到指定行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">6.</span> <span class="toc-text"> 搜索与替换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2"><span class="toc-number">6.1.</span> <span class="toc-text"> 搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-2"><span class="toc-number">6.2.</span> <span class="toc-text"> 替换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">7.</span> <span class="toc-text"> 总结常用命令</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

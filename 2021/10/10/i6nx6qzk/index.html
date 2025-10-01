@@ -1,0 +1,838 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Pygame基础知识 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 前面我们学习了第一个Pygame程序，接着，我们来了解Pygame中最为常用的几个对象。学完今天的内容，我们就可以开发一个稍微复杂一点的游戏了。  Surface 对象 Surface对象表示的是一个矩形的2D图像，这个图像，实际上是由非常多的像素点组成的，比如一个（300px , 400潘鑫）的Surface对象，这个矩形2D图像由300*400个像素点组成。可以通过调用Pygame的绘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pygame基础知识">
+<meta property="og:url" content="https://luoying.netlify.app/2021/10/10/i6nx6qzk/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 前面我们学习了第一个Pygame程序，接着，我们来了解Pygame中最为常用的几个对象。学完今天的内容，我们就可以开发一个稍微复杂一点的游戏了。  Surface 对象 Surface对象表示的是一个矩形的2D图像，这个图像，实际上是由非常多的像素点组成的，比如一个（300px , 400潘鑫）的Surface对象，这个矩形2D图像由300*400个像素点组成。可以通过调用Pygame的绘">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/f86a3c95d53b2072439ab564f36b5859.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/b6d3b43d5bc9045122f29f56b6272d03.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/2db5e2c3c6aeb795863d601b27228bc4.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/f1630c397f26536fa975fdaff2624b71.gif">
+<meta property="article:published_time" content="2021-10-10T06:59:48.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.859Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/f86a3c95d53b2072439ab564f36b5859.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Pygame基础知识">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Pygame基础知识</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#surface-%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text"> Surface 对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#color%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.</span> <span class="toc-text"> Color对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rect%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.</span> <span class="toc-text"> Rect对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%98%E5%88%B6%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text"> 绘制函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%8A%A8%E7%94%BB-pygametimeclock-%E5%AF%B9%E8%B1%A1"><span class="toc-number">6.</span> <span class="toc-text"> 制作动画 &amp;&amp; pygame.time.Clock 对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8C%AB%E7%A7%BB%E5%8A%A8%E7%9A%84%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text"> “猫移动”的动画制作</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-i6nx6qzk" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/10/10/i6nx6qzk/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-10-10T06:59:48.000Z" itemprop="datePublished">2021-10-10</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/" data-aos="zoom-in">Python</a><a class="article-category-link" href="/categories/Python/Pygame/" data-aos="zoom-in">Pygame</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>前面我们学习了第一个<code>Pygame</code>程序，接着，我们来了解<code>Pygame</code>中最为常用的几个对象。学完今天的内容，我们就可以开发一个稍微复杂一点的游戏了。</p>
+<h1 id="surface-对象"><a class="markdownIt-Anchor" href="#surface-对象"></a> Surface 对象</h1>
+<p><code>Surface对象</code>表示的是一个矩形的<code>2D图像</code>，这个图像，实际上是由非常多的像素点组成的，比如一个<code>（300px , 400潘鑫）</code>的<code>Surface</code>对象，这个矩形<code>2D图像</code>由300*400个像素点组成。可以通过调用<code>Pygame</code>的绘制函数，来对一个<code>Surface对象</code>的某些区域进行填充，从而达到修改整个<code>2D图像</code>的效果。需要注意的是，窗口的边框，标题栏，按钮并不属于<code>Surface对象</code>的一部分。</p>
+<p>我们把通过<strong>pygame.display.set_mode()</strong> 函数返回的<code>Surface对象</code>，称为<strong>显示Surface对象</strong>，绘制到显示<code>Surface对象</code>上的任何内容，在调用<code>pygame.display.update()</code>函数后，都会显示到窗口上。</p>
+<p>游戏制作中，经常要将几个不同的内容绘制到一个<code>Surface对象</code>中，在游戏的某一次循环里，调用<code>pygame.display.update()</code>函数后，这个<code>Surface对象</code>包含的所有内容都会绘制到屏幕上，这个<code>Surface对象</code>（会频繁更新）被显示到屏幕上的次数，称为<strong>帧数</strong>。一般而言，计算机的运行速度很快，游戏中一般采用每秒30（60，90）帧，即30（60，90）FPS，这叫<strong>作帧速率</strong>，简称<strong>帧率</strong>。此处<code>30 FPS</code>的含义是，<code>1s内，游戏界面会被更新30次</code>。</p>
+<h1 id="color对象"><a class="markdownIt-Anchor" href="#color对象"></a> Color对象</h1>
+<p>颜色在游戏设计中是必不可少的一部分。在计算机显示器上，以光的颜色为基础，由于光有三原色-----<strong>红</strong>，<strong>绿</strong>，<strong>蓝</strong>，通过将这三种颜色按不同比例混合，可以形成任何其他的颜色。</p>
+<p>在<code>Pygame</code>中，我们使用三个整数的元组 <strong>(a,b,c)</strong> 来表示任何一种颜色，第一个整数<code>a</code>表示颜色中有多少红色，取值为0～255，同理，第二个整数对应绿色，第三个整数对应蓝色。如(0,0,255)表示蓝色，(0,255,0)表示绿色，(128,128,128)三色混合后会得到灰色。</p>
+<p><code>Pygame</code>中创建颜色主要有两种方式。一是利用3个0～255的整数组成的元组，二是利用<code>pygame.Color对象</code>。</p>
+<p>我们用代码来演示一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys,pygame</span><br><span class="line"><span class="keyword">from</span> pygame.<span class="built_in">locals</span> <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#color      R    G    B</span></span><br><span class="line"></span><br><span class="line">BLACK = (   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>)</span><br><span class="line">WHITE = ( <span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)</span><br><span class="line">BLUE  = pygame.Color(   <span class="number">0</span>,   <span class="number">0</span>, <span class="number">255</span>)  <span class="comment"># 与前面的颜色创建方式效果相同</span></span><br><span class="line">GREEN = pygame.Color(   <span class="number">0</span>, <span class="number">255</span>,   <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">pygame.init()</span><br><span class="line">DISPLAY_SURF = pygame.display.set_mode((<span class="number">400</span>,<span class="number">300</span>))</span><br><span class="line"><span class="comment"># 将整个显示Surface对象填充为白色</span></span><br><span class="line">DISPLAY_SURF.fill(WHITE)</span><br><span class="line"><span class="comment"># 在Surface对象上，从左上角坐标(0,0)开始，绘制一个往右100px,往下100px的矩形2D区域并填充为黑色</span></span><br><span class="line">pygame.draw.rect(DISPLAY_SURF, BLACK,(<span class="number">0</span>,<span class="number">0</span>,<span class="number">100</span>,<span class="number">100</span>))</span><br><span class="line"><span class="comment"># 在Surface对象上，从左上角坐标(100,0)开始，绘制一个往右100px,往下100px的矩形2D区域并填充为绿色</span></span><br><span class="line">pygame.draw.rect(DISPLAY_SURF,GREEN,(<span class="number">100</span>,<span class="number">0</span>,<span class="number">100</span>,<span class="number">100</span>))</span><br><span class="line"></span><br><span class="line">pygame.display.set_caption(<span class="string">&quot;Hello World~&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">        <span class="keyword">if</span> event.<span class="built_in">type</span> == QUIT:</span><br><span class="line">            pygame.quit()</span><br><span class="line">            sys.exit()</span><br><span class="line">    <span class="comment"># 将Surface对象更新到屏幕上显示</span></span><br><span class="line">    pygame.display.update()</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="/images/assets/f86a3c95d53b2072439ab564f36b5859.png" alt="img" /></p>
+<p>上面用到了一个绘制函数<strong>pygame.draw.rect(Surface,Color,(x,y,a,b))</strong>，它会在<code>Surface对象</code>上绘制一个矩形区域，第三个参数是一个四元元组，其前两个参数表明矩形区域左上角的坐标（<code>pygame</code>中的<code>XOY坐标</code>，以窗口左上角为原点(0,0)，向右为<code>x坐标</code>，向下为<code>y坐标</code>)，后两个参数表明矩形区域的大小，单位为<code>像素px</code>。</p>
+<p>此外，颜色除了各种颜色的混合比例之外，还有一个特征，那就是颜色的透明度。<code>Pygame</code>允许在颜色的三元元组基础之上加入第四个整数(<code>alpha value</code>，范围<code>0~255</code>)，用于表示颜色的透明度。0表示完全透明，255表示完全不透明。</p>
+<p>为了能够使用透明颜色来进行绘制，<code>Pygame</code>要求必须使用**convert_alpha()**方法来创建一个<code>Surface对象</code>。也就是说，能够使用透明颜色来进行绘制的<code>Surface对象</code>，必须用<code>convert_alpha()</code>方法创建。比如上面的代码，我们加上一句：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Alpha_Surface = DISPLAY_SURF.convert_alpha()</span><br></pre></td></tr></table></figure>
+<p>上述代码表明可以在<code>Alpha_Surface对象</code>上可以使用透明颜色绘制，而<code>DISPLAY_SURF</code>上不行。</p>
+<h1 id="rect对象"><a class="markdownIt-Anchor" href="#rect对象"></a> Rect对象</h1>
+<p>与颜色一样，<code>Pygame</code>提供两种方式创建一个矩形区域。</p>
+<p>一是利用四元元组**（x,y,a,b)** ：</p>
+<ul>
+<li>x ：矩形区域左上角的x坐标</li>
+<li>y ：矩形区域左上角的y坐标</li>
+<li>a ：矩形区域的宽度（以像素为单位）</li>
+<li>b ：矩形区域的高度（以像素为单位）</li>
+</ul>
+<p>二是创建<strong>pygame.Rect对象</strong>，如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rect = pygame.Rect(<span class="number">100</span>,<span class="number">200</span>,<span class="number">100</span>,<span class="number">200</span>) <span class="comment"># 等同于 rect = (100,200,100,200)</span></span><br></pre></td></tr></table></figure>
+<p>与颜色类似，上述“等同”的含义是，如果有一个针对矩形区域的函数参数的话，那么既可以传入一个四元元组，也可以传入一个<code>pygame.Rect</code>对象（底层实现是重载） 。</p>
+<p><code>pygame.Rect</code>对象有许多属性，现将常用的列举如下：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义（返回值）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rect.left</strong></td>
+<td>矩形区域最左边的X坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.right</strong></td>
+<td>矩形区域最右边的X坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.top</strong></td>
+<td>矩形区域顶部的Y坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.bottom</strong></td>
+<td>矩形区域底部的Y坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.centerx</strong></td>
+<td>矩形区域中央的X坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.centery</strong></td>
+<td>矩形区域中央的Y坐标（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.width</strong></td>
+<td>矩形区域的宽度（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.height</strong></td>
+<td>矩形区域的高度（int类型）</td>
+</tr>
+<tr>
+<td><strong>Rect.size</strong></td>
+<td>矩形区域大小的元组：(width,height)</td>
+</tr>
+<tr>
+<td><strong>Rect.topleft</strong></td>
+<td>元组(int类型)：(top,left)</td>
+</tr>
+<tr>
+<td><strong>Rect.topright</strong></td>
+<td>元组(int类型)：(top,right)</td>
+</tr>
+<tr>
+<td><strong>Rect.bottomleft</strong></td>
+<td>元组(int类型)：(bottom,left)</td>
+</tr>
+<tr>
+<td><strong>Rect.bottomright</strong></td>
+<td>元组(int类型)：(bottom,right)</td>
+</tr>
+<tr>
+<td><strong>Rect.midleft</strong></td>
+<td>元组(int类型)：(left,centery)</td>
+</tr>
+<tr>
+<td><strong>Rect.midright</strong></td>
+<td>元组(int类型)：(right,centery)</td>
+</tr>
+<tr>
+<td><strong>Rect.midtop</strong></td>
+<td>元组(int类型)：(centerx,top)</td>
+</tr>
+<tr>
+<td><strong>Rect.midbottom</strong></td>
+<td>元组(int类型)：(centerx,bottom)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="绘制函数"><a class="markdownIt-Anchor" href="#绘制函数"></a> 绘制函数</h1>
+<p>有了前面知识的铺垫，我们就可以用<code>Pygame</code>提供的绘制函数来绘制我们想要绘制的图形了。</p>
+<p>先上代码，在代码中注释了每个绘制函数参数的具体含义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygame, sys</span><br><span class="line"><span class="keyword">from</span> pygame.<span class="built_in">locals</span> <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化pygame库</span></span><br><span class="line">pygame.init()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建窗口</span></span><br><span class="line">DISPLAY_SURF = pygame.display.set_mode((<span class="number">400</span>, <span class="number">300</span>), <span class="number">0</span>, <span class="number">32</span>)</span><br><span class="line">pygame.display.set_caption(<span class="string">&#x27;Drawing&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置颜色</span></span><br><span class="line">BLACK = (  <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>)</span><br><span class="line">WHITE = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)</span><br><span class="line">RED   = (<span class="number">255</span>,   <span class="number">0</span>,   <span class="number">0</span>)</span><br><span class="line">GREEN = (  <span class="number">0</span>, <span class="number">255</span>,   <span class="number">0</span>)</span><br><span class="line">BLUE  = (  <span class="number">0</span>,   <span class="number">0</span>, <span class="number">255</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制图形</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 填充为白色</span></span><br><span class="line">DISPLAY_SURF.fill(WHITE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pygame.draw.polygon(Surface,Color,pointlist,thickness)</span></span><br><span class="line"><span class="string">    在DISPLAY_SURF上，画一个多边形，</span></span><br><span class="line"><span class="string">    第三个参数为多边形顶点坐标顺次构成的元组，</span></span><br><span class="line"><span class="string">    最后的1(px)为多边形的粗细，忽略此参数或设为0，Pygame会视为用颜色填充此多边形</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">pygame.draw.polygon(DISPLAY_SURF, GREEN, ((<span class="number">146</span>, <span class="number">0</span>), (<span class="number">291</span>, <span class="number">106</span>), (<span class="number">236</span>, <span class="number">277</span>), (<span class="number">56</span>, <span class="number">277</span>), (<span class="number">0</span>, <span class="number">106</span>)),<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pygame.draw.line(Surface,Color,start_point,end_point,thickness)</span></span><br><span class="line"><span class="string">    在DISPLAY_SURF上，画一条线，</span></span><br><span class="line"><span class="string">    (60,60),(120,60)分别为线的起始坐标，终点坐标，</span></span><br><span class="line"><span class="string">    4(px)为线条粗细，单位为像素</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">pygame.draw.line(DISPLAY_SURF, BLUE, (<span class="number">60</span>, <span class="number">60</span>), (<span class="number">120</span>, <span class="number">60</span>), <span class="number">4</span>)</span><br><span class="line">pygame.draw.line(DISPLAY_SURF, BLUE, (<span class="number">120</span>, <span class="number">60</span>), (<span class="number">60</span>, <span class="number">120</span>), <span class="number">1</span>)</span><br><span class="line">pygame.draw.line(DISPLAY_SURF, BLUE, (<span class="number">60</span>, <span class="number">120</span>), (<span class="number">120</span>, <span class="number">120</span>), <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pygame.draw.circle(Surface,Color,center_point,radius,thickness)</span></span><br><span class="line"><span class="string">    在DISPLAY_SURF上，</span></span><br><span class="line"><span class="string">    画一个圆,</span></span><br><span class="line"><span class="string">    (300,50)为圆心的坐标,</span></span><br><span class="line"><span class="string">    20(px)为圆的半径，</span></span><br><span class="line"><span class="string">    0(px)指明圆的粗细，忽略此参数或者设为0，则Pygame默认将圆用颜色填充</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">pygame.draw.circle(DISPLAY_SURF, BLUE, (<span class="number">300</span>, <span class="number">50</span>), <span class="number">20</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pygame.draw.ellipse(Surface,Color,bounding_rectangle,thickness)</span></span><br><span class="line"><span class="string">    画一个椭圆，由于一个矩形可以唯一的确定一个椭圆，</span></span><br><span class="line"><span class="string">    故将其绑定一个Rect对象的矩形区域，</span></span><br><span class="line"><span class="string">    1(px)为椭圆的粗细，忽略此参数或者设为0，则Pygame默认将椭圆用颜色填充</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">pygame.draw.ellipse(DISPLAY_SURF, RED, (<span class="number">300</span>, <span class="number">200</span>, <span class="number">40</span>, <span class="number">80</span>), <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pygame.draw.rect(Surface,Color,rectangle_tuple,thickness)</span></span><br><span class="line"><span class="string">    画一个矩形，</span></span><br><span class="line"><span class="string">    (200, 150, 100, 50)表示矩形左上角坐标为(200,150)，宽度100px，高度50px</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">pygame.draw.rect(DISPLAY_SURF, RED, (<span class="number">200</span>, <span class="number">150</span>, <span class="number">100</span>, <span class="number">50</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># run the game loop</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">        <span class="keyword">if</span> event.<span class="built_in">type</span> == QUIT:</span><br><span class="line">            pygame.quit()</span><br><span class="line">            sys.exit()</span><br><span class="line">    pygame.display.update()</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="/images/assets/b6d3b43d5bc9045122f29f56b6272d03.png" alt="img" />代码中对每个绘制函数都有详细的注释，此处就不再赘述了。</p>
+<h1 id="制作动画-pygametimeclock-对象"><a class="markdownIt-Anchor" href="#制作动画-pygametimeclock-对象"></a> 制作动画 &amp;&amp; <strong>pygame.time.Clock 对象</strong></h1>
+<p>动画是一个游戏的灵魂，如何产生一幅动的画面呢？</p>
+<p>前面聊过，<code>while循环</code>里如果设置帧率为<code>30FPS</code>，则屏幕上的画面会每秒更新30次，也就是说，<code>Pygame</code>会将<code>Surface对象</code>以每秒30次的速度不断重新绘制到屏幕上。</p>
+<p>这样，如果在每次绘制到屏幕之前，对<code>Surface对象</code>上的内容做略微修改，这样不就产生“动的”画面了吗？</p>
+<p>现在的问题是，我们如何控制<code>Surface对象</code>以每秒30次的速度绘制到屏幕上呢？</p>
+<p>这个不用我们考虑，<code>Pygame</code>提供了一个专门用于控制帧率的类 <strong>pygame.time.Clock</strong>。由于计算机运行速度极快，容易导致游戏速度过快，玩家的体验不太好，因而这个对象可以确保游戏以某一个最大的帧率运行，但有时，如果是大型游戏，代码量过多，以至于无法正常运行，来频繁的绘制到屏幕上，会使得帧率下降。</p>
+<p><strong>Clock对象</strong>的用法：首先，创建Clock对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fpsClock = pygame.time.Clock()</span><br></pre></td></tr></table></figure>
+<p><code>Clock对象</code>会在游戏的每一次循环上都设置一个小小的暂停，确保游戏不会运行得太快。</p>
+<p>每次循坏的最后，调用<code>pygame.display.update()</code>方法将<code>Surface对象</code>绘制到屏幕上之后，应调用<code>Clock对象</code>的 <strong>tick()</strong> 方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run the game loop</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">        <span class="keyword">if</span> event.<span class="built_in">type</span> == QUIT:</span><br><span class="line">            pygame.quit()</span><br><span class="line">            sys.exit()</span><br><span class="line">    pygame.display.update()</span><br><span class="line">    <span class="comment"># 调用tick()，传入30FPS</span></span><br><span class="line">    fpsClock.tick(FPS)</span><br></pre></td></tr></table></figure>
+<p>这样会使得，游戏以最大帧率<code>30FPS</code>运行。</p>
+<h1 id="猫移动的动画制作"><a class="markdownIt-Anchor" href="#猫移动的动画制作"></a> “猫移动”的动画制作</h1>
+<p>借<code>invpy官网</code>的一段代码，我们演示一个简单的“猫移动”的动画，我们需要一张“猫”的图片：</p>
+<p><img src="/images/assets/2db5e2c3c6aeb795863d601b27228bc4.png" alt="img" /></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygame, sys</span><br><span class="line"><span class="keyword">from</span> pygame.<span class="built_in">locals</span> <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">pygame.init()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 帧率设置为30FPS</span></span><br><span class="line">FPS = <span class="number">30</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建Clock对象</span></span><br><span class="line">fpsClock = pygame.time.Clock()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建窗口</span></span><br><span class="line">DISPLAY_SURF = pygame.display.set_mode((<span class="number">400</span>, <span class="number">300</span>))</span><br><span class="line">pygame.display.set_caption(<span class="string">&#x27;Animation&#x27;</span>)</span><br><span class="line"></span><br><span class="line">WHITE = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)</span><br><span class="line"><span class="comment"># 加载图片</span></span><br><span class="line">catImg = pygame.image.load(<span class="string">&#x27;cat.png&#x27;</span>)</span><br><span class="line">CAT_X = <span class="number">10</span></span><br><span class="line">CAT_Y = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置猫初始往右移动</span></span><br><span class="line">direction = <span class="string">&#x27;right&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># main game loop</span></span><br><span class="line"></span><br><span class="line">    DISPLAY_SURF.fill(WHITE)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 简单地方向控制</span></span><br><span class="line">    <span class="keyword">if</span> direction == <span class="string">&#x27;right&#x27;</span>:</span><br><span class="line">        CAT_X += <span class="number">5</span></span><br><span class="line">        <span class="keyword">if</span> CAT_X == <span class="number">280</span>:</span><br><span class="line">            direction = <span class="string">&#x27;down&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> direction == <span class="string">&#x27;down&#x27;</span>:</span><br><span class="line">        CAT_Y += <span class="number">5</span></span><br><span class="line">        <span class="keyword">if</span> CAT_Y == <span class="number">220</span>:</span><br><span class="line">            direction = <span class="string">&#x27;left&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> direction == <span class="string">&#x27;left&#x27;</span>:</span><br><span class="line">        CAT_X -= <span class="number">5</span></span><br><span class="line">        <span class="keyword">if</span> CAT_X == <span class="number">10</span>:</span><br><span class="line">            direction = <span class="string">&#x27;up&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> direction == <span class="string">&#x27;up&#x27;</span>:</span><br><span class="line">        CAT_Y -= <span class="number">5</span></span><br><span class="line">        <span class="keyword">if</span> CAT_Y == <span class="number">10</span>:</span><br><span class="line">            direction = <span class="string">&#x27;right&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 利用blit()方法将图片复制到Surface对象中</span></span><br><span class="line">    <span class="comment"># 图片的左上角位于(CAT_X, CAT_Y)</span></span><br><span class="line">    DISPLAY_SURF.blit(catImg, (CAT_X, CAT_Y))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">        <span class="keyword">if</span> event.<span class="built_in">type</span> == QUIT:</span><br><span class="line">            pygame.quit()</span><br><span class="line">            sys.exit()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将Surface对象绘制到屏幕上</span></span><br><span class="line">    pygame.display.update()</span><br><span class="line">    <span class="comment"># 设置帧率：30FPS</span></span><br><span class="line">    fpsClock.tick(FPS)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="/images/assets/f1630c397f26536fa975fdaff2624b71.gif" alt="img" /></p>
+<p>到这，<code>Pygame</code>的基础知识就介绍完了，内容也许比较多，小伙伴们多多理解和实践。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/10/10/i6nx6qzk/">https://luoying.netlify.app/2021/10/10/i6nx6qzk/</a></p>
+    <p><strong>本文标题：</strong>Pygame基础知识</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件15.jpg" data-sizes="auto" alt="Python不能做游戏？" class="lazyload">
+          
+        
+        <a href="/2021/10/10/mcqd4jol/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Python不能做游戏？
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件14.jpg" data-sizes="auto" alt="王者荣耀英雄皮肤图片爬取" class="lazyload">
+        
+      
+      <a href="/2021/10/07/1a5zkopn/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          王者荣耀英雄皮肤图片爬取
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#surface-%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text"> Surface 对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#color%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.</span> <span class="toc-text"> Color对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rect%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.</span> <span class="toc-text"> Rect对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%98%E5%88%B6%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text"> 绘制函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%8A%A8%E7%94%BB-pygametimeclock-%E5%AF%B9%E8%B1%A1"><span class="toc-number">6.</span> <span class="toc-text"> 制作动画 &amp;&amp; pygame.time.Clock 对象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8C%AB%E7%A7%BB%E5%8A%A8%E7%9A%84%E5%8A%A8%E7%94%BB%E5%88%B6%E4%BD%9C"><span class="toc-number">7.</span> <span class="toc-text"> “猫移动”的动画制作</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

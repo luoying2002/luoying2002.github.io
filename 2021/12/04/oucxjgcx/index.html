@@ -1,0 +1,727 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    随机组卷功能模拟 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 今天我们来聊一聊随机组卷。相信大家对这个词语都不陌生。 最常见的情况，许多在线课程的考试试题都是随机组卷产生的。比如某慧树：  由于网课的学生群体巨大，不可能为每一位学生单独命制试题，因此导致了随机组卷的诞生。 简单解释就是，各大教育平台都有自己的试题数据库，通过程序从试题库中随机抽取部分试题来组成一份试卷，这样能极大的提高出卷的时效性。  模拟随机组卷 下面，我们使用 python 来模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机组卷功能模拟">
+<meta property="og:url" content="https://luoying.netlify.app/2021/12/04/oucxjgcx/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 今天我们来聊一聊随机组卷。相信大家对这个词语都不陌生。 最常见的情况，许多在线课程的考试试题都是随机组卷产生的。比如某慧树：  由于网课的学生群体巨大，不可能为每一位学生单独命制试题，因此导致了随机组卷的诞生。 简单解释就是，各大教育平台都有自己的试题数据库，通过程序从试题库中随机抽取部分试题来组成一份试卷，这样能极大的提高出卷的时效性。  模拟随机组卷 下面，我们使用 python 来模">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/5f5b53be1738443c4205c08ab8c738ea.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/d9bb9c830afcc46e5a5f23a9bd36323c.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/b6c522cbfe35d685d9d11d42a9f9c101.png">
+<meta property="article:published_time" content="2021-12-04T04:24:50.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.034Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/5f5b53be1738443c4205c08ab8c738ea.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="随机组卷功能模拟">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">随机组卷功能模拟</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E9%9A%8F%E6%9C%BA%E7%BB%84%E5%8D%B7"><span class="toc-number">2.</span> <span class="toc-text"> 模拟随机组卷</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E7%94%A8%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E6%9D%A5%E5%AD%98%E5%82%A8%E6%89%80%E6%9C%89%E7%9C%81%E5%90%8D%E5%B9%B6%E6%89%93%E4%B9%B1%E8%AF%A5%E5%88%97%E8%A1%A8%E5%85%83%E7%B4%A0%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 第一步，用一个列表来存储所有省名并打乱该列表元素的顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E6%9E%84%E5%BB%BA%E6%AF%8F%E4%B8%AA%E9%97%AE%E9%A2%98%E7%9A%84%E5%9B%9B%E4%B8%AA%E9%80%89%E9%A1%B91%E6%AD%A3%E7%A1%AE%E7%AD%94%E6%A1%883%E9%94%99%E8%AF%AF%E7%AD%94%E6%A1%88%E5%B9%B6%E6%89%93%E4%B9%B1%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 第二步，构建每个问题的四个选项（1正确答案+3错误答案）并打乱顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E7%BC%96%E5%86%99%E8%AF%95%E5%8D%B7%E6%96%87%E4%BB%B6%E5%8C%85%E6%8B%AC%E6%B5%8B%E8%AF%95%E5%8D%B7%E5%92%8C%E7%AD%94%E6%A1%88%E5%8D%B7%E5%BC%80%E5%A4%B4"><span class="toc-number">2.3.</span> <span class="toc-text"> 第三步，编写试卷文件（包括测试卷和答案卷）开头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%E6%B7%BB%E5%8A%A0%E9%9A%8F%E6%9C%BA%E8%AF%95%E9%A2%98%E5%92%8C%E7%AD%94%E6%A1%88"><span class="toc-number">2.4.</span> <span class="toc-text"> 第四步，添加随机试题和答案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">2.5.</span> <span class="toc-text"> 完整代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E7%BB%84%E5%8D%B7%E6%B5%8B%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text"> 随机组卷测试</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-oucxjgcx" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/12/04/oucxjgcx/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-12-04T04:24:50.000Z" itemprop="datePublished">2021-12-04</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/" data-aos="zoom-in">Python</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>今天我们来聊一聊随机组卷。相信大家对这个词语都不陌生。</p>
+<p>最常见的情况，许多在线课程的考试试题都是<code>随机组卷</code>产生的。比如某慧树：</p>
+<p><img src="/images/assets/5f5b53be1738443c4205c08ab8c738ea.png" alt="img" /></p>
+<p>由于网课的学生群体巨大，不可能为每一位学生单独命制试题，因此导致了<code>随机组卷</code>的诞生。</p>
+<p>简单解释就是，各大教育平台都有自己的试题数据库，通过程序从试题库中随机抽取部分试题来组成一份试卷，这样能极大的提高出卷的时效性。</p>
+<h1 id="模拟随机组卷"><a class="markdownIt-Anchor" href="#模拟随机组卷"></a> 模拟随机组卷</h1>
+<p>下面，我们使用 <code>python</code> 来模拟一个简单的随机组卷的过程。</p>
+<p>首先，我们得有一个`试题库，为简便起见，我们使用下面的字典作为试题库：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">capitals = &#123;</span><br><span class="line">            <span class="string">&#x27;黑龙江省&#x27;</span>:<span class="string">&#x27;哈尔滨市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;吉林省&#x27;</span>:<span class="string">&#x27;长春市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;辽宁省&#x27;</span>:<span class="string">&#x27;沈阳市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;北京市&#x27;</span>:<span class="string">&#x27;北京&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;天津市&#x27;</span>:<span class="string">&#x27;天津&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;内蒙古自治区&#x27;</span>:<span class="string">&#x27;呼和浩特市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;山西省&#x27;</span>:<span class="string">&#x27;太原市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;陕西&#x27;</span>:<span class="string">&#x27;西安市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;青海省&#x27;</span>:<span class="string">&#x27;西宁市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;甘肃&#x27;</span>:<span class="string">&#x27;兰州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;新疆维吾尔自治区&#x27;</span>:<span class="string">&#x27;乌鲁木齐市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;四川&#x27;</span>:<span class="string">&#x27;成都市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;重庆市&#x27;</span>:<span class="string">&#x27;重庆&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;云南省&#x27;</span>:<span class="string">&#x27;昆明市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;贵州省&#x27;</span>:<span class="string">&#x27;贵州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;广西壮族自治区&#x27;</span>:<span class="string">&#x27;南宁市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;广东省&#x27;</span>:<span class="string">&#x27;广州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;湖南省&#x27;</span>:<span class="string">&#x27;长沙市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;湖北省&#x27;</span>:<span class="string">&#x27;武汉市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;河南省&#x27;</span>:<span class="string">&#x27;郑州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;河北省&#x27;</span>:<span class="string">&#x27;石家庄市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;山东省&#x27;</span>:<span class="string">&#x27;济南市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;安徽省&#x27;</span>:<span class="string">&#x27;合肥市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;江苏省&#x27;</span>:<span class="string">&#x27;南京市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;浙江省&#x27;</span>:<span class="string">&#x27;杭州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;上海市&#x27;</span>:<span class="string">&#x27;上海&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;江西省&#x27;</span>:<span class="string">&#x27;南昌市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;福建省&#x27;</span>:<span class="string">&#x27;福州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;西藏&#x27;</span>:<span class="string">&#x27;拉萨市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;海南省&#x27;</span>:<span class="string">&#x27;三亚市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;宁夏回族自治区&#x27;</span>:<span class="string">&#x27;银川市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;台湾省&#x27;</span>:<span class="string">&#x27;台北市&#x27;</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>没错，我们的试题就是找到我国<code>各个省的省会城市的名称</code>。当然，实际上的试题都来自各教育平台庞大的数据库。我们在这仅使用字典来学习和借鉴。有了试题库，我们就可以开始组卷了：</p>
+<h2 id="第一步用一个列表来存储所有省名并打乱该列表元素的顺序"><a class="markdownIt-Anchor" href="#第一步用一个列表来存储所有省名并打乱该列表元素的顺序"></a> 第一步，用一个列表来存储所有省名并打乱该列表元素的顺序</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># states存储所有省名</span></span><br><span class="line">states = <span class="built_in">list</span>(capitals.keys())</span><br><span class="line"><span class="comment"># 随机打乱states列表元素的顺序</span></span><br><span class="line">random.shuffle(states)</span><br></pre></td></tr></table></figure>
+<h2 id="第二步构建每个问题的四个选项1正确答案3错误答案并打乱顺序"><a class="markdownIt-Anchor" href="#第二步构建每个问题的四个选项1正确答案3错误答案并打乱顺序"></a> 第二步，构建每个问题的四个选项（1正确答案+3错误答案）并打乱顺序</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 正确答案，questionNum为题目编号</span></span><br><span class="line">correctAnswer = capitals[states[questionNum]]</span><br><span class="line"><span class="comment"># 错误答案列表</span></span><br><span class="line">wrongAnswers = <span class="built_in">list</span>(capitals.values())</span><br><span class="line"><span class="comment"># 当然，在错误答案中需去掉正确答案</span></span><br><span class="line"><span class="keyword">del</span> wrongAnswers[wrongAnswers.index(correctAnswer)]</span><br><span class="line"><span class="comment"># 错误答案从错误答案列表wrongAnswers中随机抽取三个</span></span><br><span class="line">wrongAnswers = random.sample(wrongAnswers, <span class="number">3</span>)</span><br><span class="line"><span class="comment"># 一个正确答案和三个错误答案构成四个选项</span></span><br><span class="line">answerOptions = wrongAnswers + [correctAnswer]</span><br><span class="line"><span class="comment"># 打乱四个选项的顺序</span></span><br><span class="line">random.shuffle(answerOptions)</span><br></pre></td></tr></table></figure>
+<h2 id="第三步编写试卷文件包括测试卷和答案卷开头"><a class="markdownIt-Anchor" href="#第三步编写试卷文件包括测试卷和答案卷开头"></a> 第三步，编写试卷文件（包括测试卷和答案卷）开头</h2>
+<p>每份试卷都有一部分相同的内容，比如<code>标题，姓名，学号</code>等：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">quizFile = <span class="built_in">open</span>(<span class="string">&#x27;省会城市及省的简称测验%s.txt&#x27;</span>%(quizNum + <span class="number">1</span>),<span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">answerKeyFile = <span class="built_in">open</span>(<span class="string">&#x27;省会城市及省的简称测验答案%s.txt&#x27;</span>%(quizNum + <span class="number">1</span>),<span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 试卷标题</span></span><br><span class="line">quizFile.write((<span class="string">&#x27; &#x27;</span>*<span class="number">20</span>) + <span class="string">&#x27;省会城市及省的简称测验 (试卷 %s)&#x27;</span> % (quizNum + <span class="number">1</span>))</span><br><span class="line">quizFile.write(<span class="string">&#x27;\n\n姓名:__________________日期:__________________时间:_________________&#x27;</span>)</span><br><span class="line">quizFile.write(<span class="string">&#x27;\n\n&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="第四步添加随机试题和答案"><a class="markdownIt-Anchor" href="#第四步添加随机试题和答案"></a> 第四步，添加随机试题和答案</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 向试题文件中写入问题</span></span><br><span class="line">quizFile.write(<span class="string">&#x27;%s.%s的省会城市是 ?\n&#x27;</span> % (questionNum + <span class="number">1</span>, states[questionNum]))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">       quizFile.write(<span class="string">&#x27; %s. %s\n&#x27;</span> % (<span class="string">&#x27;ABCD&#x27;</span>[i], answerOptions[i]))</span><br><span class="line">       quizFile.write(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向答案文件中写入正确答案</span></span><br><span class="line">answerKeyFile.write(<span class="string">&#x27;%s.%s\n&#x27;</span> % (questionNum + <span class="number">1</span>, <span class="string">&#x27;ABCD&#x27;</span>[answerOptions.index(correctAnswer)]))</span><br></pre></td></tr></table></figure>
+<h2 id="完整代码"><a class="markdownIt-Anchor" href="#完整代码"></a> 完整代码</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">capitals = &#123;</span><br><span class="line">            <span class="string">&#x27;黑龙江省&#x27;</span>:<span class="string">&#x27;哈尔滨市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;吉林省&#x27;</span>:<span class="string">&#x27;长春市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;辽宁省&#x27;</span>:<span class="string">&#x27;沈阳市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;北京市&#x27;</span>:<span class="string">&#x27;北京&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;天津市&#x27;</span>:<span class="string">&#x27;天津&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;内蒙古自治区&#x27;</span>:<span class="string">&#x27;呼和浩特市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;山西省&#x27;</span>:<span class="string">&#x27;太原市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;陕西&#x27;</span>:<span class="string">&#x27;西安市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;青海省&#x27;</span>:<span class="string">&#x27;西宁市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;甘肃&#x27;</span>:<span class="string">&#x27;兰州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;新疆维吾尔自治区&#x27;</span>:<span class="string">&#x27;乌鲁木齐市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;四川&#x27;</span>:<span class="string">&#x27;成都市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;重庆市&#x27;</span>:<span class="string">&#x27;重庆&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;云南省&#x27;</span>:<span class="string">&#x27;昆明市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;贵州省&#x27;</span>:<span class="string">&#x27;贵州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;广西壮族自治区&#x27;</span>:<span class="string">&#x27;南宁市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;广东省&#x27;</span>:<span class="string">&#x27;广州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;湖南省&#x27;</span>:<span class="string">&#x27;长沙市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;湖北省&#x27;</span>:<span class="string">&#x27;武汉市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;河南省&#x27;</span>:<span class="string">&#x27;郑州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;河北省&#x27;</span>:<span class="string">&#x27;石家庄市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;山东省&#x27;</span>:<span class="string">&#x27;济南市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;安徽省&#x27;</span>:<span class="string">&#x27;合肥市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;江苏省&#x27;</span>:<span class="string">&#x27;南京市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;浙江省&#x27;</span>:<span class="string">&#x27;杭州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;上海市&#x27;</span>:<span class="string">&#x27;上海&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;江西省&#x27;</span>:<span class="string">&#x27;南昌市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;福建省&#x27;</span>:<span class="string">&#x27;福州市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;西藏&#x27;</span>:<span class="string">&#x27;拉萨市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;海南省&#x27;</span>:<span class="string">&#x27;三亚市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;宁夏回族自治区&#x27;</span>:<span class="string">&#x27;银川市&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;台湾省&#x27;</span>:<span class="string">&#x27;台北市&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 产生十份随机试卷</span></span><br><span class="line"><span class="keyword">for</span> quizNum <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    quizFile = <span class="built_in">open</span>(<span class="string">&#x27;省会城市及省的简称测验%s.txt&#x27;</span>%(quizNum + <span class="number">1</span>),<span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">    answerKeyFile = <span class="built_in">open</span>(<span class="string">&#x27;省会城市及省的简称测验答案%s.txt&#x27;</span>%(quizNum + <span class="number">1</span>),<span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 试卷标题</span></span><br><span class="line">    quizFile.write((<span class="string">&#x27; &#x27;</span>*<span class="number">20</span>) + <span class="string">&#x27;省会城市及省的简称测验 (试卷 %s)&#x27;</span> % (quizNum + <span class="number">1</span>))</span><br><span class="line">    quizFile.write(<span class="string">&#x27;\n\n姓名:__________________日期:__________________时间:_________________&#x27;</span>)</span><br><span class="line">    quizFile.write(<span class="string">&#x27;\n\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># states存储所有省名</span></span><br><span class="line">    states = <span class="built_in">list</span>(capitals.keys())</span><br><span class="line">    <span class="comment"># 随机打乱states列表元素的顺序</span></span><br><span class="line">    random.shuffle(states)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 每份试题随机产生15个问题：</span></span><br><span class="line">    <span class="keyword">for</span> questionNum <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">15</span>):</span><br><span class="line">        <span class="comment"># 正确答案</span></span><br><span class="line">        correctAnswer = capitals[states[questionNum]]</span><br><span class="line">        <span class="comment"># 错误答案列表</span></span><br><span class="line">        wrongAnswers = <span class="built_in">list</span>(capitals.values())</span><br><span class="line">        <span class="comment"># 当然错误答案中去掉正确答案</span></span><br><span class="line">        <span class="keyword">del</span> wrongAnswers[wrongAnswers.index(correctAnswer)]</span><br><span class="line">        <span class="comment"># 错误答案从错误答案列表wrongAnswers中随机抽取三个</span></span><br><span class="line">        wrongAnswers = random.sample(wrongAnswers, <span class="number">3</span>)</span><br><span class="line">        <span class="comment"># 一个正确答案和三个错误答案构成四个选项</span></span><br><span class="line">        answerOptions = wrongAnswers + [correctAnswer]</span><br><span class="line">        <span class="comment"># 打乱四个选项的顺序</span></span><br><span class="line">        random.shuffle(answerOptions)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 向试题文件中写入问题</span></span><br><span class="line">        quizFile.write(<span class="string">&#x27;%s.%s的省会城市是 ?\n&#x27;</span> % (questionNum + <span class="number">1</span>, states[questionNum]))</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">            quizFile.write(<span class="string">&#x27; %s. %s\n&#x27;</span> % (<span class="string">&#x27;ABCD&#x27;</span>[i], answerOptions[i]))</span><br><span class="line">        quizFile.write(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 向答案文件中写入正确答案</span></span><br><span class="line">        answerKeyFile.write(<span class="string">&#x27;%s.%s\n&#x27;</span> % (questionNum + <span class="number">1</span>, <span class="string">&#x27;ABCD&#x27;</span>[answerOptions.index(correctAnswer)]))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 关闭流</span></span><br><span class="line">    quizFile.close()</span><br><span class="line">    answerKeyFile.close()</span><br></pre></td></tr></table></figure>
+<h1 id="随机组卷测试"><a class="markdownIt-Anchor" href="#随机组卷测试"></a> 随机组卷测试</h1>
+<p>运行程序，可以在当前目录下看到我们产生的10份<code>随机试卷及答案</code>：</p>
+<p><img src="/images/assets/d9bb9c830afcc46e5a5f23a9bd36323c.png" alt="img" /></p>
+<p><img src="/images/assets/b6c522cbfe35d685d9d11d42a9f9c101.png" alt="img" /></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/12/04/oucxjgcx/">https://luoying.netlify.app/2021/12/04/oucxjgcx/</a></p>
+    <p><strong>本文标题：</strong>随机组卷功能模拟</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件48.jpg" data-sizes="auto" alt="Python正则表达式功能汇总" class="lazyload">
+          
+        
+        <a href="/2022/01/18/f0pjrais/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Python正则表达式功能汇总
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件16.jpg" data-sizes="auto" alt="爬虫框架Scrapy速成" class="lazyload">
+        
+      
+      <a href="/2021/12/02/9bh6zzdd/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          爬虫框架Scrapy速成
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E9%9A%8F%E6%9C%BA%E7%BB%84%E5%8D%B7"><span class="toc-number">2.</span> <span class="toc-text"> 模拟随机组卷</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E7%94%A8%E4%B8%80%E4%B8%AA%E5%88%97%E8%A1%A8%E6%9D%A5%E5%AD%98%E5%82%A8%E6%89%80%E6%9C%89%E7%9C%81%E5%90%8D%E5%B9%B6%E6%89%93%E4%B9%B1%E8%AF%A5%E5%88%97%E8%A1%A8%E5%85%83%E7%B4%A0%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 第一步，用一个列表来存储所有省名并打乱该列表元素的顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E6%9E%84%E5%BB%BA%E6%AF%8F%E4%B8%AA%E9%97%AE%E9%A2%98%E7%9A%84%E5%9B%9B%E4%B8%AA%E9%80%89%E9%A1%B91%E6%AD%A3%E7%A1%AE%E7%AD%94%E6%A1%883%E9%94%99%E8%AF%AF%E7%AD%94%E6%A1%88%E5%B9%B6%E6%89%93%E4%B9%B1%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 第二步，构建每个问题的四个选项（1正确答案+3错误答案）并打乱顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E7%BC%96%E5%86%99%E8%AF%95%E5%8D%B7%E6%96%87%E4%BB%B6%E5%8C%85%E6%8B%AC%E6%B5%8B%E8%AF%95%E5%8D%B7%E5%92%8C%E7%AD%94%E6%A1%88%E5%8D%B7%E5%BC%80%E5%A4%B4"><span class="toc-number">2.3.</span> <span class="toc-text"> 第三步，编写试卷文件（包括测试卷和答案卷）开头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%E6%B7%BB%E5%8A%A0%E9%9A%8F%E6%9C%BA%E8%AF%95%E9%A2%98%E5%92%8C%E7%AD%94%E6%A1%88"><span class="toc-number">2.4.</span> <span class="toc-text"> 第四步，添加随机试题和答案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">2.5.</span> <span class="toc-text"> 完整代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E7%BB%84%E5%8D%B7%E6%B5%8B%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text"> 随机组卷测试</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

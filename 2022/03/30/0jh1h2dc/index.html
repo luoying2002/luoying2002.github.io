@@ -1,0 +1,819 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    selenium爬取图片的保姆级教程 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 现在疫情当前，卑微的我只能乖乖的宅在家里敲代码了🙁。之前有朋友让我帮他在网上下载一些图片，那几千张图片手动一个一个下载显然不太实际。所以搬出我们的重量级工具：  人生苦短，我用python  就个人使用体验来说，用python批量下载图片确实要比手动下载快得多，但这一切的前提是建立在你有一定的爬虫基础之上，如果基础不够，就像我刚开始学的那样，折腾了一两个小时还没有手动下载的快。但是，这是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="selenium爬取图片的保姆级教程">
+<meta property="og:url" content="https://luoying.netlify.app/2022/03/30/0jh1h2dc/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 现在疫情当前，卑微的我只能乖乖的宅在家里敲代码了🙁。之前有朋友让我帮他在网上下载一些图片，那几千张图片手动一个一个下载显然不太实际。所以搬出我们的重量级工具：  人生苦短，我用python  就个人使用体验来说，用python批量下载图片确实要比手动下载快得多，但这一切的前提是建立在你有一定的爬虫基础之上，如果基础不够，就像我刚开始学的那样，折腾了一两个小时还没有手动下载的快。但是，这是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/81c501722de9010c26123883a7cc855f.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/f60026df6a88045ebfda42c66eea4c47.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/085cf7669181ccc94050ea4f9f30970b.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/2cdeb3c86938d9ad1c6a3846bd52bedc.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/d02dafec02153d9c1f6490b9d1da6663.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/ceb4a0c9b9e52f41d20ad69830187bcd.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/ac2039e13ea07780efd3d2c865af09a7.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/13c9637ad99117cb528c2549482dc703.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/9ef441b337e3c9b6a535fcb174240e4f.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/8c5e5c0bb48081536d9eafad61420429.png">
+<meta property="article:published_time" content="2022-03-29T16:38:43.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.563Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/81c501722de9010c26123883a7cc855f.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="selenium爬取图片的保姆级教程">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">selenium爬取图片的保姆级教程</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%AFhtml%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="toc-number">2.</span> <span class="toc-text"> 纯Html静态页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.</span> <span class="toc-text"> 渲染动态页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ajax%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE"><span class="toc-number">4.</span> <span class="toc-text"> Ajax请求数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%88%AC%E5%8F%96%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87"><span class="toc-number">5.</span> <span class="toc-text"> 爬取百度图片</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selenium%E5%AE%89%E8%A3%85"><span class="toc-number">5.1.</span> <span class="toc-text"> selenium安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E9%A1%B5%E9%9D%A2"><span class="toc-number">5.2.</span> <span class="toc-text"> 分析页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xpath-helper"><span class="toc-number">5.3.</span> <span class="toc-text"> XPath Helper</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-number">6.</span> <span class="toc-text"> 代码编写</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">6.1.</span> <span class="toc-text"> 完整代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.2.</span> <span class="toc-text"> 运行程序</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-0jh1h2dc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2022/03/30/0jh1h2dc/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2022-03-29T16:38:43.000Z" itemprop="datePublished">2022-03-30</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/" data-aos="zoom-in">Python</a><a class="article-category-link" href="/categories/Python/%E7%88%AC%E8%99%AB/" data-aos="zoom-in">爬虫</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>现在疫情当前，卑微的我只能乖乖的宅在家里敲代码了🙁。之前有朋友让我帮他在网上下载一些图片，那几千张图片手动一个一个下载显然不太实际。所以搬出我们的重量级工具：</p>
+<blockquote>
+<p>人生苦短，我用python</p>
+</blockquote>
+<p>就个人使用体验来说，用<code>python</code>批量下载图片确实要比手动下载快得多，但这一切的前提是建立在你有一定的爬虫基础之上，如果基础不够，就像我刚开始学的那样，折腾了一两个小时还没有手动下载的快。但是，这是每个人都必须要经历的一个过程，谁一开始不是个小白呢？</p>
+<p>🤣着实无聊，所以我顺便也把爬取的过程记录了下来。作成此篇。</p>
+<p>笔者的专业不是爬虫，所以也用不到什么非常专业的理论技术。只是一些比较简单的库或者框架而已。对于爬虫，就学习生活上的问题而言，我们只需了解 <strong>Python+requests+selenium</strong> 这三个组合就完全够用了。总结说来，笔者所遇到的爬虫问题，大多可以分为以下三类：</p>
+<h1 id="纯html静态页面"><a class="markdownIt-Anchor" href="#纯html静态页面"></a> 纯Html静态页面</h1>
+<p>这种页面是一种最为简单的页面。简单来说，纯<code>Html</code>静态页面未使用<code>js渲染</code>，而浏览器一次性渲染得到的纯<code>Html文</code>本，只需简单的<code>xml定位</code>即可获取对应信息，使用<code>Python</code>的<strong>requests</strong>库即可搞定。</p>
+<h1 id="渲染动态页面"><a class="markdownIt-Anchor" href="#渲染动态页面"></a> 渲染动态页面</h1>
+<p>页面采用<code>js</code>动态渲染，是部分网站应对爬虫的举措之一。什么是<code>js渲染动态页面</code>呢？简单举个例子，网易云音乐。如果网页允许使用<code>js渲染</code>，则网易云的官网长这个样子：</p>
+<p><img src="/images/assets/81c501722de9010c26123883a7cc855f.png" alt="img" /></p>
+<p><code>谷歌浏览器</code>提供了一个有用的插件 ----- <strong>Toggle JavaScript</strong>，使用它可以禁止网页使用<code>js</code>进行渲染，我们来看看禁用<code>js</code>后的网易云页面（注意右上角的按钮）：</p>
+<p><img src="/images/assets/f60026df6a88045ebfda42c66eea4c47.png" alt="img" /></p>
+<p>一旦禁用<code>js</code>，你看到的只是其官网上的一些静态<code>Html元素</code>，而往往这些元素对我们没有用处。这说明网页上对我们有用的信息，大多都是通过<code>js</code>实时渲染出来的，因而这类信息的爬取，<strong>requests</strong>库就无能为力了。</p>
+<p>再如，图片类网站，我们的鼠标不断往下滑的时候，图片也慢慢地增加并显示，这种页面，显然不可能是静态的，也无法用<strong>requests</strong>库爬取。</p>
+<p>所谓魔高一尺道高一丈，自动化测试工具 <strong>selenium</strong>可以帮助我们解决这个问题。当然这个工具的主要应用领域不在爬虫，但我们仍然可以使用它来帮助我们渲染<code>js</code>页面。</p>
+<h1 id="ajax请求数据"><a class="markdownIt-Anchor" href="#ajax请求数据"></a> Ajax请求数据</h1>
+<p>学过前端的小伙伴们应该很清楚，前端页面上的数据，大多需要从<code>后端服务器</code>上获取，一般使用<strong>Ajax请求</strong>，而且，这些通过<code>Ajax请求</code>从后端获得的数据往往正是我们所需要的。</p>
+<p>就如我之前写的批量爬取四六级成绩文章，里面的爬虫程序其实非常简单 ，就访问了一个接口而已：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://cachecloud.neea.cn/api/latest/results/cet?e=CET_202112_DANGCI&amp;km=2&amp;xm=%E7%BD%97%E9%A2%96&amp;no=4311...&amp;v=">http://cachecloud.neea.cn/api/latest/results/cet?e=CET_202112_DANGCI&amp;km=2&amp;xm=罗颖&amp;no=4311...&amp;v=</a></p>
+</blockquote>
+<p>访问类似这种的接口，其服务器的响应大多是以<code>json串</code>或者<code>xml数据</code>的格式，其中就包含着我们想要的数据。</p>
+<p>这种接口一般是网站提供的，由于前端页面的数据填充展示过程中需要用到这个接口返回的数据，因此这个接口往往都是开放的，我们可以访问，爬虫程序当然也可以（部分网站为了<code>反爬</code>，会混淆接口参数） 。</p>
+<p>所以，这种类型的爬虫程序，难点不在于代码编写（使用<strong>requests</strong>库即可实现），而在于如何找到这种接口，即<code>分析页面</code>的过程。</p>
+<p>当然，在实际的爬取过程中，也许会同时用到上面的<code>两种或者三种</code>，这需要我们灵活运用。</p>
+<h1 id="爬取百度图片"><a class="markdownIt-Anchor" href="#爬取百度图片"></a> 爬取百度图片</h1>
+<p>下面开始我们的正片…今天来爬取<code>百度图片</code>。百度输入“图片” ：</p>
+<p><img src="/images/assets/085cf7669181ccc94050ea4f9f30970b.png" alt="img" /></p>
+<p>进入第一个搜索结果，图片尺寸选择特大尺寸（注意图片尺寸那里，不同的尺寸选择得到的<code>url地址</code>不同，说明是不同页面)：</p>
+<p><img src="/images/assets/2cdeb3c86938d9ad1c6a3846bd52bedc.png" alt="img" /></p>
+<p>我们针对百度图片中的“<code>特大尺寸</code>”的图片进行爬取 。单击搜索地址栏，可以看到此页面完整的<code>url地址</code>：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://image.baidu.com/search/index?ct=201326592&amp;z=9&amp;tn=baiduimage&amp;word=%E5%9B%BE%E7%89%87&amp;pn=&amp;spn=&amp;ie=utf-8&amp;oe=utf-8&amp;cl=2&amp;lm=-1&amp;fr=ala&amp;se=&amp;sme=&amp;width=0&amp;height=0&amp;cs=&amp;os=&amp;objurl=&amp;di=&amp;gsm=1e&amp;dyTabStr=MCwzLDYsMSw0LDIsNSw3LDgsOQ%3D%3D">https://image.baidu.com/search/index?ct=201326592&amp;z=9&amp;tn=baiduimage&amp;word=图片&amp;pn=&amp;spn=&amp;ie=utf-8&amp;oe=utf-8&amp;cl=2&amp;lm=-1&amp;fr=ala&amp;se=&amp;sme=&amp;width=0&amp;height=0&amp;cs=&amp;os=&amp;objurl=&amp;di=&amp;gsm=1e&amp;dyTabStr=MCwzLDYsMSw0LDIsNSw3LDgsOQ%3D%3D</a></p>
+</blockquote>
+<p>这就是我们待会要爬取的入口页面地址。</p>
+<h2 id="selenium安装"><a class="markdownIt-Anchor" href="#selenium安装"></a> selenium安装</h2>
+<p>之前提到过，这种图片页面往下滑会不断的更新出图片，我们猜测这应该是个<code>动态页面</code>。事实上，如果<code>禁用js</code>，你会发现页面直接跳转到了百度图片网站的首页，这说明，刚看到的整个页面都是由<code>js渲染</code>出来的…所以<strong>requests</strong>库就无能为力了…需要用到<strong>selenium</strong>。</p>
+<p>关于<code>selenium</code>的安装和使用，本文就不再介绍了。网上的教程讲的都非常详细…比如这位大佬：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43965708/article/details/120658713">selenium用法详解【从入门到实战】【Python爬虫】【4万字】</a></p>
+<p><strong>selenium</strong>是最广泛使用的开源 Web UI（用户界面）自动化测试套件之一。Selenium 支持的语言包括C#，Java，Perl，PHP，Python 和 Ruby。目前，Selenium Web 驱动程序最受 Python 和 C＃欢迎。</p>
+</blockquote>
+<p>依据此博文的步骤，安装<strong>selenium</strong>驱动后，再下载<code>python</code>的<strong>selenium</strong>支持库：</p>
+<blockquote>
+<p>pip install selenium</p>
+</blockquote>
+<p>安装完成之后，就可以开始使用了。</p>
+<h2 id="分析页面"><a class="markdownIt-Anchor" href="#分析页面"></a> 分析页面</h2>
+<p>分析页面除了一些基本的工具和技巧之外呢，大部分都是<strong>熟能生巧</strong>，当爬的多了，自然就能猜到大概应该怎么去分析。</p>
+<p>比如，图片的这种展示，有很多张，我们最为直观的猜测便是，一张图片放在一个 <strong>li</strong> 标签里。因此我们在分析网页的时候，会更加关注 <strong>li</strong> 标签。</p>
+<p>再比如，平台上的评论数据一般都会提供一个接口供访问，找到接口就已经解决一半的问题了。</p>
+<p>利用<code>谷歌浏览器</code>自带的<code>开发者工具</code>（按<code>F12</code>弹出，对网页的分析，基本上都需要这个），我们随便找一张图片，右键点击“<code>检查</code>”，就能迅速定位到图片元素所在的<code>Html标签</code>：</p>
+<p><img src="/images/assets/d02dafec02153d9c1f6490b9d1da6663.png" alt="img" /></p>
+<p>很容易找到这张图片的<code>url地址</code>（<code>img标签</code>的<code>src属性</code>） ，同时，每张图片下面还有一段文字说明，我们就用这段文字来命名这张图片。</p>
+<p>这样看来，我们还需要爬取图片下面的那段文字，可以使用图片同样的方法，右键文字段处点击“<code>检查</code>”，定位到文字元素所在的<code>Html标签</code>，不过那段文字在<code>Html文本</code>中出现的地方有很多，我们随便取一个，比如：</p>
+<p><img src="/images/assets/ceb4a0c9b9e52f41d20ad69830187bcd.png" alt="img" /></p>
+<p>这段<code>Html源码</code>印证了我们之前的猜测 ------- 一张图片放在一个 <strong>li</strong> 标签里。而且不止图片，它下面的文字段也包含在对应的 <strong>li</strong> 标签里。</p>
+<p>这样，我们对要爬取的内容就有了一个直观的了解。</p>
+<h2 id="xpath-helper"><a class="markdownIt-Anchor" href="#xpath-helper"></a> XPath Helper</h2>
+<p>一般而言，Html标签元素的定位使用的大多是<code>xpath</code>或者<code>css表达式</code>，这是爬虫最为基础的内容，如果小伙伴们还不太清楚的话，可以先去学一学基本语法，再来看本章内容。</p>
+<p><code>谷歌浏览器</code>提供了一个插件 ------ <strong>XPath Helper</strong>，它允许我们在浏览器上的某页面直接执行<code>xpath语法</code>定位对应元素并提供结果展示。因此大多数情况下，我们都会使用 <strong>XPath Helper</strong>来验证我们的猜想，比如上述图片的<code>url地址</code>的定位，xpath语法应该这样写：</p>
+<blockquote>
+<p>//img[@class=&quot;main_img img-hover&quot;]/@src</p>
+</blockquote>
+<p>可以看到浏览器返回的结果：</p>
+<p><img src="/images/assets/ac2039e13ea07780efd3d2c865af09a7.png" alt="img" /></p>
+<p>可以看到，我们成功的获取到了所有39张图片的<code>url地址</code>，这说明我们的<code>xpath表达式</code>符合要求。</p>
+<p>再来思考一个问题，为什么只有39张呢？</p>
+<p>之前说过，这是个动态页面，我们在鼠标往下滑动之前，浏览器使用<code>js</code>仅渲染了部分图片，此时渲染页面得到的<code>Html源码</code>中只有39个 <strong>li</strong> 标签，因此<code>xpath表达式</code>就只找到了39个<code>url地址</code>，那我们想要更多的图片<code>url地址</code>怎么办呢？</p>
+<p>简单，让鼠标往下滑就行了。我们来验证我们的想法：</p>
+<p><img src="/images/assets/13c9637ad99117cb528c2549482dc703.png" alt="img" /></p>
+<p>显然，往下滑之后，同一个<code>xpath表达式</code>找到了更多的<code>url地址</code>，有了更多的 <strong>li</strong> 标签。这也同时说明了这个页面的<code>Html文本</code>是使用<code>js实时</code>渲染出来的。</p>
+<h1 id="代码编写"><a class="markdownIt-Anchor" href="#代码编写"></a> 代码编写</h1>
+<p>有了以上的分析，结合<strong>Python+requests+selenium</strong> ，我们就可以开始爬取代码的编写了：</p>
+<p>首先导入相关的库：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options</span><br></pre></td></tr></table></figure>
+<p><strong>re库</strong>用于正则提取；<strong>time库</strong>用于强制休眠，防止爬取过快ip被封； <strong>os库</strong>操作文件及文件夹，用于保存图片；<strong>requests，selenium</strong>用于爬取数据。基本上，爬虫所需要的所有库都在这了。</p>
+<p>在当前目录下建一个<code>images</code>文件夹，用于存放下载的图片（当然也可以自定义下载路径）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;images&#x27;</span>):</span><br><span class="line">    os.mkdir(<span class="string">&#x27;images&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>接着初始化 <strong>selenium</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># options = Options()</span></span><br><span class="line"><span class="comment"># options.add_argument(&#x27;--headless&#x27;)</span></span><br><span class="line"><span class="comment"># options.add_argument(&#x27;--disable-gpu&#x27;)</span></span><br><span class="line"><span class="comment"># options.add_experimental_option(&#x27;excludeSwitches&#x27;, [&#x27;enable-automation&#x27;])</span></span><br><span class="line"><span class="comment"># driver = webdriver.Chrome(options=options)</span></span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">driver.implicitly_wait(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图片所在网址</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://image.baidu.com/search/index?ct=201326592&amp;z=9&amp;tn=baiduimage&amp;word=%E5%9B%BE%E7%89%87&amp;pn=&amp;spn=&amp;ie=utf-8&amp;oe=utf-8&amp;cl=2&amp;lm=-1&amp;fr=ala&amp;se=&amp;sme=&amp;width=0&amp;height=0&amp;cs=&amp;os=&amp;objurl=&amp;di=&amp;gsm=3c&amp;dyTabStr=MCwzLDYsMSw0LDIsNSw3LDgsOQ%3D%3D&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>如果不想自动打开谷歌浏览器，可将注释段代码替换第一行代码。</p>
+<p>接着我们来思考一个问题，如何实现鼠标下滑的操作呢？<strong>selenium</strong>的自动化测试功能，其<strong>webdriver</strong>类提供了一个**execute_script()**方法可以用于执行<code>js脚本</code>，而在<code>JavaScript</code>中，要实现下滑操作太容易了，我们定义一个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scroll</span>(<span class="params">driver, px=<span class="string">&#x27;document.body.scrollHeight&#x27;</span></span>):</span><br><span class="line">    driver.execute_script(</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            (function () &#123;</span></span><br><span class="line"><span class="string">                var y = 0;</span></span><br><span class="line"><span class="string">                var step = 100;</span></span><br><span class="line"><span class="string">                window.scroll(0, 0);</span></span><br><span class="line"><span class="string">                function f() &#123;</span></span><br><span class="line"><span class="string">                    if (y &lt; %s) &#123;</span></span><br><span class="line"><span class="string">                        y += step;</span></span><br><span class="line"><span class="string">                        window.scroll(0, y);</span></span><br><span class="line"><span class="string">                        setTimeout(f, 100);</span></span><br><span class="line"><span class="string">                    &#125; else &#123;</span></span><br><span class="line"><span class="string">                        document.title += &quot;scroll-ok&quot;;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">            setTimeout(f, 1000);</span></span><br><span class="line"><span class="string">            &#125;)();</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">        % px</span><br><span class="line">    )</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;下拉中......&quot;</span>)</span><br><span class="line">    <span class="comment"># time.sleep(180)</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;scroll-ok&quot;</span> <span class="keyword">in</span> driver.title:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;已拉到指定位置......&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;还没有拉到指定位置......&quot;</span>)</span><br><span class="line">            time.sleep(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>函数很简单，在此就不多做解释了。现在，我们在上述爬取代码中调用该函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scroll(driver, <span class="string">&#x27;10000&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;等待5s......&#x27;</span>)</span><br><span class="line">time.sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>我们让鼠标下滑，让页面往下翻10000像素， 如果你想下载更多的图片，调整这个数值即可。此外需要注意的是，此处一定需要等待几秒后再进行之后的爬取工作，由于网络缓慢等原因，下滑后页面的<code>Html</code>还没有完全渲染出来，这时如果立即进行<code>xpath表达式</code>爬取就会漏掉部分还未被渲染出来的li标签，导致数据信息丢失。</p>
+<p>接着来爬取图片的<strong>url地址</strong>和<strong>文字段说明</strong>。</p>
+<p>爬取过程中总会出现各种各样的错误和不足。这需要我们慢慢修正我们的代码。比如<code>url地址</code>，使用<code>xpath表达式</code></p>
+<blockquote>
+<p>//img[@class=&quot;main_img img-hover&quot;]/@src</p>
+</blockquote>
+<p>提取到的不一定都是有效的<code>url格式</code>，比如实际提取过程中，匹配到了下述内容：</p>
+<blockquote>
+<p>data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAFLAfQDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAABAUDBgACBwEI/8</p>
+</blockquote>
+<p>这显然不是我们想要的<code>url格式</code>，因此在获取到某个<code>url地址</code>内容后，我们需要做一个判断，最简单的判断方式---------判断这玩意是不是以“<code>http</code>“开头的，我们使用<strong>re模块</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> re.<span class="keyword">match</span>(<span class="string">r&#x27;^(http)&#x27;</span>, img.get_attribute(<span class="string">&#x27;src&#x27;</span>)):</span><br><span class="line">    <span class="comment"># 再进行数据处理</span></span><br></pre></td></tr></table></figure>
+<p>好了，现在可以将爬取到的url地址使用<strong>requests</strong>库进行下载保存了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># li标签作为根标签，使用xpath表达式</span></span><br><span class="line">elements = driver.find_elements_by_xpath(<span class="string">&#x27;//li[@class=&quot;imgitem normal&quot;]&#x27;</span>)</span><br><span class="line"><span class="comment"># 遍历每个li标签</span></span><br><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> elements:</span><br><span class="line">    img = element.find_element_by_xpath(<span class="string">&#x27;.//img[@class=&quot;main_img img-hover&quot;]&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> re.<span class="keyword">match</span>(<span class="string">r&#x27;^(http)&#x27;</span>, img.get_attribute(<span class="string">&#x27;src&#x27;</span>)):</span><br><span class="line">        <span class="comment"># 以流的方式打开</span></span><br><span class="line">        image = requests.get(img.get_attribute(<span class="string">&#x27;src&#x27;</span>), stream=<span class="literal">True</span>).content</span><br><span class="line">        <span class="comment"># 去掉&lt;strong&gt;&lt;/strong&gt;标签</span></span><br><span class="line">        title = re.sub(<span class="string">r&#x27;[&lt;/strong&gt; ]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, element.get_attribute(<span class="string">&#x27;data-title&#x27;</span>))</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">f&#x27;<span class="subst">&#123;os.getcwd()&#125;</span>/images/%s.jpg&#x27;</span> % title, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> jpg:</span><br><span class="line">                jpg.write(image)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;已下载<span class="subst">&#123;title&#125;</span>.jpg......&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span> IOError:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;下载&#123;title&#125;.jpg错误......&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;下载完毕.&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="完整代码"><a class="markdownIt-Anchor" href="#完整代码"></a> 完整代码</h2>
+<p>下面是完整代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scroll</span>(<span class="params">driver, px=<span class="string">&#x27;document.body.scrollHeight&#x27;</span></span>):</span><br><span class="line">    driver.execute_script(</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            (function () &#123;</span></span><br><span class="line"><span class="string">                var y = 0;</span></span><br><span class="line"><span class="string">                var step = 100;</span></span><br><span class="line"><span class="string">                window.scroll(0, 0);</span></span><br><span class="line"><span class="string">                function f() &#123;</span></span><br><span class="line"><span class="string">                    if (y &lt; %s) &#123;</span></span><br><span class="line"><span class="string">                        y += step;</span></span><br><span class="line"><span class="string">                        window.scroll(0, y);</span></span><br><span class="line"><span class="string">                        setTimeout(f, 100);</span></span><br><span class="line"><span class="string">                    &#125; else &#123;</span></span><br><span class="line"><span class="string">                        document.title += &quot;scroll-ok&quot;;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">            setTimeout(f, 1000);</span></span><br><span class="line"><span class="string">            &#125;)();</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">        % px</span><br><span class="line">    )</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;下拉中......&quot;</span>)</span><br><span class="line">    <span class="comment"># time.sleep(180)</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;scroll-ok&quot;</span> <span class="keyword">in</span> driver.title:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;已拉到指定位置......&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;还没有拉到指定位置......&quot;</span>)</span><br><span class="line">            time.sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;images&#x27;</span>):</span><br><span class="line">    os.mkdir(<span class="string">&#x27;images&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    options = Options()</span><br><span class="line">    options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line">    options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line">    options.add_experimental_option(<span class="string">&#x27;excludeSwitches&#x27;</span>, [<span class="string">&#x27;enable-automation&#x27;</span>])</span><br><span class="line">    driver = webdriver.Chrome(options=options)</span><br><span class="line"></span><br><span class="line">    driver.implicitly_wait(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">    driver.get(</span><br><span class="line">        <span class="string">&#x27;https://image.baidu.com/search/index?ct=201326592&amp;z=9&amp;tn=baiduimage&amp;word=%E5%9B%BE%E7%89%87&amp;pn=&amp;spn=&amp;ie=utf-8&amp;oe=utf-8&amp;cl=2&amp;lm=-1&amp;fr=ala&amp;se=&amp;sme=&amp;width=0&amp;height=0&amp;cs=&amp;os=&amp;objurl=&amp;di=&amp;gsm=3c&amp;dyTabStr=MCwzLDYsMSw0LDIsNSw3LDgsOQ%3D%3D&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    scroll(driver, <span class="string">&#x27;10000&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;等待5s......&#x27;</span>)</span><br><span class="line">    time.sleep(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># li标签作为根标签</span></span><br><span class="line">    elements = driver.find_elements_by_xpath(<span class="string">&#x27;//li[@class=&quot;imgitem normal&quot;]&#x27;</span>)</span><br><span class="line">    <span class="comment"># 遍历每个li标签</span></span><br><span class="line">    <span class="keyword">for</span> element <span class="keyword">in</span> elements:</span><br><span class="line">        img = element.find_element_by_xpath(<span class="string">&#x27;.//img[@class=&quot;main_img img-hover&quot;]&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> re.<span class="keyword">match</span>(<span class="string">r&#x27;^(http)&#x27;</span>, img.get_attribute(<span class="string">&#x27;src&#x27;</span>)):</span><br><span class="line">            <span class="comment"># 以流的方式打开</span></span><br><span class="line">            image = requests.get(img.get_attribute(<span class="string">&#x27;src&#x27;</span>), stream=<span class="literal">True</span>).content</span><br><span class="line">            title = re.sub(<span class="string">r&#x27;[&lt;/strong&gt; ]&#x27;</span>, <span class="string">&#x27;&#x27;</span>, element.get_attribute(<span class="string">&#x27;data-title&#x27;</span>))</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">f&#x27;<span class="subst">&#123;os.getcwd()&#125;</span>/images/%s.jpg&#x27;</span> % title, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> jpg:</span><br><span class="line">                    jpg.write(image)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&#x27;已下载<span class="subst">&#123;title&#125;</span>.jpg......&#x27;</span>)</span><br><span class="line">            <span class="keyword">except</span> IOError:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;下载&#123;title&#125;.jpg错误......&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;下载完毕.&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h2 id="运行程序"><a class="markdownIt-Anchor" href="#运行程序"></a> 运行程序</h2>
+<p><img src="/images/assets/9ef441b337e3c9b6a535fcb174240e4f.png" alt="img" /></p>
+<p>结束后，在当前目录下生成<code>images</code>文件夹，里面存着爬取到的图片：</p>
+<p><img src="/images/assets/8c5e5c0bb48081536d9eafad61420429.png" alt="img" /></p>
+<p>过程感觉挺长的，但是大多时间还是花在思考上，代码本身编写不难，难在整个分析过程。基本上使用上述爬取流程，可以爬取当下90%以上的网站图片了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2022/03/30/0jh1h2dc/">https://luoying.netlify.app/2022/03/30/0jh1h2dc/</a></p>
+    <p><strong>本文标题：</strong>selenium爬取图片的保姆级教程</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件25.jpg" data-sizes="auto" alt="B站视频弹幕提取" class="lazyload">
+          
+        
+        <a href="/2022/03/31/j347xv4l/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            B站视频弹幕提取
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件10.jpg" data-sizes="auto" alt="六级成绩批量查询" class="lazyload">
+        
+      
+      <a href="/2022/02/24/5cs0uw3v/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          六级成绩批量查询
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%AFhtml%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="toc-number">2.</span> <span class="toc-text"> 纯Html静态页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.</span> <span class="toc-text"> 渲染动态页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ajax%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE"><span class="toc-number">4.</span> <span class="toc-text"> Ajax请求数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%88%AC%E5%8F%96%E7%99%BE%E5%BA%A6%E5%9B%BE%E7%89%87"><span class="toc-number">5.</span> <span class="toc-text"> 爬取百度图片</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selenium%E5%AE%89%E8%A3%85"><span class="toc-number">5.1.</span> <span class="toc-text"> selenium安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E9%A1%B5%E9%9D%A2"><span class="toc-number">5.2.</span> <span class="toc-text"> 分析页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xpath-helper"><span class="toc-number">5.3.</span> <span class="toc-text"> XPath Helper</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-number">6.</span> <span class="toc-text"> 代码编写</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">6.1.</span> <span class="toc-text"> 完整代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.2.</span> <span class="toc-text"> 运行程序</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

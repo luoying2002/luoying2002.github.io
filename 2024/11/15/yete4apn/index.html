@@ -1,0 +1,991 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    DNABERT：针对基因组DNA语言的预训练双向编码器Transformers模型 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="文章链接  Ji Y, Zhou Z, Liu H, Davuluri RV. DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome. Bioinformatics. 2021;37(15):2112-2120. https:&#x2F;&#x2F;d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNABERT：针对基因组DNA语言的预训练双向编码器Transformers模型">
+<meta property="og:url" content="https://luoying.netlify.app/2024/11/15/yete4apn/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="文章链接  Ji Y, Zhou Z, Liu H, Davuluri RV. DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome. Bioinformatics. 2021;37(15):2112-2120. https:&#x2F;&#x2F;d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/banner.webp">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215205007485.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215205652155.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215205846968.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215210956177.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215211144471.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets//image-20241215211346554.png">
+<meta property="article:published_time" content="2024-11-15T03:24:45.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.407Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/banner.webp">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="DNABERT：针对基因组DNA语言的预训练双向编码器Transformers模型">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">DNABERT：针对基因组DNA语言的预训练双向编码器Transformers模型</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5"><span class="toc-number">1.</span> <span class="toc-text"> 文章链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text"> 摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text"> 创新点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text"> 主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%89%8D%E9%A1%BB%E7%9F%A5"><span class="toc-number">5.1.</span> <span class="toc-text"> 读前须知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">5.2.</span> <span class="toc-text"> 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="toc-number">5.3.</span> <span class="toc-text"> 模型与方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dnabert%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.3.1.</span> <span class="toc-text"> DNABERT模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dnabert%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="toc-number">5.3.2.</span> <span class="toc-text"> DNABERT模型的训练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E5%8C%96"><span class="toc-number">5.3.2.1.</span> <span class="toc-text"> 标记化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">5.3.2.2.</span> <span class="toc-text"> 预训练</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BE%AE%E8%B0%83"><span class="toc-number">5.3.2.3.</span> <span class="toc-text"> 微调</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">5.3.3.</span> <span class="toc-text"> 结果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-prom%E8%83%BD%E5%A4%9F%E6%9C%89%E6%95%88%E9%A2%84%E6%B5%8B%E8%BF%91%E7%AB%AF%E5%92%8C%E6%A0%B8%E5%BF%83%E5%90%AF%E5%8A%A8%E5%AD%90%E5%8C%BA%E5%9F%9F"><span class="toc-number">5.3.3.1.</span> <span class="toc-text"> DNABERT-Prom能够有效预测近端和核心启动子区域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-tf%E8%83%BD%E5%87%86%E7%A1%AE%E8%AF%86%E5%88%AB%E8%BD%AC%E5%BD%95%E5%9B%A0%E5%AD%90%E7%BB%93%E5%90%88%E4%BD%8D%E7%82%B9"><span class="toc-number">5.3.3.2.</span> <span class="toc-text"> DNABERT-TF能准确识别转录因子结合位点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-viz-%E5%AE%9E%E7%8E%B0%E9%87%8D%E8%A6%81%E5%8C%BA%E5%9F%9F-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E5%BA%8F%E5%88%97%E5%9F%BA%E5%BA%8F%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">5.3.3.3.</span> <span class="toc-text"> DNABERT-viz 实现重要区域、上下文和序列基序的可视化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-splice%E5%87%86%E7%A1%AE%E8%AF%86%E5%88%AB%E7%BB%8F%E5%85%B8%E5%92%8C%E9%9D%9E%E7%BB%8F%E5%85%B8%E5%89%AA%E6%8E%A5%E4%BD%8D%E7%82%B9"><span class="toc-number">5.3.3.4.</span> <span class="toc-text"> DNABERT-Splice准确识别经典和非经典剪接位点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%98%BE%E8%91%97%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD%E5%B9%B6%E5%8F%AF%E6%8E%A8%E5%B9%BF%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%9F%E7%89%A9%E4%BD%93"><span class="toc-number">5.3.3.5.</span> <span class="toc-text"> 预训练显著提升性能并可推广到其他生物体</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">6.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%AF%E6%92%91%E6%80%A7%E6%9D%90%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text"> 支撑性材料</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">8.</span> <span class="toc-text"> 参考文献</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-yete4apn" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/11/15/yete4apn/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-11-15T03:24:45.000Z" itemprop="datePublished">2024-11-15</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" data-aos="zoom-in">论文解读</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="文章链接"><a class="markdownIt-Anchor" href="#文章链接"></a> 文章链接</h1>
+<blockquote>
+<p>Ji Y, Zhou Z, Liu H, Davuluri RV. DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome. Bioinformatics. 2021;37(15):2112-2120. <a target="_blank" rel="noopener" href="https://doi.org/10.1093/bioinformatics/btab083">https://doi.org/10.1093/bioinformatics/btab083</a></p>
+</blockquote>
+<h1 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h1>
+<p><code>DNABERT</code>：提出了一个针对基因组DNA语言的预训练双向编码器<code>Transformers</code>模型</p>
+<h1 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h1>
+<p><strong>动机</strong>：破译非编码DNA的语言是基因组研究中的一个基本问题。由于多义性和远距离语义关系的存在，基因调控密码高度复杂，而以往的信息学方法在数据稀缺的情况下往往难以捕捉这些特征。</p>
+<p><strong>结果</strong>：为应对此挑战，我们开发了一种新型的预训练双向编码器表示模型，命名为<code>DNABERT</code>，基于上下游核苷酸上下文来捕获基因组DNA序列的全局和可迁移理解。我们将<code>DNABERT</code>与目前最广泛使用的基因组调控元件预测程序进行了比较，展示了其易用性、准确性和效率。我们证明，单个预训练的<code>transformers</code>模型在使用少量任务特定标记数据进行简单微调后，可以同时在启动子、剪接位点和转录因子结合位点的预测上达到最先进的性能。此外，<code>DNABERT</code>可以直接可视化输入序列中核苷酸级别的重要性和语义关系，从而提供更好的可解释性，并准确识别保守序列基序和功能性遗传变异候选。最后，我们展示了用人类基因组预训练的<code>DNABERT</code>甚至可以直接应用于其他生物体并取得出色的表现。我们预期预训练的<code>DNABERT</code>模型可以微调用于许多其他序列分析任务。</p>
+<p><strong>可用性和实现</strong>：<code>DNABERT</code>的源代码、预训练模型和微调模型可在GitHub获取（<a target="_blank" rel="noopener" href="https://github.com/jerryji1993/DNABERT">https://github.com/jerryji1993/DNABERT</a>）。</p>
+<h1 id="创新点"><a class="markdownIt-Anchor" href="#创新点"></a> 创新点</h1>
+<ol>
+<li>模型创新：</li>
+</ol>
+<ul>
+<li>首次将<code>BERT</code>架构应用于DNA序列分析，开发了名为<code>DNABERT</code>的预训练模型</li>
+<li>创新性地使用<code>k-mer</code>表示方法对DNA序列进行分词，更好地捕捉局部上下文信息</li>
+<li>开发了<code>DNABERT-XL</code>版本以处理超长序列</li>
+</ul>
+<ol start="2">
+<li>技术优势：</li>
+</ol>
+<ul>
+<li>通过注意力机制可以全局捕获序列上下文信息</li>
+<li>采用&quot;自上而下&quot;的方法，先通过自监督预训练理解DNA语言的一般特征，再应用于具体任务</li>
+<li>在数据稀缺的情况下仍能实现良好性能</li>
+</ul>
+<ol start="3">
+<li>应用创新：</li>
+</ol>
+<ul>
+<li>实现&quot;一个模型解决多个任务&quot;：同一个预训练模型可以通过简单微调应用于启动子、剪接位点和转录因子结合位点预测等多个任务</li>
+<li>开发了<code>DNABERT-viz</code>模块，提供了直观的可视化功能，增强了模型的可解释性</li>
+<li>能够识别功能性遗传变异</li>
+</ul>
+<p>这些创新使得<code>DNABERT</code>在DNA序列分析领域具有重要的理论价值和实际应用价值。</p>
+<h1 id="主要内容"><a class="markdownIt-Anchor" href="#主要内容"></a> 主要内容</h1>
+<h2 id="读前须知"><a class="markdownIt-Anchor" href="#读前须知"></a> 读前须知</h2>
+<ol>
+<li>论文解读尽可能的还原原文，若有不恰当之处，还请见谅；</li>
+<li>排版上，插图会尽量贴近出处，而<code>补充图表</code>均在文末“<code>支撑性材料</code>”的下载链接中；</li>
+<li>左边👈有目录，可自行跳转至想看的部分；</li>
+<li>部分专业术语翻译成中文可能不太恰当，此时会用括号标明它的英文原文，如感受野（<code>Receptive field</code>）。请注意，仅首次出现会标明；</li>
+</ol>
+<h2 id="引言"><a class="markdownIt-Anchor" href="#引言"></a> 引言</h2>
+<p>破译DNA中隐藏的<code>指令语言</code>一直是生物研究中的主要目标之一。虽然解释DNA如何转译成蛋白质的遗传密码是通用的，但决定<code>基因何时以及如何表达</code>的调控密码却在不同的细胞类型和生物体中存在差异。相同的<code>顺式调控元件(CREs)</code>在不同的生物学环境中常常具有不同的功能和活性，而远距离分布的多个CREs可能会相互协作，导致在不同功能角色下对替代启动子的依赖性使用。这些观察结果表明序列编码中存在多义性和远距离语义关系，这些都是自然语言的关键特征。先前的语言学研究证实了DNA，尤其是非编码区域，确实表现出与人类语言极大的相似性，从字母和词汇到语法和语音学都有体现。然而，CREs的语义(即功能)如何随不同的上下文(上游和下游核苷酸序列)而变化仍然大部分未知。</p>
+<p>近年来，通过成功地将深度学习技术应用于基因组序列数据,已开发出许多计算工具来研究<code>顺式调控</code>景观的各个方面，包括DNA-蛋白质相互作用、染色质可及性、非编码变异等。大多数方法采用基于<code>卷积神经网络(CNN)</code>的架构。其他工具关注DNA的序列特征，试图通过应用基于<code>递归神经网络(RNN)</code>的模型来捕获状态之间的依赖关系，如<code>长短期记忆(LSTM)</code>和<code>门控循环单元(GRU)</code>网络。一些混合方法也被提出来整合这两种模型架构的优点。</p>
+<p>为了更好地将DNA建模为一种语言，理想的计算方法应该：</p>
+<ol>
+<li>
+<p>全局考虑所有上下文信息以区分多义CREs；</p>
+</li>
+<li>
+<p>发展可转移到各种任务的通用理解；</p>
+</li>
+<li>
+<p>在标记数据有限的情况下具有良好的泛化能力。</p>
+</li>
+</ol>
+<p>然而，<code>CNN</code>和<code>RNN</code>架构都无法满足这些要求。<code>CNN</code>通常无法捕获长程上下文中的语义依赖关系，因为其提取局部特征的能力受限于过滤器大小。<code>RNN</code>模型(<code>LSTM</code>、<code>GRU</code>)虽然能够学习长期依赖关系，但当它顺序处理所有过去的状态并将上下文信息压缩到具有长输入序列的瓶颈时，大大受到梯度消失和低效率问题的影响。此外，大多数现有模型需要大量标记数据，导致在数据稀缺的情况下性能和适用性有限，而在这种情况下，获取高质量的标记数据是昂贵且耗时的。</p>
+<p>为了解决上述限制，我们采用了<code>双向编码器表示Transformers(BERT)</code>模型的理念，将其应用于基因组DNA领域，开发了一种称为<code>DNABERT</code>的深度学习方法。<code>DNABERT</code>应用<code>Transformer</code>，这是一种基于注意力的架构，在大多数自然语言处理任务中都取得了最先进的性能。我们证明<code>DNABERT</code>通过以下方式解决了上述挑战：</p>
+<ol>
+<li>
+<p>从纯未标记的人类基因组中发展出一般且可迁移的理解，并以&quot;一个模型解决所有问题&quot;的方式通用地解决各种序列相关任务；</p>
+</li>
+<li>
+<p>通过注意力机制全局捕获整个输入序列的上下文信息；</p>
+</li>
+<li>
+<p>在数据稀缺场景中取得出色的性能；</p>
+</li>
+<li>
+<p>无需任何人工指导即可发现DNA序列中的重要子区域和不同顺式元件之间的潜在关系；</p>
+</li>
+<li>
+<p>成功地以跨生物体的方式工作。</p>
+</li>
+</ol>
+<p>由于<code>DNABERT</code>模型的预训练需要大量资源(在8个<code>NVIDIA 2080Ti GPUs</code>上约需25天)，作为本研究的主要贡献，我们在GitHub上提供了源代码和预训练模型供未来的学术研究使用。</p>
+<blockquote>
+<p><code>transformer架构</code>可参考这篇文章：<div class="post-link-card-wrap">
+    <div class="post-link-card">
+      <a href="/2024/11/04/skrzswes/" title="Transformer：Attention Is All You Need"></a>
+      <div class="post-link-card-cover-wrap"><img src="/images/banner.webp" class="no-lightbox" title="Transformer：Attention Is All You Need" alt="Transformer：Attention Is All You Need"/></div>
+      <div class="post-link-card-item-wrap">
+        <div class="post-link-card-title">Transformer：Attention Is All You Need</div>
+        <div class="post-link-card-excerpt">
+# 文章链接
+
+> Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). Attention is all you need. Advances in neural information processing syste</div>
+      </div>
+    </div>
+  </div></p>
+</blockquote>
+<h2 id="模型与方法"><a class="markdownIt-Anchor" href="#模型与方法"></a> 模型与方法</h2>
+<h3 id="dnabert模型"><a class="markdownIt-Anchor" href="#dnabert模型"></a> DNABERT模型</h3>
+<p><code>BERT</code>是一种基于<code>transformer</code>的上下文化语言表示模型，在许多自然语言处理(<code>NLP</code>)任务中取得了超人的表现。它引入了预训练和微调的范式，首先从大量未标记的数据中发展通用理解，然后通过最小的架构修改使用特定任务的数据解决各种应用。<code>DNABERT</code>遵循与<code>BERT</code>相同的训练过程。</p>
+<p><img src="/images/assets//image-20241215205007485.png" alt="image-20241215205007485" /></p>
+<p><code>DNABERT</code>首先将一组用<code>k-mer</code>标记表示的序列作为输入(图1b)。每个序列通过将每个标记嵌入到一个数值向量中而表示为一个矩阵M。从形式上讲，<code>DNABERT</code>通过对M执行多头自注意力机制来捕获上下文信息:</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>MultiHead</mtext><mo stretchy="false">(</mo><mi>M</mi><mo stretchy="false">)</mo><mo>=</mo><mtext>Concat</mtext><mo stretchy="false">(</mo><mi>h</mi><mi>e</mi><mi>a</mi><msub><mi>d</mi><mn>1</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>h</mi><mi>e</mi><mi>a</mi><msub><mi>d</mi><mi>h</mi></msub><mo stretchy="false">)</mo><msup><mi>W</mi><mi>O</mi></msup></mrow><annotation encoding="application/x-tex">\text {MultiHead}(M) = \text {Concat}(head_1,...,head_h)W^O
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">MultiHead</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1413309999999999em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Concat</span></span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">O</span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>其中：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mtext>head</mtext><mi>i</mi></msub><mo>=</mo><mtext>softmax</mtext><mo stretchy="false">(</mo><mfrac><mrow><mi>M</mi><msubsup><mi>W</mi><mi>i</mi><mi>Q</mi></msubsup><mo stretchy="false">(</mo><mi>M</mi><msubsup><mi>W</mi><mi>i</mi><mi>K</mi></msubsup><msup><mo stretchy="false">)</mo><mi>T</mi></msup></mrow><msqrt><msub><mi>d</mi><mi>k</mi></msub></msqrt></mfrac><mo stretchy="false">)</mo><mi>M</mi><msubsup><mi>W</mi><mi>i</mi><mi>V</mi></msubsup></mrow><annotation encoding="application/x-tex">\text {head}_i = \text {softmax}(\frac{MW^Q_i(MW^{K}_i)^T}{\sqrt{d_k}})MW^V_i
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord text"><span class="mord">head</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.646103em;vertical-align:-0.9850000000000001em;"></span><span class="mord text"><span class="mord">softmax</span></span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.661103em;"><span style="top:-2.19778em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.87722em;"><span class="svg-align" style="top:-3.01em;"><span class="pstrut" style="height:3.01em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8272199999999996em;"><span class="pstrut" style="height:3.01em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.09em;"><svg width='400em' height='1.09em' viewBox='0 0 400000 1090' preserveAspectRatio='xMinYMin slice'><path d='M95,712
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l4.819277108433735 -10.000000000000002
+c5.3,-9.3,12,-14,20,-14
+H400000v50H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M844 80h400000v50h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.18278000000000005em;"><span></span></span></span></span></span></span></span><span style="top:-3.225em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.05em;"></span></span><span style="top:-3.7018639999999996em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.959239em;"><span style="top:-2.4231360000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">Q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9850000000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>W</mi><mi>O</mi></msup></mrow><annotation encoding="application/x-tex">W^O</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">O</span></span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>W</mi><mi>i</mi><mi>Q</mi></msubsup><mo separator="true">,</mo><msubsup><mi>W</mi><mi>i</mi><mi>K</mi></msubsup><mo separator="true">,</mo><msubsup><mi>W</mi><mi>i</mi><mi>V</mi></msubsup></mrow><annotation encoding="application/x-tex">{W^Q_i, W^K_i, W^V_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.236103em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.959239em;"><span style="top:-2.4231360000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">Q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span></span> 是用于线性投影的学习参数。</p>
+<p><code>head</code>通过首先计算每两个标记之间的注意力分数，然后利用它们作为权重来汇总 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><msubsup><mi>W</mi><mi>i</mi><mi>V</mi></msubsup></mrow><annotation encoding="application/x-tex">MW^V_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0999949999999998em;vertical-align:-0.258664em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span> 中的行，从而计算M的下一个隐藏状态。<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>MultiHead()</mtext></mrow><annotation encoding="application/x-tex">\text {MultiHead()}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">MultiHead()</span></span></span></span></span> 将h个独立头部的结果与不同的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>W</mi><mi>i</mi><mi>Q</mi></msubsup><mo separator="true">,</mo><msubsup><mi>W</mi><mi>i</mi><mi>K</mi></msubsup><mo separator="true">,</mo><msubsup><mi>W</mi><mi>i</mi><mi>V</mi></msubsup></mrow><annotation encoding="application/x-tex">{W^Q_i, W^K_i, W^V_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.236103em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.959239em;"><span style="top:-2.4231360000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">Q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.441336em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span></span> 集合连接起来。整个过程执行L次，L为层数。</p>
+<p>与<code>BERT</code>类似，<code>DNABERT</code>也采用预训练-微调方案(图1c)。然而，我们通过删除下一句预测、调整序列长度以及强制模型预测连续k个标记来显著修改了预训练过程，以适应DNA场景。在预训练过程中，<code>DNABERT</code>通过自监督学习掌握DNA的基本语法和语义，基于从人类基因组中通过截断和采样提取的长度为10到510的序列。对于每个序列，我们随机掩盖构成序列15%的k个连续标记区域，让<code>DNABERT</code>基于剩余部分预测被掩盖的序列，确保充足的训练样本。我们使用交叉熵损失预训练<code>DNABERT</code>：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mi>N</mi></munderover><msubsup><mi>y</mi><mi>i</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L = \sum_{i=0}^N y&#x27;_i log(y_i)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.106005em;vertical-align:-1.277669em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.872331em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3000050000000005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.277669em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8018919999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
+<p>这里，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>y</mi><mi>i</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">y&#x27;_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.010556em;vertical-align:-0.258664em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.441336em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 分别是N个类别中每个类别的真实概率和预测概率。预训练的<code>DNABERT</code>模型可以用特定任务的训练数据进行微调，用于各种序列级和标记级预测任务的应用。我们将<code>DNABERT</code>模型在三个特定应用上进行了微调——启动子预测、转录因子结合位点(<code>TFBSs</code>)预测和剪接位点预测——并将训练好的模型与当前最先进的工具进行了基准比较。</p>
+<h3 id="dnabert模型的训练"><a class="markdownIt-Anchor" href="#dnabert模型的训练"></a> DNABERT模型的训练</h3>
+<h4 id="标记化"><a class="markdownIt-Anchor" href="#标记化"></a> 标记化</h4>
+<p>与将每个碱基视为单个标记不同，我们使用<code>k-mer</code>表示法对DNA序列进行标记化，这是一种在分析DNA序列时被广泛使用的方法。<code>k-mer</code>表示通过将每个脱氧核苷酸碱基与其后续碱基连接起来，为其整合了更丰富的上下文信息。它们的连接被称为一个<code>k-mer</code>。例如，一个DNA序列&quot;<code>ATGGCT</code>&quot;可以被标记化为四个<code>3-mer</code>：{<code>ATG</code>, <code>TGG</code>, <code>GGC</code>, <code>GCT</code>}或两个<code>5-mer</code>：{<code>ATGGC</code>, <code>TGGCT</code>}。由于不同的k会导致DNA序列的不同标记化。在我们的实验中，我们分别将k设置为<code>3</code>、<code>4</code>、<code>5</code>和<code>6</code>，并训练了4个不同的模型：<code>DNABERT-3</code>、<code>DNABERT-4</code>、<code>DNABERT-5</code>、<code>DNABERT-6</code>。对于<code>DNABERT-k</code>，它的词汇表由所有<code>k-mer</code>的排列组合以及5个特殊标记组成：<code>[CLS]</code>代表分类标记；<code>[PAD]</code>代表填充标记，<code>[UNK]</code>代表未知标记，<code>[SEP]</code>代表分隔标记，<code>[MASK]</code>代表掩码标记。因此，在<code>DNABERT-k</code>的词汇表中有<code>4k+5</code>个标记。</p>
+<h4 id="预训练"><a class="markdownIt-Anchor" href="#预训练"></a> 预训练</h4>
+<p>跟随之前的工作，<code>DNABERT</code>以最大长度为<code>512</code>的序列作为输入。如图1b所示，对于一个DNA序列，我们首先将其标记化为一系列<code>k-mers</code>，并在其开始处添加一个特殊的<code>[CLS]</code>标记(代表整个序列)，以及在末尾添加一个特殊的<code>[SEP]</code>标记(表示序列结束)。在预训练步骤中，我们掩盖了某些<code>k-mers</code>的连续k长度跨度(总计输入序列的15%)，考虑到一个标记可能会从紧邻的<code>k-mers</code>中被轻易推断出来，而在微调时，我们跳过掩码步骤，直接将标记化的序列输入到嵌入层。</p>
+<p>我们通过两种方法从人类基因组生成训练数据：直接非重叠分割和随机采样，序列长度在5到510之间。我们以2000的批量大小对<code>DNABERT</code>进行了120k步的预训练。在前100k步中，我们在每个序列中掩盖了15%的<code>k-mers</code>。在最后20k步中，我们将掩码率提高到20%。学习率在前10k步中从0线性增加(即预热)到<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>4</mn></mrow></msup></mrow><annotation encoding="application/x-tex">4\times10^{-4}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span>，然后在200k步后线性降至<code>0</code>(补充图S1)。我们在<code>120k</code>步后停止训练过程，因为我们发现损失曲线出现了平稳的迹象。</p>
+<p>我们使用与<code>BERT base</code>相同的模型架构，它由12个<code>Transformer</code>层组成，每层有768个隐藏单元和12个注意力头，并在预训练期间对所有四个<code>DNABERT</code>模型使用相同的参数设置。我们在配备8个<code>Nvidia2080Ti GPUs</code>的机器上使用混合精度浮点运算训练每个<code>DNABERT</code>模型。</p>
+<h4 id="微调"><a class="markdownIt-Anchor" href="#微调"></a> 微调</h4>
+<p>对于每个下游应用，我们从预训练参数开始，使用特定任务的数据对<code>DNABERT</code>进行微调。我们在所有应用中都使用了相同的训练技巧，即学习率首先线性预热到峰值，然后线性衰减到接近0。我们使用固定权重衰减的<code>AdamW</code>作为优化器，并对输出层采用了<code>dropout</code>。我们将训练数据分为训练集和开发集用于超参数调优。对于不同k值的<code>DNABERT</code>，我们稍微调整了峰值学习率。详细的超参数设置列在补充表S5中。</p>
+<p>对于长度超过512的序列，我们将它们分割成片段并连接它们的表示作为最终表示。这使得<code>DNABERT</code>能够处理超长序列(<code>DNABERT-XL</code>)。<code>k = 3</code>、<code>4</code>、<code>5</code>、<code>6</code>的<code>DNABERT</code>都取得了非常相似的性能，只有轻微波动。在所有实验中，我们报告<code>kmer=6</code>的结果，因为它取得了最佳性能。</p>
+<h3 id="结果"><a class="markdownIt-Anchor" href="#结果"></a> 结果</h3>
+<h4 id="dnabert-prom能够有效预测近端和核心启动子区域"><a class="markdownIt-Anchor" href="#dnabert-prom能够有效预测近端和核心启动子区域"></a> DNABERT-Prom能够有效预测近端和核心启动子区域</h4>
+<p>预测基因启动子是生物信息学中最具挑战性的问题之一。我们首先评估了预训练模型在识别近端启动子区域方面的表现。为了公平地与具有不同序列长度设置的现有工具进行比较，我们使用来自<code>真核生物启动子数据库(EPDnew)</code>的长度为<code>10000bp</code>的人类<code>TATA</code>和非<code>TATA</code>启动子，对两个模型进行了微调，分别命名为<code>DNABERT-Prom-300</code>和<code>DNABERT-Prom-scan</code>。我们使用<code>TSS</code>周围从<code>-249</code>到<code>50bp</code>的序列作为正例，随机选择的<code>300bp</code>长度含<code>TATA</code>序列作为<code>TATA</code>负例，以及二核苷酸打乱的序列作为非<code>TATA</code>负例，将<code>DNABERT-Prom-300</code>与<code>DeePromoter</code>进行了比较。我们使用基于<code>10000bp</code>长序列的滑动窗口扫描，将<code>DNABERT-Prom-scan</code>与当前可用的方法进行了比较，包括最新的最先进方法<code>PromID</code>、<code>FPROM</code>和我们之前的软件<code>FirstEF</code>。为了适当地在相同设置下与<code>PromID</code>进行基准比较，我们使用了<code>1001bp</code>长的扫描，这超出了传统<code>BERT</code>模型的长度容量。因此，我们专门为此任务开发了<code>DNABERT-XL</code>。我们使用与<code>PromID</code>相同的评估标准，通过扫描序列并将预测与已知<code>TSS</code>的<code>-500</code>到<code>+500bp</code>重叠。与已知<code>TSS</code>的<code>-500</code>到<code>+500bp</code>重叠≥50%的<code>1001bp</code>序列被视为阳性，其余的被视为阴性。对于<code>PromID</code>和<code>FPROM</code>，测试集被直接输入进行评估。相比之下，<code>FirstEF</code>首先生成全基因组预测，然后将其与阳性序列对齐。</p>
+<p><code>DNABERT-Prom</code>在不同设置下通过显著提高的准确性指标超越了所有其他模型(图2)。具体而言，对于<code>prom-300</code>设置下的<code>TATA</code>启动子，<code>DNABERT-Prom-300</code>在准确率和<code>MCC</code>指标上分别超过<code>DeePromoter</code> <code>0.335</code>和<code>0.554</code>(图2a)。同样，我们在非<code>TATA</code>和组合情况下也观察到<code>DNABERT-Prom</code>的性能显著提高(补充图S2)。同时，<code>prom-scan</code>设置本质上更加困难，因为类别高度不平衡，所以所有测试的基准模型表现都很差。在基准模型中，<code>FirstEF</code>取得了最好的性能，在<code>TATA</code>、非<code>TATA</code>和组合数据集的<code>F1</code>得分分别为<code>0.277</code>、<code>0.377</code>和<code>0.331</code>(图2b)。然而，<code>DNABERT-Prom-scan</code>取得的<code>F1</code>得分和<code>MCC</code>远超<code>FirstEF</code>。</p>
+<p><img src="/images/assets//image-20241215205652155.png" alt="image-20241215205652155" /></p>
+<p>接下来，我们评估了我们的模型在核心启动子上的预测性能，这是一个由于序列上下文大小减少而更具挑战性的问题。我们使用了以<code>TSS</code>为中心的<code>Prom-300</code>数据中的<code>70bp</code>，并与<code>CNN</code>、<code>CNN+LSTM</code>和<code>CNN+GRU</code>进行了比较。<code>DNABERT-Prom-core</code>在不同数据集上明显优于所有三个基准模型(图2c-g)，清楚地表明<code>DNABERT</code>可以被可靠地微调，仅依靠<code>TSS</code>区域附近的序列模式就能准确预测长的近端启动子和较短的核心启动子。为了进一步证明<code>DNABERT-XL</code>的有效性，我们还在<code>301bp</code>长序列和<code>2001bp</code>长序列上进行了实验。实验表明，该模型在预测<code>2001 bp</code>长序列时取得了更好的性能(补充表S7)。</p>
+<h4 id="dnabert-tf能准确识别转录因子结合位点"><a class="markdownIt-Anchor" href="#dnabert-tf能准确识别转录因子结合位点"></a> DNABERT-TF能准确识别转录因子结合位点</h4>
+<p>第二代测序技术以前所未有的方式促进了基因组调控区域的全基因组鉴定，揭示了基因调控的复杂性。在分析体内基因组范围内结合相互作用数据时，一个重要步骤是预测目标顺式调控区域中的<code>转录因子结合位点(TFBS)</code>并整理得到的转录因子结合谱。因此，我们使用来自<code>ENCODE</code>数据库的<code>690</code>个<code>TF ChIP-seq</code>统一峰值谱来微调<code>DNABERT-TF</code>模型，以预测<code>ChIP-seq</code>富集区域中的<code>TFBS</code>，并与广泛使用的和之前发表的<code>TFBS</code>预测工具进行了比较，包括<code>DeepBind</code>、<code>DeepSEA</code>、<code>Basset</code>、<code>DeepSite</code>、<code>DanQ</code>和<code>DESSO</code>。</p>
+<p><code>DNABERT-TF</code>是唯一一个平均和中位数准确率和<code>F1</code>值都超过<code>0.9</code>的方法（图3，<code>0.918</code>和<code>0.919</code>），大大超过第二好的竞争者（<code>DeepSEA</code>，<code>Wilcoxon</code>单侧符号秩检验，n=690，校正后P=<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4.5</mn><mo>×</mo><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>100</mn></mrow></msup></mrow><annotation encoding="application/x-tex">4.5×10^{-100}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mord">.</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span><span class="mord mtight">0</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><mn>1</mn><msup><mn>0</mn><mrow><mo>−</mo><mn>98</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1×10^{-98}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">9</span><span class="mord mtight">8</span></span></span></span></span></span></span></span></span></span></span></span>，对于平均值）。其他工具在某些实验中产生了许多假阳性（FP）和假阴性（FN）预测，导致在比较平均值时表现更不令人满意，这是由于分布的偏斜性。几个工具在使用高质量数据的实验中，在找到真阴性（TN）方面与<code>DNABERT</code>表现相当，但在低质量实验数据的预测中表现较差。相比之下，即使在低质量数据上，<code>DNABERT</code>也实现了显著高于其他工具的召回率（图3，中左）。同时，无论实验质量如何，<code>DNABERT-TF</code>产生的假阳性预测都比任何其他模型少得多（图3，右上）。这些结果在使用有限数量峰值的<code>ChIP-seq</code>谱的基准测试中得到进一步支持，其中<code>DNABERT-TF</code>始终优于其他方法（见补充图S3）。</p>
+<p><img src="/images/assets//image-20241215205846968.png" alt="image-20241215205846968" /></p>
+<p>为了评估我们的方法是否能有效区分多义的顺式调控元件，我们关注了<code>p53</code>家族蛋白（它们识别相同的基序），并研究了<code>TAp73-alpha</code>和<code>TAp73-beta</code>亚型之间结合特异性的上下文差异。我们将来自<code>GEO</code>数据集<code>GSE15780</code>的<code>p53</code>、<code>TAp73-alpha</code>和<code>TAp73-beta ChIP-seq</code>峰值与我们的<code>P53Scan</code>程序预测的结合位点重叠，并使用得到的<code>ChIP-seq</code>特征化<code>BS</code>（<code>35bp</code>）来微调我们的模型。<code>DNABERT-TF</code>在个别<code>TF</code>的二元分类上实现了接近完美的表现（<code>0.99</code>）（见补充表S2）。使用具有更宽上下文（<code>500bp</code>）的输入序列，<code>DNABERT-TF</code>能有效区分两种<code>TAp73</code>亚型，准确率达到<code>0.828</code>（见补充表S2）。总之，<code>DNABERT-TF</code>可以根据不同的上下文窗口准确识别甚至非常相似的<code>TFBS</code>。</p>
+<h4 id="dnabert-viz-实现重要区域-上下文和序列基序的可视化"><a class="markdownIt-Anchor" href="#dnabert-viz-实现重要区域-上下文和序列基序的可视化"></a> DNABERT-viz 实现重要区域、上下文和序列基序的可视化</h4>
+<p>为了克服常见的&quot;黑箱&quot;问题，深度学习模型需要在与传统方法相比表现出色的同时保持可解释性。因此，为了总结和理解微调后的<code>DNABERT</code>模型基于哪些重要序列特征做出分类决策，我们开发了<code>DNABERT-viz</code>模块，用于直接可视化对模型决策有贡献的重要区域。我们证明，由于注意力机制的存在，<code>DNABERT</code>天生适合在<code>DNA</code>序列中找到重要模式并理解它们在上下文中的关系，从而确保了模型的可解释性。</p>
+<p>图4a显示了三个<code>TAp73-beta</code>响应元件的学习到的注意力图，其中<code>DNABERT-viz</code>以无监督的方式准确确定了<code>P53Scan</code>预测的<code>TFBS</code>的位置和得分。然后，我们汇总了所有热图，在<code>Prom-300</code>和<code>ENCODE 690 TF</code>的测试集上产生注意力景观。对于<code>TATA</code>启动子，<code>DNABERT</code>始终在<code>TSS</code>上游<code>-20</code>到<code>-30bp</code>区域（<code>TATA</code>框所在位置）表现出高度注意力，而对于大多数非<code>TATA</code>启动子，则观察到更分散的注意力模式（图4）。这种模式也在<code>TF-690</code>数据集中看到，每个峰值都显示出一组不同的高注意力区域，其中大多数分散在峰值中心周围（补充图S4）。我们特别关注了个别<code>ChIP-seq</code>实验的例子，以更好地理解注意力模式。大多数高质量实验都显示在<code>ChIP-seq</code>峰值中心或<code>TFBS</code>区域周围的注意力富集（图4和补充图S5）。相比之下，低质量实验倾向于具有分散的注意力，没有明显可观察到的模式，除了仅在序列开始处的高注意力，这可能是由于模型偏差造成的（图4d）。</p>
+<p><img src="/images/assets//image-20241215210956177.png" alt="image-20241215210956177" /></p>
+<p>接下来，我们扩展了<code>DNABERT-viz</code>，使其能够直接可视化任何输入序列内的上下文关系（图4e）。例如，最左边的图显示了<code>p53</code>数据集中一个输入序列的全局自注意力模式，其中来自大多数<code>k-mer</code>标记的各个注意力在所有头部中都正确地集中在二聚体<code>BS</code>的两个中心。通过观察哪些标记特别关注该位点，我们可以进一步推断<code>BS</code>与输入序列其他区域之间的相互依赖关系（图4e，右）。在注意力头部中，橙色的头部明显发现了上下文中隐藏的语义关系，因为它广泛突出了对这个重要标记<code>CTT</code>的注意力有贡献的各个短区域。此外，三个头部（绿色、紫色和粉色）成功地将这个标记与二聚体<code>BS</code>的下游一半相关联，展示了对输入序列的上下文理解。</p>
+<p>为了在许多输入序列中提取保守的基序模式，我们应用<code>DNABERT-viz</code>来寻找连续的高注意力区域，并通过超几何检验进行过滤（见补充方法）。然后将得到的显著基序实例对齐并合并，生成位置权重矩阵（<code>PWMs</code>）。通过在<code>ENCODE 690</code>数据集中发现的基序上应用<code>TOMTOM</code>程序并与<code>JASPAR 2018</code>数据库比较，我们发现发现的<code>1999</code>个基序中有<code>1595</code>个成功对齐到已验证的基序（补充图S6，q值&lt;0.01）。通过与已记录基序的强烈相似性，说明识别的基序总体上质量很高（补充图S7）。</p>
+<p>最后，我们应用<code>DNABERT-viz</code>来理解区分<code>TAp73-alpha</code>和<code>beta</code>亚型结合位点的重要因素。注意力景观确实显示出两种亚型之间差异富集的许多短区域，其中<code>alpha</code>在中心具有更集中的高注意力，而<code>beta</code>则更分散在上下文中（补充图S8）。提取的许多强基序模式都没有对齐到<code>JASPAR</code>数据库，除了一些突出未知关系的模式（补充图S9）。重要的是，<code>c-Fos</code>、<code>c-Jun</code>和<code>TAp73-alpha/beta</code>亚型之间的差异性串扰对细胞凋亡平衡有贡献，而<code>DNABERT-viz</code>成功捕捉到了这种关系。总之，<code>DNABERT</code>可以以更直接的方式获得与基于<code>CNN</code>的模型相当的可解释性，同时在预测性能上大大超越它们。</p>
+<h4 id="dnabert-splice准确识别经典和非经典剪接位点"><a class="markdownIt-Anchor" href="#dnabert-splice准确识别经典和非经典剪接位点"></a> DNABERT-Splice准确识别经典和非经典剪接位点</h4>
+<p>预测剪接位点对于揭示基因结构和理解选择性剪接机制至关重要。然而，既存在含有<code>GT-AG</code>的非剪接位点序列，又存在不含这些二核苷酸的非经典剪接位点，这给准确识别带来了困难。最近，<code>SpliceFinder</code>通过递归纳入先前误分类的假阳性序列来重建数据集，成功解决了这个问题。为了与<code>SpliceFinder</code>在相同基准数据上的性能进行比较，我们迭代重建了包含供体、受体和非剪接位点类别的相同数据集。我们还与多个基线模型进行了比较分析。</p>
+<p>正如预期的那样，由于任务过于简单化，所有模型在初始数据集上的表现都很好，尽管<code>DNABERT-Splice</code>仍然取得了最好的成绩（补充表S3）。然后，我们使用包含&quot;对抗样本&quot;的重建数据集将<code>DNABERT-Splice</code>与所有基线进行比较（图5a）。这一次，基线模型的预测性能大幅下降，而<code>DNABERT-Splice</code>仍然实现了<code>0.923</code>的最佳准确率、<code>0.919</code>的<code>F1</code>值和<code>0.871</code>的<code>MCC</code>，其<code>AUROC</code>和<code>AUPRC</code>显著优于其他模型（图5b和c），这也得到了<code>Mcnemar</code>精确检验的支持（补充图S10和S11）。此外，当在包含我们迭代训练过程中保留的滑动窗口扫描的独立测试集上进行预测时，<code>DNABERT-Splice</code>再次优于所有模型（补充表S4）。</p>
+<p><img src="/images/assets//image-20241215211144471.png" alt="image-20241215211144471" /></p>
+<p>我们还检查了注意力景观，以阐明模型如何做出分类决策（补充图S12）。令人惊讶的是，<code>DNABERT-Splice</code>在内含子区域（供体下游和受体上游）表现出全局一致的高注意力，突显了作为剪接<code>CREs</code>的各种内含子剪接增强子（<code>ISEs</code>）和抑制子（<code>ISSs</code>）的存在和功能重要性。</p>
+<h4 id="预训练显著提升性能并可推广到其他生物体"><a class="markdownIt-Anchor" href="#预训练显著提升性能并可推广到其他生物体"></a> 预训练显著提升性能并可推广到其他生物体</h4>
+<p>最后，我们基于性能提升和可推广性研究了预训练的重要性。当在相同超参数下比较预训练的<code>DNABERT-prom-300</code>与随机初始化的训练损失时，预训练的<code>DNABERT</code>收敛到明显更低的损失，这表明没有预训练的随机初始化模型很快就陷入局部最小值，因为预训练通过捕获远距离上下文信息确保了对<code>DNA</code>逻辑的初步理解（图6d）。同样，随机初始化的<code>DNABERT-prom-core</code>模型要么完全无法训练，要么表现出次优性能。</p>
+<p><img src="/images/assets//image-20241215211346554.png" alt="image-20241215211346554" /></p>
+<p>对注意力图的检查揭示了对输入序列的逐步理解（图6e）。由于对不同生物体分别预训练<code>DNABERT</code>既耗时又需要大量资源，我们还评估了用人类基因组预训练的<code>DNABERT</code>是否也可以应用于其他哺乳动物生物体。具体来说，我们用<code>78</code>个小鼠<code>ENCODE ChIP-seq</code>数据集对用人类基因组预训练的<code>DNABERT</code>进行微调，并与<code>CNN</code>、<code>CNN+LSTM</code>、<code>CNN+GRU</code>和随机初始化的<code>DNABERT</code>进行比较。预训练的<code>DNABERT</code>显著优于所有基线模型（图6f），表明即使在不同基因组间<code>DNABERT</code>也具有稳健性和适用性。</p>
+<p>众所周知，虽然人类和小鼠基因组的蛋白质编码区域约有<code>85%</code>的同源性，但非编码区域仅显示约<code>50%</code>的全局相似性。由于<code>TFBS</code>主要位于非编码区域，<code>DNABERT</code>模型成功地将学习到的信息从一个基因组转移到一个相似度低得多的基因组，对这些差异具有很高的容忍度。这表明该模型正确捕获了不同生物体<code>DNA</code>序列中共同的深层语义。上述评估证明了预训练的必要性，并保证了预训练模型在不同生物体的众多序列预测任务中的高效应用的可扩展性。</p>
+<h1 id="讨论"><a class="markdownIt-Anchor" href="#讨论"></a> 讨论</h1>
+<p>基于<code>Transformers</code>的模型在各种自然语言处理任务、大规模电子健康记录备注和生物医学文档的生物医学和临床实体提取方面都取得了最先进的性能。之前的研究已经将<code>Transformers</code>应用于蛋白质序列和原核生物基因组。在这里，我们展示了<code>DNABERT</code>通过大大超越现有工具，在各种下游<code>DNA</code>序列预测任务中实现了卓越的性能。通过对输入序列创新性的全局上下文嵌入，<code>DNABERT</code>采用&quot;自上而下&quot;的方法来解决序列特异性预测问题，首先通过自监督预训练发展对<code>DNA</code>语言的普遍理解，然后将其应用于特定任务，这与使用特定任务数据的传统&quot;自下而上&quot;方法形成对比。</p>
+<p><code>DNABERT</code>的这些特点确保它能更有效地从<code>DNA</code>上下文中学习，具有适应多种情况的巨大灵活性，并且在有限数据条件下性能得到提升。特别是，我们还观察到预训练的<code>DNABERT</code>在不同生物体之间具有很强的泛化能力，这确保了我们的方法无需单独预训练就能广泛应用。</p>
+<p>作为本研究的一部分发布的预训练<code>DNABERT</code>模型可以用于其他序列预测任务，例如，从<code>ATAC-seq</code>和<code>DAP-seq</code>确定<code>CREs</code>和增强子区域。此外，由于<code>RNA</code>序列与<code>DNA</code>序列仅相差一个碱基（胸腺嘧啶变成尿嘧啶），而语法和语义基本保持不变，我们提出的方法也可以应用于交联和免疫沉淀（<code>CLIP-seq</code>）数据，用于预测<code>RNA</code>结合蛋白（<code>RBPs</code>）的结合偏好。尽管对<code>DNA</code>的直接机器翻译尚不可能，但<code>DNABERT</code>的成功开发为这种可能性提供了启示。</p>
+<p>作为一个成功的语言模型，<code>DNABERT</code>正确捕获了<code>DNA</code>序列中隐藏的语法、语法规则和语义，一旦标记级标签可用，它应该在序列到序列（<code>Seq2seq</code>）翻译任务上表现同样出色。同时，<code>DNA</code>和人类语言在文本之外的其他相似方面（如选择性剪接和标点符号）突显了需要结合不同层次的数据来更恰当地破译<code>DNA</code>语言。总之，我们预期<code>DNABERT</code>通过将先进的语言建模视角带入基因调控分析，可以为生物信息学界带来新的进展和见解。</p>
+<h1 id="支撑性材料"><a class="markdownIt-Anchor" href="#支撑性材料"></a> 支撑性材料</h1>
+<p>本文的支撑性材料可在<a target="_blank" rel="noopener" href="https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/bioinformatics/37/15/10.1093_bioinformatics_btab083/6/btab083_supplementary_data.zip?Expires=1737199066&amp;Signature=Ei0ZDa86mUeYlE-aB7PSlBXjV70u7bWtd4u-N2Rk2psxNmFyLT83dh1Z6J8SLDl8MuEoOzycXI9uZvuzrBA0e3iX97BSKh3s1qyw7GG2ZqzZqTcoNowJM4Ue4xBRvecQVRY6FIUxxXwfTusFq-kcWRcCCfHzNVuyYyNXg3TvoWWNRrTytJnyl4f4opHe-vTHSENslUn4UNDKsxTtaVScJxEAkvLSjOufQ8qFgI7kWNe1yw3XMkUcSSpaoyTZ3XIww0hevUkIryG~QzhMakxQTydUjsoupJvcdvJQh08j7VvFh5-qXPLeZzZx5P-91xw3HjsRqcXmcnMjYQA5A11UQg__&amp;Key-Pair-Id=APKAIE5G5CRDK6RD3PGA">这里</a>获取。</p>
+<h1 id="参考文献"><a class="markdownIt-Anchor" href="#参考文献"></a> 参考文献</h1>
+<ol>
+<li>
+<p>Andersson, R., Sandelin, A. (2020). Determinants of enhancer and promoter activities of regulatory elements.</p>
+</li>
+<li>
+<p>Nirenberg, M., Leder, P., Bernfield, M., Brimacombe, R., Trupin, J., Rottman, F., O’neal, C. (1965). RNA codewords and protein synthesis, VII. On the general nature of the RNA code.</p>
+</li>
+<li>
+<p>Davuluri, R.V., Suzuki, Y., Sugano, S., Plass, C., Huang, T.H.-M. (2008). The functional consequences of alternative promoter use in mammalian genomes.</p>
+</li>
+<li>
+<p>Gibcus, J.H., Dekker, J. (2012). The context of gene regulation.</p>
+</li>
+<li>
+<p>Ji, Y., Mishra, R.K., Claude, E., Moore, J.E., Lobos, C.M., Hoff, A.M., et al. (2020). Promoter-proximal pausing coordinates tissue-specific timing of gene expression.</p>
+</li>
+<li>
+<p>Vitting-Seerup, K., Sandelin, A. (2017). The landscape of isoform switches in human cancers.</p>
+</li>
+<li>
+<p>Brendel, V., Busse, H.G. (1984). Genome structure described by formal languages.</p>
+</li>
+<li>
+<p>Head, T. (1987). Formal language theory and DNA: An analysis of the generative capacity of specific recombinant behaviors.</p>
+</li>
+<li>
+<p>Ji, S. (1999). The linguistics of DNA: Words, sentences, grammar, phonetics, and semantics.</p>
+</li>
+<li>
+<p>Mantegna, R.N., Buldyrev, S.V., Goldberger, A.L., Havlin, S., Peng, C.-K., Simons, M., Stanley, H.E. (1994). Linguistic features of noncoding DNA sequences.</p>
+</li>
+<li>
+<p>Searls, D.B. (1992). The linguistics of DNA.</p>
+</li>
+<li>
+<p>Searls, D.B. (2002). The language of genes.</p>
+</li>
+<li>
+<p>Alipanahi, B., Delong, A., Weirauch, M.T., Frey, B.J. (2015). Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning.</p>
+</li>
+<li>
+<p>Kelley, D.R., Snoek, J., Rinn, J.L. (2016). Basset: Learning the regulatory code of the accessible genome with deep convolutional neural networks.</p>
+</li>
+<li>
+<p>Zhou, J., Troyanskaya, O.G. (2015). Predicting effects of noncoding variants with deep learning-based sequence model.</p>
+</li>
+<li>
+<p>Zou, J., Huss, M., Abid, A., Mohammadi, P., Torkamani, A., Telenti, A. (2019). A primer on deep learning in genomics.</p>
+</li>
+<li>
+<p>Hochreiter, S., Schmidhuber, J. (1997). Long short-term memory.</p>
+</li>
+<li>
+<p>Cho, K., Van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., Bengio, Y. (2014). Learning phrase representations using RNN encoder-decoder for statistical machine translation.</p>
+</li>
+<li>
+<p>Hassanzadeh, H.R., Wang, M.D. (2016). DeeperBind: Enhancing prediction of sequence specificities of DNA binding proteins.</p>
+</li>
+<li>
+<p>Quang, D., Xie, X. (2016). DanQ: a hybrid convolutional and recurrent deep neural network for quantifying the function of DNA sequences.</p>
+</li>
+<li>
+<p>Shen, Z., Bao, W., Huang, D.-S. (2018). Recurrent neural network for predicting transcription factor binding sites.</p>
+</li>
+<li>
+<p>Bengio, Y., Courville, A., Vincent, P. (2013). Representation learning: A review and new perspectives.</p>
+</li>
+<li>
+<p>LeCun, Y., Bengio, Y., Hinton, G. (2015). Deep learning.</p>
+</li>
+<li>
+<p>Devlin, J., Chang, M.-W., Lee, K., Toutanova, K. (2018). BERT: Pre-training of deep bidirectional transformers for language understanding. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.04805">https://arxiv.org/abs/1810.04805</a></p>
+</li>
+<li>
+<p>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.N., et al. (2017). Attention is all you need.</p>
+</li>
+<li>
+<p>Liu, Y., Ott, M., Goyal, N., Du, J., Joshi, M., Chen, D., et al. (2019). RoBERTa: A robustly optimized BERT pretraining approach.</p>
+</li>
+<li>
+<p>Yang, Z., Dai, Z., Yang, Y., Carbonell, J., Salakhutdinov, R.R., Le, Q.V. (2019). XLNet: Generalized autoregressive pretraining for language understanding.</p>
+</li>
+<li>
+<p>Li, F., Chen, Y., Zhang, Z., Ouyang, J., Wang, Y., Meng, S., et al. (2019). Discriminating clinical phases of recovery from major depressive disorder using the dynamics of facial expression.</p>
+</li>
+<li>
+<p>Lee, J., Yoon, W., Kim, S., Kim, D., Kim, S., So, C.H., Kang, J. (2020). BioBERT: a pre-trained biomedical language representation model for biomedical text mining.</p>
+</li>
+<li>
+<p>Clauwaert, J., Waegeman, W. (2020). Novel transformer networks for improved sequence labeling in genomics.</p>
+</li>
+<li>
+<p>Min, X., Zeng, W., Chen, S., Chen, N., Chen, T., Jiang, R. (2019). Predicting enhancers with deep convolutional neural networks.</p>
+</li>
+<li>
+<p>Gupta, S., Stamatoyannopoulos, J.A., Bailey, T.L., Noble, W.S. (2007). Quantifying similarity between motifs.</p>
+</li>
+<li>
+<p>Koeppel, M., van Heeringen, S.J., Kramer, D., Smeenk, L., Janssen-Megens, E., Hartmann, M., et al. (2011). Crosstalk between c-Jun and TAp73α/β contributes to the apoptosis-survival balance.</p>
+</li>
+<li>
+<p>Wang, Z., Burge, C.B. (2008). Splicing regulation: from a parts list of regulatory elements to an integrated splicing code.</p>
+</li>
+<li>
+<p>Buenrostro, J.D., Giresi, P.G., Zaba, L.C., Chang, H.Y., Greenleaf, W.J. (2013). Transposition of native chromatin for fast and sensitive epigenomic profiling of open chromatin, DNA-binding proteins and nucleosome position.</p>
+</li>
+<li>
+<p>Bartlett, A., O’malley, R.C., Huang, S.C., Galli, M., Nery, J.R., Gallavotti, A., Ecker, J.R. (2017). Mapping genome-wide transcription-factor binding sites using DAP-seq.</p>
+</li>
+<li>
+<p>Gerstberger, S., Hafner, M., Tuschl, T. (2014). A census of human RNA-binding proteins.</p>
+</li>
+<li>
+<p>Mouse Genome Sequencing Consortium (2002). Initial sequencing and comparative analysis of the mouse genome.</p>
+</li>
+<li>
+<p>Mouse ENCODE Consortium (2012). An encyclopedia of mouse DNA elements (Mouse ENCODE).</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/11/15/yete4apn/">https://luoying.netlify.app/2024/11/15/yete4apn/</a></p>
+    <p><strong>本文标题：</strong>DNABERT：针对基因组DNA语言的预训练双向编码器Transformers模型</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件49.jpg" data-sizes="auto" alt="生信笔记---医学遗传学详述" class="lazyload">
+          
+        
+        <a href="/2024/11/15/gom7w8w1/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            生信笔记---医学遗传学详述
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件46.jpg" data-sizes="auto" alt="Transformer：Attention Is All You Need" class="lazyload">
+        
+      
+      <a href="/2024/11/04/skrzswes/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Transformer：Attention Is All You Need
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E9%93%BE%E6%8E%A5"><span class="toc-number">1.</span> <span class="toc-text"> 文章链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text"> 摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text"> 创新点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text"> 主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%89%8D%E9%A1%BB%E7%9F%A5"><span class="toc-number">5.1.</span> <span class="toc-text"> 读前须知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">5.2.</span> <span class="toc-text"> 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="toc-number">5.3.</span> <span class="toc-text"> 模型与方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dnabert%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.3.1.</span> <span class="toc-text"> DNABERT模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dnabert%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="toc-number">5.3.2.</span> <span class="toc-text"> DNABERT模型的训练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E5%8C%96"><span class="toc-number">5.3.2.1.</span> <span class="toc-text"> 标记化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">5.3.2.2.</span> <span class="toc-text"> 预训练</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BE%AE%E8%B0%83"><span class="toc-number">5.3.2.3.</span> <span class="toc-text"> 微调</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">5.3.3.</span> <span class="toc-text"> 结果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-prom%E8%83%BD%E5%A4%9F%E6%9C%89%E6%95%88%E9%A2%84%E6%B5%8B%E8%BF%91%E7%AB%AF%E5%92%8C%E6%A0%B8%E5%BF%83%E5%90%AF%E5%8A%A8%E5%AD%90%E5%8C%BA%E5%9F%9F"><span class="toc-number">5.3.3.1.</span> <span class="toc-text"> DNABERT-Prom能够有效预测近端和核心启动子区域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-tf%E8%83%BD%E5%87%86%E7%A1%AE%E8%AF%86%E5%88%AB%E8%BD%AC%E5%BD%95%E5%9B%A0%E5%AD%90%E7%BB%93%E5%90%88%E4%BD%8D%E7%82%B9"><span class="toc-number">5.3.3.2.</span> <span class="toc-text"> DNABERT-TF能准确识别转录因子结合位点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-viz-%E5%AE%9E%E7%8E%B0%E9%87%8D%E8%A6%81%E5%8C%BA%E5%9F%9F-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E5%BA%8F%E5%88%97%E5%9F%BA%E5%BA%8F%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">5.3.3.3.</span> <span class="toc-text"> DNABERT-viz 实现重要区域、上下文和序列基序的可视化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dnabert-splice%E5%87%86%E7%A1%AE%E8%AF%86%E5%88%AB%E7%BB%8F%E5%85%B8%E5%92%8C%E9%9D%9E%E7%BB%8F%E5%85%B8%E5%89%AA%E6%8E%A5%E4%BD%8D%E7%82%B9"><span class="toc-number">5.3.3.4.</span> <span class="toc-text"> DNABERT-Splice准确识别经典和非经典剪接位点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E6%98%BE%E8%91%97%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD%E5%B9%B6%E5%8F%AF%E6%8E%A8%E5%B9%BF%E5%88%B0%E5%85%B6%E4%BB%96%E7%94%9F%E7%89%A9%E4%BD%93"><span class="toc-number">5.3.3.5.</span> <span class="toc-text"> 预训练显著提升性能并可推广到其他生物体</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A8%E8%AE%BA"><span class="toc-number">6.</span> <span class="toc-text"> 讨论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%AF%E6%92%91%E6%80%A7%E6%9D%90%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text"> 支撑性材料</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">8.</span> <span class="toc-text"> 参考文献</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

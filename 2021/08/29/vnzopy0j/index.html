@@ -1,0 +1,786 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Java多线程详解（线程不安全案例） |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 通过前面两章的学习，我们了解了线程的基本概念和创建线程的四种方式。 这一章，我们来谈谈线程安全问题。 也许小伙伴们刚听到这个词语的时候，是一脸懵逼，笔者初学线程安全也是这样的。所以本章从几个案例入手，让小伙伴们尽可能地理解什么是线程安全。  sleep()方法 在学习线程安全之前，我们首先得简单地介绍Thread类中的一个静态方法----sleep() 首先我们要知道，程序运行的速度是非常">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java多线程详解（线程不安全案例）">
+<meta property="og:url" content="https://luoying.netlify.app/2021/08/29/vnzopy0j/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 通过前面两章的学习，我们了解了线程的基本概念和创建线程的四种方式。 这一章，我们来谈谈线程安全问题。 也许小伙伴们刚听到这个词语的时候，是一脸懵逼，笔者初学线程安全也是这样的。所以本章从几个案例入手，让小伙伴们尽可能地理解什么是线程安全。  sleep()方法 在学习线程安全之前，我们首先得简单地介绍Thread类中的一个静态方法----sleep() 首先我们要知道，程序运行的速度是非常">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/248c8fc8d6e90bc81e0d5f3eac1f0007.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/aefb1231ebd7d25b969325895cc6b990.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/d29bca10f98bc9e51495a8626ad63ec6.png">
+<meta property="og:image" content="https://luoying.netlify.app/2021/08/29/vnzopy0j/images/assets/e20c7d6dbcb162b4d0f5b13bff7cf0db.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/8329e0a91cc04f6de8d305a7d026f7b1.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/7e498b724664f66560c93fd48f4f903a.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/77c220c94f097d93d275bd7c1bd144f0.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/7818a5e82e09aaad57f779a9a15a2ec6.png">
+<meta property="article:published_time" content="2021-08-29T05:23:44.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.039Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/248c8fc8d6e90bc81e0d5f3eac1f0007.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Java多线程详解（线程不安全案例）">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Java多线程详解（线程不安全案例）</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sleep%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> sleep()方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%E5%A4%9A%E4%BA%BA%E5%8F%96%E9%92%B1"><span class="toc-number">3.</span> <span class="toc-text"> 问题一：多人取钱</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C%E5%A4%9A%E4%BA%BA%E8%B4%AD%E7%A5%A8"><span class="toc-number">4.</span> <span class="toc-text"> 问题二：多人购票</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89arraylist"><span class="toc-number">5.</span> <span class="toc-text"> 问题三：ArrayList</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-vnzopy0j" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/08/29/vnzopy0j/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-08-29T05:23:44.000Z" itemprop="datePublished">2021-08-29</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/" data-aos="zoom-in">Java</a><a class="article-category-link" href="/categories/Java/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" data-aos="zoom-in">Java多线程</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>通过前面两章的学习，我们了解了线程的基本概念和创建线程的四种方式。</p>
+<p>这一章，我们来谈谈线程安全问题。</p>
+<p>也许小伙伴们刚听到这个词语的时候，是一脸懵逼，笔者初学线程安全也是这样的。所以本章从几个案例入手，让小伙伴们尽可能地理解什么是线程安全。</p>
+<h1 id="sleep方法"><a class="markdownIt-Anchor" href="#sleep方法"></a> sleep()方法</h1>
+<p>在学习线程安全之前，我们首先得简单地介绍<code>Thread类</code>中的一个静态方法----<code>sleep()</code></p>
+<p>首先我们要知道，程序运行的速度是非常快的，当<code>CPU</code>调度某个线程开始执行时，由于运行速度太快，此线程可能执行完之后<code>CPU</code>才开始调度其他线程，这样显然不符合<code>并发</code>的特点，因此我们希望能阻塞某个线程的运行，使得其他线程有执行的“机会”，这时我们可以考虑<code>sleep()</code>方法。</p>
+<p>在某个线程的<code>run()</code>方法里调用<code>Thread.sleep(1000)</code>后，会使当前正在运行的线程立即进入<code>阻塞状态</code>，1000ms后，阻塞状态解除，进入<code>可运行态</code>，等待CPU的<code>再次调度</code>。在这段时间里，其它线程有可能获取CPU的使用权，从而达到<code>并发</code>的效果。</p>
+<p>调用<code>sleep()</code>方法可以扩大多线程执行时问题的发生性，以便开发者能够迅速发现bug，解决bug。</p>
+<p>最后，请记住一句话（后几章会解释）：Java中**<code>每个对象有且只有一把锁，调用sleep()不会释放锁</code>**。</p>
+<h1 id="问题一多人取钱"><a class="markdownIt-Anchor" href="#问题一多人取钱"></a> 问题一：多人取钱</h1>
+<p>了解完<code>sleep()</code>方法后，我们来看第一个案例-----多人取钱问题。</p>
+<p>假设现在，你和你妻子有100万存款，现在你俩同时去取钱，你想取50万，你妻子想取100万。就上述这个场景，我们用代码来模拟一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sixibiheye</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/8/28</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiNote</span> 线程安全问题一-------取钱问题</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnsafeBank</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//账户</span></span><br><span class="line">        <span class="type">Account</span> <span class="variable">account</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Account</span>(<span class="number">100</span>,<span class="string">&quot;买房基金&quot;</span>);</span><br><span class="line">        <span class="comment">//你和你的妻子都要取钱</span></span><br><span class="line">        <span class="type">Drawing</span> <span class="variable">you</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Drawing</span>(account,<span class="number">50</span>,<span class="string">&quot;你&quot;</span>);</span><br><span class="line">        <span class="type">Drawing</span> <span class="variable">girlFriend</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Drawing</span>(account,<span class="number">100</span>,<span class="string">&quot;妻子&quot;</span>);</span><br><span class="line">        you.start();</span><br><span class="line">        girlFriend.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//账户</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Account</span>&#123;</span><br><span class="line">    <span class="type">int</span> money; <span class="comment">//余额</span></span><br><span class="line">    String name; <span class="comment">//卡名</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Account</span><span class="params">(<span class="type">int</span> money,String name)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.money = money;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//银行</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Drawing</span> <span class="keyword">extends</span> <span class="title class_">Thread</span>&#123;</span><br><span class="line">    Account account; <span class="comment">//账户</span></span><br><span class="line">    <span class="type">int</span> drawingMoney; <span class="comment">//取的钱</span></span><br><span class="line">    <span class="type">int</span> nowMoney; <span class="comment">//现手上有的钱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Drawing</span><span class="params">(Account account,<span class="type">int</span> drawingMoney,String name)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(name);</span><br><span class="line">        <span class="built_in">this</span>.account = account;</span><br><span class="line">        <span class="built_in">this</span>.drawingMoney = drawingMoney;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(account.money - drawingMoney &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">&quot;钱不够了，取不了！&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//卡内余额</span></span><br><span class="line">        account.money = account.money - drawingMoney;</span><br><span class="line">        <span class="comment">//手里的钱</span></span><br><span class="line">        nowMoney = nowMoney + drawingMoney;</span><br><span class="line">        <span class="comment">//打印</span></span><br><span class="line">        System.out.println(account.name + <span class="string">&quot;余额为：&quot;</span> + account.money);</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;手里的钱：&quot;</span> + nowMoney);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码本身比较简单，我们来看它的运行结果：</p>
+<p><img src="/images/assets/248c8fc8d6e90bc81e0d5f3eac1f0007.png" alt="img" /></p>
+<p>再运行一次：</p>
+<p><img src="/images/assets/aefb1231ebd7d25b969325895cc6b990.png" alt="img" />粗略看来，上述运行结果好像没有什么问题，但是，我在前面说过，如果程序运行太快，两个线程可能是顺序执行的，因此我们考虑在程序中加入<code>sleep()</code>方法来<code>模拟延时</code>，以此扩大问题发生的可能性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sixibiheye</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/8/28</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiNote</span> 线程安全问题一-------取钱问题</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnsafeBank</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//账户</span></span><br><span class="line">        <span class="type">Account</span> <span class="variable">account</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Account</span>(<span class="number">100</span>,<span class="string">&quot;买房基金&quot;</span>);</span><br><span class="line">        <span class="comment">//你和你的妻子都要取钱</span></span><br><span class="line">        <span class="type">Drawing</span> <span class="variable">you</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Drawing</span>(account,<span class="number">50</span>,<span class="string">&quot;你&quot;</span>);</span><br><span class="line">        <span class="type">Drawing</span> <span class="variable">girlFriend</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Drawing</span>(account,<span class="number">100</span>,<span class="string">&quot;妻子&quot;</span>);</span><br><span class="line">        you.start();</span><br><span class="line">        girlFriend.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//账户</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Account</span>&#123;</span><br><span class="line">    <span class="type">int</span> money; <span class="comment">//余额</span></span><br><span class="line">    String name; <span class="comment">//卡名</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Account</span><span class="params">(<span class="type">int</span> money,String name)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.money = money;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//银行</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Drawing</span> <span class="keyword">extends</span> <span class="title class_">Thread</span>&#123;</span><br><span class="line">    Account account; <span class="comment">//账户</span></span><br><span class="line">    <span class="type">int</span> drawingMoney; <span class="comment">//取的钱</span></span><br><span class="line">    <span class="type">int</span> nowMoney; <span class="comment">//现手上有的钱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Drawing</span><span class="params">(Account account,<span class="type">int</span> drawingMoney,String name)</span>&#123;</span><br><span class="line">        <span class="built_in">super</span>(name);</span><br><span class="line">        <span class="built_in">this</span>.account = account;</span><br><span class="line">        <span class="built_in">this</span>.drawingMoney = drawingMoney;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(account.money - drawingMoney &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">&quot;钱不够了，取不了！&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//模拟延时，保证多人都有机会取到钱</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//卡内余额</span></span><br><span class="line">        account.money = account.money - drawingMoney;</span><br><span class="line">        <span class="comment">//手里的钱</span></span><br><span class="line">        nowMoney = nowMoney + drawingMoney;</span><br><span class="line">        <span class="comment">//打印</span></span><br><span class="line">        System.out.println(account.name + <span class="string">&quot;余额为：&quot;</span> + account.money);</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;手里的钱：&quot;</span> + nowMoney);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时，我们来看程序的运行结果：</p>
+<p><img src="/images/assets/d29bca10f98bc9e51495a8626ad63ec6.png" alt="img" />再运行一次：     <img src="images/assets/e20c7d6dbcb162b4d0f5b13bff7cf0db.png" alt="img" />你会惊奇地发现，余额竟然出现了负数！ 为什么会出现负数呢？</p>
+<p>小伙伴们可以停下来想一想原因。首先，我们来了解一下JVM中的线程是如何处理“<code>count--</code>”这个指令的。咱可以简单地分为三步：</p>
+<blockquote>
+<ol>
+<li>–&gt;某线程从内存中读取count到自己的寄存器</li>
+<li>–&gt;某线程在寄存器中修改count的值</li>
+<li>–&gt;某线程将修改后的count值写入内存(刷新内存)</li>
+</ol>
+</blockquote>
+<p>在<code>多线程环境</code>下，由于<code>线程会共享进程中的资源</code>，上述三步中任何一步都有可能被其他线程打断，也就是说，有可能<code>count值</code>还没来得及写入内存，就被其他线程读取或写入了。理解这个之后，就不难理解<code> -50（万）</code>出现的原因了。</p>
+<p>假设“妻子的线程”先被<code>CPU</code>调度执行，在妻子的<code>run()</code>方法中，首先执行<code>if判断</code>，条件为假，继续执行下一句。假设刚要执行下一句</p>
+<blockquote>
+<p>account.money = account.money - drawingMoney</p>
+</blockquote>
+<p>时，“妻子的线程”强行被“你的线程”打断，“你的线程”读取到的<code>account.money</code>值仍然是原来的 100（万），这使得“你的线程”通过执行</p>
+<blockquote>
+<p>account.money = account.money - drawingMoney</p>
+</blockquote>
+<p>使得<code>account.money</code>的值变为了</p>
+<blockquote>
+<p>100（万）- 50（万）= 50（万）</p>
+</blockquote>
+<p>并成功写入了内存里。“你的线程”执行完之后，<code>CPU</code>继续调度“妻子的线程”。妻子读取到的<code>account.money</code>值为被“你的线程”修改后的 50（万），由于此前已执行过<code>if判断</code>，故“妻子的线程”接着执行</p>
+<blockquote>
+<p>account.money = account.money - drawingMoney</p>
+</blockquote>
+<p>使得<code>account.money</code>变成了</p>
+<blockquote>
+<p>50（万）- 100（万）= -50（万）</p>
+</blockquote>
+<p>并也成功地写入了内存，最后输出，就出现了-50（万）这个结果。请小伙伴们细细体会～。</p>
+<h1 id="问题二多人购票"><a class="markdownIt-Anchor" href="#问题二多人购票"></a> 问题二：多人购票</h1>
+<p>如果你已经理解了一丢丢，我们继续举第二个例子-----多人购票问题：</p>
+<p>假设现在，某铁路局某线仅有10张票了，小红，小白，小黑都想要买票，就这个场景，我们来模拟一下买票的过程，同上，我们仍然用<code>sleep()</code>模拟延时，扩大问题发生的可能性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sixibiheye</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/8/27</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiNote</span> 线程安全问题一-------买票问题</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnsafeBuyTicket</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">BuyTicket</span> <span class="variable">buyTicket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BuyTicket</span>();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(buyTicket,<span class="string">&quot;小红&quot;</span>).start();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(buyTicket,<span class="string">&quot;小白&quot;</span>).start();</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(buyTicket,<span class="string">&quot;小黑&quot;</span>).start();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BuyTicket</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span>&#123;</span><br><span class="line">    <span class="comment">//票数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">tickets</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="comment">//线程停止的标志位</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">buy</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="comment">//判断是否有票</span></span><br><span class="line">        <span class="keyword">if</span>(tickets &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">            flag = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//模拟延时，保证多人都能买到票</span></span><br><span class="line">        Thread.sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//买票</span></span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;拿到了第&quot;</span> + tickets-- +<span class="string">&quot;张票&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                buy();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不知道小伙伴们在这个程序里发现了哪些问题，我们来看运行结果：</p>
+<p><img src="/images/assets/8329e0a91cc04f6de8d305a7d026f7b1.png" alt="img" /></p>
+<p><img src="/images/assets/7e498b724664f66560c93fd48f4f903a.png" alt="img" />这儿有两个问题：</p>
+<blockquote>
+<ol>
+<li>
+<p>三人同时抢到了同一张票！</p>
+</li>
+<li>
+<p>有人抢到了第 -1 张票！</p>
+</li>
+</ol>
+</blockquote>
+<p>小伙伴们可以仔细思考一下，下面，我给出问题2的一个解释。为了便于解释，我们将小红，小黑，小白三个线程记作<code>A</code>，<code>B</code>，<code>C</code>三个线程。当还剩下最后一张票的时候，我们可以脑补一下程序的执行过程：</p>
+<p>在<code>A线程</code>里，刚执行完<code>if语句判断</code>，便被<code>B线程</code>打断，<code>B线程</code>刚执行完<code>if语句判断</code>，又被<code>C线程</code>打断，<code>C线程</code>未被打断，成功执行完<code>run()</code>方法输出最后一张票同时将<code>count</code>(票数)更新成了0，<code>C线程</code>结束。之后假设CPU调度<code>A线程</code>，由于之前在<code>A线程</code>里已执行过<code>if语句判断</code>，那么再次调度会接着<code>if</code>语句后面的代码执行，从而输出了第0张票同时使得<code>count</code>(票数)更新成了-1，<code>A线程</code>结束。最后<code>CPU</code>调度<code>B线程</code>，同理，由于之前在<code>B线程</code>里已执行过<code>if</code>语句判断，那么再次调度会接着<code>if</code>语句后面的代码执行，从而输出了第<code>-1</code>张票。</p>
+<p>至于三人同时抢到了同一张票，小伙伴们自行思考一下吧…</p>
+<p>上述两个例子中，问题出现的核心原因，咱概括来说，就是<code>线程间不确定地切换使得if语句失去了原有的作用</code>，程序未及时终止而出错。</p>
+<h1 id="问题三arraylist"><a class="markdownIt-Anchor" href="#问题三arraylist"></a> 问题三：ArrayList</h1>
+<p>最后，我们举一个<code>JDK</code>中线程不安全的例子，以<code>ArrayList</code>为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sixibiheye</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/8/28</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiNote</span> 线程安全问题一-------ArrayList安全问题</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnsafeList</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>( () -&gt; &#123;</span><br><span class="line">                list.add(Thread.currentThread().getName());</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//sleep保证上述for循环跑完再输出</span></span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        <span class="comment">//输出列表大小</span></span><br><span class="line">        System.out.println(list.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你认为输出结果是10000的话，那就大错特错了，请看运行结果：</p>
+<p><img src="/images/assets/77c220c94f097d93d275bd7c1bd144f0.png" alt="img" />再运行一次：</p>
+<p><img src="/images/assets/7818a5e82e09aaad57f779a9a15a2ec6.png" alt="img" />这个问题比较简单：虽然开启了10000个线程往<code>ArrayList</code>里加数据，但有可能出现：<code>某两个线程往ArrayList添加数据的时候，添加在了ArrayList的同一位置</code>（ 比如<code>ArrayList[5666] </code>)，这样<code>ArrayList</code>的大小自然就不足10000了。</p>
+<p>希望小伙伴们能够认真地理解上面介绍的三个线程不安全的案例。只有对问题足够了解，才有可能解决问题。下一章，我们将介绍如何解决上面的线程不安全问题。</p>
+<p>PS：It so difficult to write this…能够借鉴的资料实在有限，查阅了大量资料，修改了十几遍，才成此篇，部分解释可能不太严谨，欢迎指正～</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/08/29/vnzopy0j/">https://luoying.netlify.app/2021/08/29/vnzopy0j/</a></p>
+    <p><strong>本文标题：</strong>Java多线程详解（线程不安全案例）</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件45.jpg" data-sizes="auto" alt="Java多线程详解（线程同步）" class="lazyload">
+          
+        
+        <a href="/2021/08/31/8ajv7uz8/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Java多线程详解（线程同步）
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件37.jpg" data-sizes="auto" alt="Java多线程详解（如何创建线程）" class="lazyload">
+        
+      
+      <a href="/2021/08/28/ntvsm7il/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Java多线程详解（如何创建线程）
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sleep%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> sleep()方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%E5%A4%9A%E4%BA%BA%E5%8F%96%E9%92%B1"><span class="toc-number">3.</span> <span class="toc-text"> 问题一：多人取钱</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%BA%8C%E5%A4%9A%E4%BA%BA%E8%B4%AD%E7%A5%A8"><span class="toc-number">4.</span> <span class="toc-text"> 问题二：多人购票</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89arraylist"><span class="toc-number">5.</span> <span class="toc-text"> 问题三：ArrayList</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

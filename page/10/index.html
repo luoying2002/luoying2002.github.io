@@ -1,0 +1,966 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="一方小筑，与君共勉">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小小白的笔记屋">
+<meta property="og:url" content="https://luoying.netlify.app/page/10/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="一方小筑，与君共勉">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/banner.webp">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/banner.webp">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        <link rel="preload" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">小小白的笔记屋</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper ">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+      
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main">
+  
+    <div class="post-categories-wrapper" data-aos="fade-up">
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件8.jpg" data-sizes="auto" alt="算法基础" class="lazyload">
+              
+            
+            <h2>算法基础</h2>
+            <h3>1 篇文章</h3>
+          </div>
+        </div>
+      
+        <div class="post-categories-wrap">
+          
+          <a class="post-link" href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB" aria-label=""></a>
+          <div class="post-categories-cover">
+            
+              
+              
+                <img data-src="/covers/文件16.jpg" data-sizes="auto" alt="论文解读" class="lazyload">
+              
+            
+            <h2>论文解读</h2>
+            <h3>6 篇文章</h3>
+          </div>
+        </div>
+      
+    </div>
+  
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/10/10/y1s02h4v/" aria-label="游戏实战之--《ink spill》（附游戏完整源码）"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件8.jpg" data-sizes="auto" alt="游戏实战之--《ink spill》（附游戏完整源码）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-10-10</span>
+        <span><span class="icon-pencil"></span>7.5k 字</span>
+        <span><span class="icon-clock"></span>33 分钟</span>
+      </div>
+      <h2 class="post-title">游戏实战之--《ink spill》（附游戏完整源码）</h2>
+      <article class="post-article">
+        
+           前言
+通过前两章对Pygame的学习，我们了解了它的基本使用，现在，我们就开始真正动手写一个游戏。
+这个游戏名字为：ink spill，中文名：墨水溢出。这是Python中一个非常典型的游戏，我们首先来看看游戏长什么样子以及应该怎么玩：
+编辑
+小伙伴们看完后，应该差不多明白这个游戏的玩法了。现在，让我们站在“设计者”的角度来考虑，这个游戏应该怎么去制作。
+ 如何制作游戏？
+一般说来，游戏制作要考虑三个方面的内容：
+
+
+游戏道具 （图片，音效等）
+逻辑控制 （游戏状态的逻辑控制）
+UI设计 （游戏界面的设计）
+
+
+游戏道具 ，主要通过两种方式获得：一是加载图片，二是用代码直接绘制。
+本游戏中，
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/10/10/mcqd4jol/" aria-label="Python不能做游戏？"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件41.jpg" data-sizes="auto" alt="Python不能做游戏？" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-10-10</span>
+        <span><span class="icon-pencil"></span>1.9k 字</span>
+        <span><span class="icon-clock"></span>6 分钟</span>
+      </div>
+      <h2 class="post-title">Python不能做游戏？</h2>
+      <article class="post-article">
+        
+           前言
+写在前面的话：
+有人说，python做不出好的游戏，个人是不赞同的，只能说，python可以用来写游戏，但不适合。
+举个最简单的例子，弹弓可以用来拔牙吗？当然可以，只不过人们不用弹弓而已。现在主流的大型游戏的制作，主要用的是C++或者C#，但是，python也可以写出比较好的大型游戏，比如《EVE》，《文明》等等。
+但，说句实话，python有两个缺点，一是速度慢，二是语法缺陷。
+速度慢是python这类解释性语言的通病。而语法缺陷，举个例子，一个格斗类游戏，武器有如下类型：弓箭，枪，刀等，那么在C++或者C#中，声明一把武器为对应类型可以这样写：
+123箭 A = xxx;枪 B =
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/10/10/i6nx6qzk/" aria-label="Pygame基础知识"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件5.png" data-sizes="auto" alt="Pygame基础知识" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-10-10</span>
+        <span><span class="icon-pencil"></span>2.8k 字</span>
+        <span><span class="icon-clock"></span>11 分钟</span>
+      </div>
+      <h2 class="post-title">Pygame基础知识</h2>
+      <article class="post-article">
+        
+           前言
+前面我们学习了第一个Pygame程序，接着，我们来了解Pygame中最为常用的几个对象。学完今天的内容，我们就可以开发一个稍微复杂一点的游戏了。
+ Surface 对象
+Surface对象表示的是一个矩形的2D图像，这个图像，实际上是由非常多的像素点组成的，比如一个（300px , 400潘鑫）的Surface对象，这个矩形2D图像由300*400个像素点组成。可以通过调用Pygame的绘制函数，来对一个Surface对象的某些区域进行填充，从而达到修改整个2D图像的效果。需要注意的是，窗口的边框，标题栏，按钮并不属于Surface对象的一部分。
+我们把通过pygame.display
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/10/07/1a5zkopn/" aria-label="王者荣耀英雄皮肤图片爬取"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件13.jpg" data-sizes="auto" alt="王者荣耀英雄皮肤图片爬取" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-10-07</span>
+        <span><span class="icon-pencil"></span>1.2k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">王者荣耀英雄皮肤图片爬取</h2>
+      <article class="post-article">
+        
+           前言
+众所周知，python在爬虫领域有着得天独厚的优势，今天，我们来用python爬取王者荣耀英雄皮肤图片。
+本章中，我会着重带大家了解爬取网页的基本流程。
+ 网页分析
+首先，咱去王者荣耀的官网瞧瞧：王者荣耀官方网站-腾讯游戏 （建议用谷歌浏览器），我们的目标是，找到英雄皮肤的url地址，如下图，官网是这样的：
+
+发现图中的红框部分-----英雄资料，点进去看看：
+
+往下滑，我们可以发现好多的英雄头像，点一个进去看看，比如貂蝉姐姐：
+
+如上图，我们看到了貂蝉的所有皮肤， 现在我们要找到这些皮肤的url地址，鼠标放至皮肤图片处，在谷歌浏览器中，按F12调出开发者工具，可以看到如下内容：
+
+我
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/09/15/ijbekjky/" aria-label="你会几种“复制”文本的方式？"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件7.jpg" data-sizes="auto" alt="你会几种“复制”文本的方式？" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-09-15</span>
+        <span><span class="icon-pencil"></span>896 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">你会几种“复制”文本的方式？</h2>
+      <article class="post-article">
+        
+           前言
+最近有一位朋友学习了I/O流，他提出了这样一个问题：现在有一个简单的haha.txt文件，利用IO流将haha.txt中的所有文本复制到第二个txt文件：haha2.txt中，问有多少种方式？
+I/O流是Java中一个比较重要的模块，但是jdk中与IO流有关的类比较繁多，大伙记忆起来也比较繁琐，推荐大家多敲代码，在敲代码的过程中，对记忆这些类会轻松许多。
+借那位朋友的问题，我们来复习一下IO流中四种最基本的流。
+ 四种最基本的IO流
+ FileInputStream 和 FileOutputStream
+第一种方式：
+利用 FileInputStream 和 FileOutputStr
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/09/03/jy2j7lo4/" aria-label="Java多线程详解（线程池）"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Java多线程详解（线程池）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-09-03</span>
+        <span><span class="icon-pencil"></span>3.8k 字</span>
+        <span><span class="icon-clock"></span>14 分钟</span>
+      </div>
+      <h2 class="post-title">Java多线程详解（线程池）</h2>
+      <article class="post-article">
+        
+           前言
+上一章我们介绍了Java中的Thread类里一些常用的方法。本节我们就来聊一聊线程池。
+说到“池”，大家或许都不陌生，在java中，我们有见过数据库连接池，Java常量池，对象池等等，将实体进行“池化”，这种“池化”思想，有助于我们对实体进行统一的管理，监控和调用。
+本章的主要内容有：
+
+
+创建线程池
+构造方法的参数解读
+四种功能性线程池
+关闭线程池
+
+
+作为经常被面试的一个模块，线程池的概念不是那么通俗易懂，但在实际开发应用中，线程池对程序性能优化有着不可磨灭的贡献。
+ 线程池
+ 线程池效率对比
+首先，我们来对比下面两个程序运行的效率。程序一，使用前面我们学过的一般线程：
+12345
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/09/02/99n7yacb/" aria-label="Java多线程详解（深究Thread类）"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件3.jpg" data-sizes="auto" alt="Java多线程详解（深究Thread类）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-09-02</span>
+        <span><span class="icon-pencil"></span>3.8k 字</span>
+        <span><span class="icon-clock"></span>14 分钟</span>
+      </div>
+      <h2 class="post-title">Java多线程详解（深究Thread类）</h2>
+      <article class="post-article">
+        
+           前言
+上一章咱介绍了线程同步，了解了解决线程安全的基本思想----“队列与锁”。
+在前几章的介绍中，我们时不时地会使用到sleep()这个方法，知道它可以通过使线程休眠来扩大问题发生的可能性，使开发者能够迅速定位到bug的位置。它是Thread类中一个比较重要的静态方法，那么本章就来介绍一下Thread类中一些常用的方法。
+在介绍Thread类里面的方法之前，我们来回顾一下线程的五大状态：
+请注意体会，当调用下面的这些方法时，线程的状态是如何变化的。
+ sleep()
+sleep()方法有两种重载：
+
+
+public static native void sleep(long millis)
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/08/31/8ajv7uz8/" aria-label="Java多线程详解（线程同步）"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件35.jpg" data-sizes="auto" alt="Java多线程详解（线程同步）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-08-31</span>
+        <span><span class="icon-pencil"></span>2.8k 字</span>
+        <span><span class="icon-clock"></span>12 分钟</span>
+      </div>
+      <h2 class="post-title">Java多线程详解（线程同步）</h2>
+      <article class="post-article">
+        
+           前言
+上一章，我们通过几个例子介绍了线程安全问题，而说到线程安全就不得不提到线程同步，它是解决线程安全的一种重要方法。本章就来简单地介绍一下线程同步。
+从上一章的学习我们知道，当多个线程操作一个资源的时候，有可能由于线程的不确定切换出现数据不一致的安全问题，因此，我们要解决这个问题，就得想办法使得资源在某个时间戳只能被一个线程访问。基于这样的思想，我们提出了“队列与锁”的策略：
+通俗理解，就是将所有线程排成一个队列，给要共享的资源上把锁，只有线程获得该资源的锁之后，才能访问该资源。
+这也是线程同步的基本思想。所谓线程同步，是指同一进程中的多个线程相互协调工作从而达到一致性。使用线程同步，在解
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/08/29/vnzopy0j/" aria-label="Java多线程详解（线程不安全案例）"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/文件16.jpg" data-sizes="auto" alt="Java多线程详解（线程不安全案例）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-08-29</span>
+        <span><span class="icon-pencil"></span>2.6k 字</span>
+        <span><span class="icon-clock"></span>10 分钟</span>
+      </div>
+      <h2 class="post-title">Java多线程详解（线程不安全案例）</h2>
+      <article class="post-article">
+        
+           前言
+通过前面两章的学习，我们了解了线程的基本概念和创建线程的四种方式。
+这一章，我们来谈谈线程安全问题。
+也许小伙伴们刚听到这个词语的时候，是一脸懵逼，笔者初学线程安全也是这样的。所以本章从几个案例入手，让小伙伴们尽可能地理解什么是线程安全。
+ sleep()方法
+在学习线程安全之前，我们首先得简单地介绍Thread类中的一个静态方法----sleep()
+首先我们要知道，程序运行的速度是非常快的，当CPU调度某个线程开始执行时，由于运行速度太快，此线程可能执行完之后CPU才开始调度其他线程，这样显然不符合并发的特点，因此我们希望能阻塞某个线程的运行，使得其他线程有执行的“机会”，这时我们
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2021/08/28/ntvsm7il/" aria-label="Java多线程详解（如何创建线程）"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Java多线程详解（如何创建线程）" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2021-08-28</span>
+        <span><span class="icon-pencil"></span>1.3k 字</span>
+        <span><span class="icon-clock"></span>5 分钟</span>
+      </div>
+      <h2 class="post-title">Java多线程详解（如何创建线程）</h2>
+      <article class="post-article">
+        
+           前言
+前面一章，我们了解了线程的基本概念，从这一章，我们开始学习如何创建一个线程。总的说来，在java中，有四种创建线程的方式：
+
+
+继承Thread类
+实现Runnable接口
+实现Callable接口
+使用线程池
+
+
+上述四种创建线程的方式中，我们着重介绍 1，2 ，对于 3，4，小伙伴们作为了解即可。下面用代码来实现这几种创建方式。
+ 继承Thread类
+下面的代码中使用了sleep()方法，不太理解的同学可以先放一放，后面我们会详细介绍这个方法。
+123456789101112131415161718192021222324252627282930313233/** * * @aut
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+
+
+  <nav id="page-nav" data-aos="fade-up">
+    
+    <a class="extend prev" rel="prev" href="/page/9/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/11/">下一页 &raquo;</a>
+  </nav>
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+
+    
+  </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+    
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

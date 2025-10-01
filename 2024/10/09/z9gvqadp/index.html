@@ -1,0 +1,949 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---touch |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="touch 是 Linux&#x2F;Unix 系统中用于创建空文件或更新文件时间戳的命令。它是一个简单而常用的工具，特别适合文件操作时快速创建新文件或修改现有文件的时间信息。   基本语法 1touch [选项] 文件名  选项：控制行为（如修改时间戳、创建文件等）。 文件名：指定需要操作的目标文件，可以是一个或多个。    常用功能  创建空文件 如果文件不存在，touch 会创建一个新的空文件。 1t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---touch">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/z9gvqadp/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="touch 是 Linux&#x2F;Unix 系统中用于创建空文件或更新文件时间戳的命令。它是一个简单而常用的工具，特别适合文件操作时快速创建新文件或修改现有文件的时间信息。   基本语法 1touch [选项] 文件名  选项：控制行为（如修改时间戳、创建文件等）。 文件名：指定需要操作的目标文件，可以是一个或多个。    常用功能  创建空文件 如果文件不存在，touch 会创建一个新的空文件。 1t">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T14:29:15.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.624Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---touch">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---touch</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text"> 常用功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%A9%BA%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text"> 创建空文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text"> 批量创建多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E7%9A%84%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.3.</span> <span class="toc-text"> 更新文件的时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.4.</span> <span class="toc-text"> 指定时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E4%BB%B6%E7%9A%84%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.5.</span> <span class="toc-text"> 使用参考文件的时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E4%BB%85%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.6.</span> <span class="toc-text"> 不创建文件，仅修改时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4%E6%88%96%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="toc-number">2.7.</span> <span class="toc-text"> 修改访问时间或修改时间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%85%E4%BF%AE%E6%94%B9%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4atime"><span class="toc-number">2.7.1.</span> <span class="toc-text"> 1) 仅修改访问时间（atime）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%85%E4%BF%AE%E6%94%B9%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4mtime"><span class="toc-number">2.7.2.</span> <span class="toc-text"> 2) 仅修改修改时间（mtime）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">2.8.</span> <span class="toc-text"> 检查文件时间信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="toc-number">2.8.1.</span> <span class="toc-text"> 1) 查看修改时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E8%AF%A6%E7%BB%86%E6%97%B6%E9%97%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">2.8.2.</span> <span class="toc-text"> 2) 查看详细时间信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text"> 常用选项总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text"> 示例场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text"> 创建多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.2.</span> <span class="toc-text"> 更新文件时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E4%B8%BA%E7%89%B9%E5%AE%9A%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.3.</span> <span class="toc-text"> 修改文件为特定时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE"><span class="toc-number">4.4.</span> <span class="toc-text"> 模拟文件访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.5.</span> <span class="toc-text"> 复制时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%88%9B%E5%BB%BA%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">4.6.</span> <span class="toc-text"> 避免创建新文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-z9gvqadp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/z9gvqadp/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T14:29:15.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>touch</code> 是 Linux/Unix 系统中用于创建空文件或更新文件时间戳的命令。它是一个简单而常用的工具，特别适合文件操作时快速创建新文件或修改现有文件的时间信息。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> [选项] 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>选项</strong>：控制行为（如修改时间戳、创建文件等）。</li>
+<li><strong>文件名</strong>：指定需要操作的目标文件，可以是一个或多个。</li>
+</ul>
+<hr />
+<h1 id="常用功能"><a class="markdownIt-Anchor" href="#常用功能"></a> <strong>常用功能</strong></h1>
+<h2 id="创建空文件"><a class="markdownIt-Anchor" href="#创建空文件"></a> <strong>创建空文件</strong></h2>
+<p>如果文件不存在，<code>touch</code> 会创建一个新的空文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：创建一个名为 <code>example.txt</code> 的空文件。</li>
+</ul>
+<hr />
+<h2 id="批量创建多个文件"><a class="markdownIt-Anchor" href="#批量创建多个文件"></a> <strong>批量创建多个文件</strong></h2>
+<p>可以同时创建多个文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> 文件1 文件2 文件3</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> file1.txt file2.txt file3.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：创建 <code>file1.txt</code>、<code>file2.txt</code> 和 <code>file3.txt</code>。</li>
+</ul>
+<hr />
+<h2 id="更新文件的时间戳"><a class="markdownIt-Anchor" href="#更新文件的时间戳"></a> <strong>更新文件的时间戳</strong></h2>
+<p>如果文件已存在，<code>touch</code> 会更新该文件的 <strong>访问时间（atime）</strong> 和 <strong>修改时间（mtime）</strong>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> existing_file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：更新 <code>existing_file.txt</code> 的时间戳为当前时间。</li>
+</ul>
+<hr />
+<h2 id="指定时间戳"><a class="markdownIt-Anchor" href="#指定时间戳"></a> <strong>指定时间戳</strong></h2>
+<p>使用 <code>-t</code> 选项可以设置自定义的时间戳。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -t [[CC]YY]MMDDhhmm[.ss] 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>格式说明：</p>
+<ul>
+<li><code>CC</code>：世纪（可选）。</li>
+<li><code>YY</code>：年。</li>
+<li><code>MM</code>：月（01-12）。</li>
+<li><code>DD</code>：日（01-31）。</li>
+<li><code>hh</code>：小时（00-23）。</li>
+<li><code>mm</code>：分钟（00-59）。</li>
+<li><code>.ss</code>：秒（可选，00-59）。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -t 202312312359.59 example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>example.txt</code> 的时间戳设置为 2023 年 12 月 31 日 23:59:59。</li>
+</ul>
+<hr />
+<h2 id="使用参考文件的时间戳"><a class="markdownIt-Anchor" href="#使用参考文件的时间戳"></a> <strong>使用参考文件的时间戳</strong></h2>
+<p>可以使用 <code>-r</code> 或 <code>--reference</code> 选项以其他文件的时间戳为参考。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -r 参考文件 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -r old_file.txt new_file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>new_file.txt</code> 的时间戳设置为与 <code>old_file.txt</code> 相同。</li>
+</ul>
+<hr />
+<h2 id="不创建文件仅修改时间戳"><a class="markdownIt-Anchor" href="#不创建文件仅修改时间戳"></a> <strong>不创建文件，仅修改时间戳</strong></h2>
+<p>使用 <code>-c</code> 或 <code>--no-create</code> 选项可以避免创建新文件，仅更新已有文件的时间戳。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -c 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -c existing_file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：更新 <code>existing_file.txt</code> 的时间戳，如果文件不存在，则不创建。</li>
+</ul>
+<hr />
+<h2 id="修改访问时间或修改时间"><a class="markdownIt-Anchor" href="#修改访问时间或修改时间"></a> <strong>修改访问时间或修改时间</strong></h2>
+<h3 id="1-仅修改访问时间atime"><a class="markdownIt-Anchor" href="#1-仅修改访问时间atime"></a> <strong>1) 仅修改访问时间（atime）</strong></h3>
+<p>使用 <code>-a</code> 选项可以只更新访问时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -a 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -a example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：仅更新 <code>example.txt</code> 的访问时间，保持修改时间（mtime）不变。</li>
+</ul>
+<hr />
+<h3 id="2-仅修改修改时间mtime"><a class="markdownIt-Anchor" href="#2-仅修改修改时间mtime"></a> <strong>2) 仅修改修改时间（mtime）</strong></h3>
+<p>使用 <code>-m</code> 选项可以只更新修改时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -m 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -m example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：仅更新 <code>example.txt</code> 的修改时间，保持访问时间（atime）不变。</li>
+</ul>
+<hr />
+<h2 id="检查文件时间信息"><a class="markdownIt-Anchor" href="#检查文件时间信息"></a> <strong>检查文件时间信息</strong></h2>
+<p>虽然 <code>touch</code> 不直接显示文件时间信息，但可以使用 <code>ls -l</code> 查看文件的修改时间，或使用 <code>stat</code> 查看详细的时间信息。</p>
+<h3 id="1-查看修改时间"><a class="markdownIt-Anchor" href="#1-查看修改时间"></a> <strong>1) 查看修改时间</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：显示文件的修改时间。</li>
+</ul>
+<hr />
+<h3 id="2-查看详细时间信息"><a class="markdownIt-Anchor" href="#2-查看详细时间信息"></a> <strong>2) 查看详细时间信息</strong></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stat</span> 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stat</span> example.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：显示文件的访问时间（atime）、修改时间（mtime）和状态更改时间（ctime）。</li>
+</ul>
+<hr />
+<h1 id="常用选项总结"><a class="markdownIt-Anchor" href="#常用选项总结"></a> <strong>常用选项总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>选项</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-a</code></td>
+<td>仅更新访问时间（atime）。</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td>仅更新修改时间（mtime）。</td>
+</tr>
+<tr>
+<td><code>-c</code> 或 <code>--no-create</code></td>
+<td>不创建新文件，仅修改已有文件的时间戳。</td>
+</tr>
+<tr>
+<td><code>-r</code> 或 <code>--reference</code></td>
+<td>使用参考文件的时间戳。</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>指定自定义时间戳（格式：<code>[[CC]YY]MMDDhhmm[.ss]</code>）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="示例场景"><a class="markdownIt-Anchor" href="#示例场景"></a> <strong>示例场景</strong></h1>
+<h2 id="创建多个文件"><a class="markdownIt-Anchor" href="#创建多个文件"></a> <strong>创建多个文件</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> file1.txt file2.txt file3.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：同时创建 <code>file1.txt</code>、<code>file2.txt</code> 和 <code>file3.txt</code>。</li>
+</ul>
+<hr />
+<h2 id="更新文件时间戳"><a class="markdownIt-Anchor" href="#更新文件时间戳"></a> <strong>更新文件时间戳</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> existing_file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：更新 <code>existing_file.txt</code> 的时间戳为当前时间。</li>
+</ul>
+<hr />
+<h2 id="修改文件为特定时间戳"><a class="markdownIt-Anchor" href="#修改文件为特定时间戳"></a> <strong>修改文件为特定时间戳</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -t 202312312359.59 file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：将 <code>file.txt</code> 的时间戳设置为 2023 年 12 月 31 日 23:59:59。</li>
+</ul>
+<hr />
+<h2 id="模拟文件访问"><a class="markdownIt-Anchor" href="#模拟文件访问"></a> <strong>模拟文件访问</strong></h2>
+<p>如果需要模拟文件被访问的行为，可以只更新文件的访问时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -a file.txt</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="复制时间戳"><a class="markdownIt-Anchor" href="#复制时间戳"></a> <strong>复制时间戳</strong></h2>
+<p>将一个文件的时间戳复制到另一个文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -r source_file.txt target_file.txt</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="避免创建新文件"><a class="markdownIt-Anchor" href="#避免创建新文件"></a> <strong>避免创建新文件</strong></h2>
+<p>如果不希望 <code>touch</code> 创建新文件，可以使用 <code>-c</code> 选项。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> -c file_does_not_exist.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：如果 <code>file_does_not_exist.txt</code> 不存在，则什么都不做。</li>
+</ul>
+<hr />
+<h1 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> <strong>注意事项</strong></h1>
+<ol>
+<li><strong>没有权限</strong>：如果对目标文件或目录没有写权限，则 <code>touch</code> 命令会失败。</li>
+<li><strong>文件已存在</strong>：<code>touch</code> 不会覆盖文件内容，仅更新时间戳。</li>
+<li><strong>批量操作</strong>：可以在命令中一次性操作多个文件，例如批量创建文件或批量更新文件时间。</li>
+</ol>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong>命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创建空文件</td>
+<td><code>touch 文件名</code></td>
+</tr>
+<tr>
+<td>创建多个文件</td>
+<td><code>touch 文件1 文件2 文件3</code></td>
+</tr>
+<tr>
+<td>更新文件时间戳</td>
+<td><code>touch 文件名</code></td>
+</tr>
+<tr>
+<td>仅更新访问时间</td>
+<td><code>touch -a 文件名</code></td>
+</tr>
+<tr>
+<td>仅更新修改时间</td>
+<td><code>touch -m 文件名</code></td>
+</tr>
+<tr>
+<td>设置特定时间戳</td>
+<td><code>touch -t 时间戳 文件名</code></td>
+</tr>
+<tr>
+<td>使用参考文件时间戳</td>
+<td><code>touch -r 参考文件 目标文件</code></td>
+</tr>
+<tr>
+<td>不创建新文件</td>
+<td><code>touch -c 文件名</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>touch</code> 是一个快速、灵活的文件操作工具，尤其在脚本和系统自动化任务中非常有用！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/z9gvqadp/">https://luoying.netlify.app/2024/10/09/z9gvqadp/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---touch</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件5.png" data-sizes="auto" alt="Linux命令详解---top" class="lazyload">
+          
+        
+        <a href="/2024/10/09/2yn952dc/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---top
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Linux命令详解---yum" class="lazyload">
+        
+      
+      <a href="/2024/10/09/jneaca9h/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---yum
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text"> 常用功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%A9%BA%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text"> 创建空文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text"> 批量创建多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E7%9A%84%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.3.</span> <span class="toc-text"> 更新文件的时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.4.</span> <span class="toc-text"> 指定时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E4%BB%B6%E7%9A%84%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.5.</span> <span class="toc-text"> 使用参考文件的时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E4%BB%85%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">2.6.</span> <span class="toc-text"> 不创建文件，仅修改时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4%E6%88%96%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="toc-number">2.7.</span> <span class="toc-text"> 修改访问时间或修改时间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%85%E4%BF%AE%E6%94%B9%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4atime"><span class="toc-number">2.7.1.</span> <span class="toc-text"> 1) 仅修改访问时间（atime）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%85%E4%BF%AE%E6%94%B9%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4mtime"><span class="toc-number">2.7.2.</span> <span class="toc-text"> 2) 仅修改修改时间（mtime）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">2.8.</span> <span class="toc-text"> 检查文件时间信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4"><span class="toc-number">2.8.1.</span> <span class="toc-text"> 1) 查看修改时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E8%AF%A6%E7%BB%86%E6%97%B6%E9%97%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">2.8.2.</span> <span class="toc-text"> 2) 查看详细时间信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text"> 常用选项总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text"> 示例场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text"> 创建多个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.2.</span> <span class="toc-text"> 更新文件时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E4%B8%BA%E7%89%B9%E5%AE%9A%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.3.</span> <span class="toc-text"> 修改文件为特定时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE"><span class="toc-number">4.4.</span> <span class="toc-text"> 模拟文件访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-number">4.5.</span> <span class="toc-text"> 复制时间戳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%88%9B%E5%BB%BA%E6%96%B0%E6%96%87%E4%BB%B6"><span class="toc-number">4.6.</span> <span class="toc-text"> 避免创建新文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

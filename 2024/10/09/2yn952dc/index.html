@@ -1,0 +1,1016 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---top |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="top 是 Linux 和类 Unix 系统中用于动态显示系统运行信息的命令行工具，它可以实时监控系统的进程活动和系统资源使用情况，如 CPU 使用率、内存使用情况、任务状态等。top 是系统管理员和开发人员用来排查性能问题的一个重要工具。   基本用法 运行 top 命令： 1top  默认情况下，top 会持续刷新系统状态（通常每 3 秒刷新一次），显示系统的资源使用情况和当前运行的进程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---top">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/09/2yn952dc/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="top 是 Linux 和类 Unix 系统中用于动态显示系统运行信息的命令行工具，它可以实时监控系统的进程活动和系统资源使用情况，如 CPU 使用率、内存使用情况、任务状态等。top 是系统管理员和开发人员用来排查性能问题的一个重要工具。   基本用法 运行 top 命令： 1top  默认情况下，top 会持续刷新系统状态（通常每 3 秒刷新一次），显示系统的资源使用情况和当前运行的进程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-09T14:47:11.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.603Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---top">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---top</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%95%8C%E9%9D%A2%E8%A7%A3%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text"> 界面解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%95%B4%E4%BD%93%E4%BF%A1%E6%81%AF%E9%A1%B6%E9%83%A8%E6%91%98%E8%A6%81%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text"> 系统整体信息（顶部摘要部分）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E8%A1%8C%E4%BB%BB%E5%8A%A1%E6%97%B6%E9%97%B4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD"><span class="toc-number">2.1.1.</span> <span class="toc-text"> 第一行：任务时间和系统负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.2.</span> <span class="toc-text"> 第二行：任务信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E8%A1%8Ccpu-%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.3.</span> <span class="toc-text"> 第三行：CPU 使用情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E8%A1%8C%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.4.</span> <span class="toc-text"> 第四行：内存使用情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E8%A1%8C%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.5.</span> <span class="toc-text"> 第五行：交换分区使用情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF%E4%B8%8B%E6%96%B9%E5%8A%A8%E6%80%81%E8%A1%A8%E6%A0%BC%E9%83%A8%E5%88%86"><span class="toc-number">2.2.</span> <span class="toc-text"> 进程信息（下方动态表格部分）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作与快捷键</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">4.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text"> 常用示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E8%BF%90%E8%A1%8C"><span class="toc-number">5.1.</span> <span class="toc-text"> 普通运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E6%8E%A7%E6%9F%90%E4%B8%AA%E7%94%A8%E6%88%B7%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text"> 监控某个用户的进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E6%A8%A1%E5%BC%8F%E6%8A%93%E5%8F%96%E4%B8%80%E6%AC%A1%E6%95%B0%E6%8D%AE%E5%90%8E%E9%80%80%E5%87%BA"><span class="toc-number">5.3.</span> <span class="toc-text"> 批处理模式（抓取一次数据后退出）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%8F-5-%E7%A7%92%E5%88%B7%E6%96%B0%E4%B8%80%E6%AC%A1"><span class="toc-number">5.4.</span> <span class="toc-text"> 每 5 秒刷新一次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E7%9B%91%E6%8E%A7%E6%9F%90%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%8C%89-pid"><span class="toc-number">5.5.</span> <span class="toc-text"> 仅监控某个进程（按 PID）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E7%8E%87%E6%8E%92%E5%BA%8F"><span class="toc-number">5.6.</span> <span class="toc-text"> 按内存使用率排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.7.</span> <span class="toc-text"> 显示线程信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-2yn952dc" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/09/2yn952dc/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-09T14:47:11.000Z" itemprop="datePublished">2024-10-09</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>top</code> 是 Linux 和类 Unix 系统中用于动态显示系统运行信息的命令行工具，它可以实时监控系统的<strong>进程活动</strong>和<strong>系统资源使用情况</strong>，如 CPU 使用率、内存使用情况、任务状态等。<code>top</code> 是系统管理员和开发人员用来排查性能问题的一个重要工具。</p>
+<hr />
+<h1 id="基本用法"><a class="markdownIt-Anchor" href="#基本用法"></a> <strong>基本用法</strong></h1>
+<p>运行 <code>top</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
+<ul>
+<li>默认情况下，<code>top</code> 会持续刷新系统状态（通常每 3 秒刷新一次），显示系统的资源使用情况和当前运行的进程。</li>
+</ul>
+<hr />
+<h1 id="界面解析"><a class="markdownIt-Anchor" href="#界面解析"></a> <strong>界面解析</strong></h1>
+<p><code>top</code> 命令启动后，默认显示如下内容（可能因系统不同稍有差异）：</p>
+<h2 id="系统整体信息顶部摘要部分"><a class="markdownIt-Anchor" href="#系统整体信息顶部摘要部分"></a> <strong>系统整体信息（顶部摘要部分）</strong></h2>
+<p>顶部摘要部分显示系统的全局信息，包含以下字段：</p>
+<h3 id="第一行任务时间和系统负载"><a class="markdownIt-Anchor" href="#第一行任务时间和系统负载"></a> <strong>第一行：任务时间和系统负载</strong></h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top - 10:05:32 up 2 days,  3:45,  3 users,  load average: 0.10, 0.20, 0.15</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>10:05:32</strong>：当前系统时间。</li>
+<li><strong>up 2 days, 3:45</strong>：系统已运行时间，格式为“天、小时:分钟”。</li>
+<li><strong>3 users</strong>：当前登录的用户数量。</li>
+<li><strong>load average</strong>：系统负载平均值，分别为过去 <strong>1 分钟、5 分钟、15 分钟</strong> 的平均负载值。接近或高于 CPU 核心数可能表示系统过载。</li>
+</ul>
+<h3 id="第二行任务信息"><a class="markdownIt-Anchor" href="#第二行任务信息"></a> <strong>第二行：任务信息</strong></h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tasks: 120 total, 1 running, 119 sleeping, 0 stopped, 0 zombie</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>120 total</strong>：系统中总共的任务（进程）数。</li>
+<li><strong>1 running</strong>：正在运行的任务数。</li>
+<li><strong>119 sleeping</strong>：处于“休眠”状态的任务数。</li>
+<li><strong>0 stopped</strong>：停止的任务数。</li>
+<li><strong>0 zombie</strong>：僵尸进程数。</li>
+</ul>
+<h3 id="第三行cpu-使用情况"><a class="markdownIt-Anchor" href="#第三行cpu-使用情况"></a> <strong>第三行：CPU 使用情况</strong></h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%Cpu(s):  1.5 us,  0.5 sy,  0.0 ni, 98.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>us</strong>（user）：用户空间占用的 CPU 百分比。</li>
+<li><strong>sy</strong>（system）：内核空间占用的 CPU 百分比。</li>
+<li><strong>ni</strong>（nice）：被调整优先级的进程占用的 CPU 百分比。</li>
+<li><strong>id</strong>（idle）：空闲 CPU 百分比。</li>
+<li><strong>wa</strong>（IO wait）：等待 I/O 操作完成占用的 CPU 百分比。</li>
+<li><strong>hi</strong>（hardware interrupts）：硬件中断占用的 CPU 百分比。</li>
+<li><strong>si</strong>（software interrupts）：软件中断占用的 CPU 百分比。</li>
+<li><strong>st</strong>（steal）：虚拟机环境中被其他虚拟机占用的 CPU 百分比。</li>
+</ul>
+<h3 id="第四行内存使用情况"><a class="markdownIt-Anchor" href="#第四行内存使用情况"></a> <strong>第四行：内存使用情况</strong></h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MiB Mem :  8000.0 total,  3000.0 free,  2500.0 used,  2500.0 buff/cache</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>total</strong>：总物理内存大小。</li>
+<li><strong>free</strong>：未被使用的内存大小。</li>
+<li><strong>used</strong>：已使用的内存大小（不包括缓冲和缓存）。</li>
+<li><strong>buff/cache</strong>：用于缓冲和缓存的内存大小。</li>
+</ul>
+<h3 id="第五行交换分区使用情况"><a class="markdownIt-Anchor" href="#第五行交换分区使用情况"></a> <strong>第五行：交换分区使用情况</strong></h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MiB Swap:  2000.0 total,  1500.0 free,   500.0 used.  5000.0 avail Mem</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>total</strong>：总交换分区大小。</li>
+<li><strong>free</strong>：未使用的交换分区大小。</li>
+<li><strong>used</strong>：已使用的交换分区大小。</li>
+<li><strong>avail Mem</strong>：可用内存（包括 free 和部分 buff/cache）。</li>
+</ul>
+<hr />
+<h2 id="进程信息下方动态表格部分"><a class="markdownIt-Anchor" href="#进程信息下方动态表格部分"></a> <strong>进程信息（下方动态表格部分）</strong></h2>
+<p>下方表格动态显示系统的进程信息，每个进程占一行。默认显示的列包含以下字段：</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PID</strong></td>
+<td>进程 ID。</td>
+</tr>
+<tr>
+<td><strong>USER</strong></td>
+<td>进程所属用户。</td>
+</tr>
+<tr>
+<td><strong>PR</strong></td>
+<td>进程优先级（priority）。</td>
+</tr>
+<tr>
+<td><strong>NI</strong></td>
+<td>进程的 nice 值（优先级调整值）。</td>
+</tr>
+<tr>
+<td><strong>VIRT</strong></td>
+<td>进程占用的虚拟内存总量（包括交换分区）。</td>
+</tr>
+<tr>
+<td><strong>RES</strong></td>
+<td>进程占用的物理内存大小。</td>
+</tr>
+<tr>
+<td><strong>SHR</strong></td>
+<td>共享内存大小。</td>
+</tr>
+<tr>
+<td><strong>S</strong></td>
+<td>进程状态：<code>R</code>（运行）、<code>S</code>（休眠）、<code>Z</code>（僵尸）、<code>T</code>（停止）。</td>
+</tr>
+<tr>
+<td><strong>%CPU</strong></td>
+<td>进程占用的 CPU 百分比。</td>
+</tr>
+<tr>
+<td><strong>%MEM</strong></td>
+<td>进程占用的内存百分比。</td>
+</tr>
+<tr>
+<td><strong>TIME+</strong></td>
+<td>进程累计运行时间（格式：分钟:秒.百分秒）。</td>
+</tr>
+<tr>
+<td><strong>COMMAND</strong></td>
+<td>启动进程的命令名称或路径。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常用操作与快捷键"><a class="markdownIt-Anchor" href="#常用操作与快捷键"></a> <strong>常用操作与快捷键</strong></h1>
+<p>在运行 <code>top</code> 命令时，可以通过键盘输入快捷键动态调整显示内容或执行操作：</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h</code></td>
+<td>显示帮助菜单。</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>退出 <code>top</code> 命令。</td>
+</tr>
+<tr>
+<td><code>Space</code></td>
+<td>马上刷新一次显示（无需等待刷新间隔）。</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>按 CPU 使用率排序（默认）。</td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>按内存使用率排序。</td>
+</tr>
+<tr>
+<td><code>T</code></td>
+<td>按运行时间排序。</td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>杀死进程（需要输入 PID）。</td>
+</tr>
+<tr>
+<td><code>r</code></td>
+<td>调整进程优先级（需要输入 PID 和新的 <code>nice</code> 值）。</td>
+</tr>
+<tr>
+<td><code>u</code></td>
+<td>显示指定用户的进程。</td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>设置刷新时间间隔（以秒为单位）。</td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td>设置或取消显示的列（自定义显示字段）。</td>
+</tr>
+<tr>
+<td><code>o</code> 或 <code>O</code></td>
+<td>按指定字段排序（输入字段名称）。</td>
+</tr>
+<tr>
+<td><code>l</code></td>
+<td>开关显示第一行（系统时间和负载）。</td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>开关显示 CPU 使用信息。</td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>开关显示内存信息。</td>
+</tr>
+<tr>
+<td><code>z</code></td>
+<td>切换显示颜色模式。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<p>除了交互模式操作外，<code>top</code> 命令也支持选项，可以直接在命令行中指定：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-b</code></td>
+<td>以<strong>批处理模式</strong>运行，适合脚本抓取数据（非交互模式）。</td>
+</tr>
+<tr>
+<td><code>-n [次数]</code></td>
+<td>指定刷新次数后退出（需结合 <code>-b</code> 使用）。</td>
+</tr>
+<tr>
+<td><code>-u [用户名]</code></td>
+<td>仅显示指定用户的进程。</td>
+</tr>
+<tr>
+<td><code>-p [PID]</code></td>
+<td>仅监控指定的进程 ID。</td>
+</tr>
+<tr>
+<td><code>-d [秒]</code></td>
+<td>设置刷新间隔时间（默认 3 秒）。</td>
+</tr>
+<tr>
+<td><code>-H</code></td>
+<td>显示线程信息，而非进程信息。</td>
+</tr>
+<tr>
+<td><code>-o [字段名]</code></td>
+<td>指定排序字段（如 <code>%CPU</code> 或 <code>%MEM</code>）。</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>显示完整的命令行（包括命令参数）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="常用示例"><a class="markdownIt-Anchor" href="#常用示例"></a> <strong>常用示例</strong></h1>
+<h2 id="普通运行"><a class="markdownIt-Anchor" href="#普通运行"></a> <strong>普通运行</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
+<ul>
+<li>默认以交互模式运行，实时显示系统资源使用情况。</li>
+</ul>
+<hr />
+<h2 id="监控某个用户的进程"><a class="markdownIt-Anchor" href="#监控某个用户的进程"></a> <strong>监控某个用户的进程</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -u username</span><br></pre></td></tr></table></figure>
+<ul>
+<li>仅显示指定用户的进程。</li>
+</ul>
+<hr />
+<h2 id="批处理模式抓取一次数据后退出"><a class="markdownIt-Anchor" href="#批处理模式抓取一次数据后退出"></a> <strong>批处理模式（抓取一次数据后退出）</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -b -n 1 &gt; top_output.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>以批处理模式运行，抓取一次系统状态并保存到 <code>top_output.txt</code> 文件中。</li>
+</ul>
+<hr />
+<h2 id="每-5-秒刷新一次"><a class="markdownIt-Anchor" href="#每-5-秒刷新一次"></a> <strong>每 5 秒刷新一次</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -d 5</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置刷新时间间隔为 5 秒。</li>
+</ul>
+<hr />
+<h2 id="仅监控某个进程按-pid"><a class="markdownIt-Anchor" href="#仅监控某个进程按-pid"></a> <strong>仅监控某个进程（按 PID）</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -p 12345</span><br></pre></td></tr></table></figure>
+<ul>
+<li>仅显示 PID 为 <code>12345</code> 的进程。</li>
+</ul>
+<hr />
+<h2 id="按内存使用率排序"><a class="markdownIt-Anchor" href="#按内存使用率排序"></a> <strong>按内存使用率排序</strong></h2>
+<p>在 <code>top</code> 运行后按 <code>M</code>，或者直接使用选项：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -o %MEM</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="显示线程信息"><a class="markdownIt-Anchor" href="#显示线程信息"></a> <strong>显示线程信息</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top -H</span><br></pre></td></tr></table></figure>
+<ul>
+<li>显示每个线程的信息，而不是进程。</li>
+</ul>
+<hr />
+<h1 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> <strong>注意事项</strong></h1>
+<ol>
+<li>
+<p><strong>权限问题</strong>：</p>
+<ul>
+<li>普通用户运行时，无法监控其他用户的某些进程（如系统守护进程）。</li>
+<li>使用 <code>sudo</code> 提升权限可以查看所有用户的进程。</li>
+</ul>
+</li>
+<li>
+<p><strong>刷新间隔</strong>：</p>
+<ul>
+<li>刷新间隔过短可能导致系统负载增加，建议设置适当的刷新时间（如 3 秒或更长）。</li>
+</ul>
+</li>
+<li>
+<p><strong>僵尸进程</strong>：</p>
+<ul>
+<li>如果看到 <code>zombie</code> 进程（僵尸进程），需要检查程序的父进程是否处理了子进程的退出状态。</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<ul>
+<li><strong><code>top</code> 是实时监控系统性能和进程活动的核心工具</strong>，它可以帮助快速定位性能瓶颈（如高 CPU、内存占用）。</li>
+<li><strong>常用快捷键</strong>：
+<ul>
+<li><code>P</code>：按 CPU 使用率排序。</li>
+<li><code>M</code>：按内存使用率排序。</li>
+<li><code>k</code>：杀死进程。</li>
+<li><code>q</code>：退出。</li>
+</ul>
+</li>
+<li>如果需要非交互式使用 <code>top</code>，可以结合 <code>-b</code> 和其他选项，方便在脚本中使用或保存结果到文件中。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/09/2yn952dc/">https://luoying.netlify.app/2024/10/09/2yn952dc/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---top</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Linux命令详解---netstat" class="lazyload">
+          
+        
+        <a href="/2024/10/09/7un4eax0/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---netstat
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件7.jpg" data-sizes="auto" alt="Linux命令详解---touch" class="lazyload">
+        
+      
+      <a href="/2024/10/09/z9gvqadp/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---touch
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本用法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%95%8C%E9%9D%A2%E8%A7%A3%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text"> 界面解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%95%B4%E4%BD%93%E4%BF%A1%E6%81%AF%E9%A1%B6%E9%83%A8%E6%91%98%E8%A6%81%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text"> 系统整体信息（顶部摘要部分）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E8%A1%8C%E4%BB%BB%E5%8A%A1%E6%97%B6%E9%97%B4%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD"><span class="toc-number">2.1.1.</span> <span class="toc-text"> 第一行：任务时间和系统负载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E8%A1%8C%E4%BB%BB%E5%8A%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.2.</span> <span class="toc-text"> 第二行：任务信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E8%A1%8Ccpu-%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.3.</span> <span class="toc-text"> 第三行：CPU 使用情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E8%A1%8C%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.4.</span> <span class="toc-text"> 第四行：内存使用情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E8%A1%8C%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">2.1.5.</span> <span class="toc-text"> 第五行：交换分区使用情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF%E4%B8%8B%E6%96%B9%E5%8A%A8%E6%80%81%E8%A1%A8%E6%A0%BC%E9%83%A8%E5%88%86"><span class="toc-number">2.2.</span> <span class="toc-text"> 进程信息（下方动态表格部分）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E4%B8%8E%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">3.</span> <span class="toc-text"> 常用操作与快捷键</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">4.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text"> 常用示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E8%BF%90%E8%A1%8C"><span class="toc-number">5.1.</span> <span class="toc-text"> 普通运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E6%8E%A7%E6%9F%90%E4%B8%AA%E7%94%A8%E6%88%B7%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text"> 监控某个用户的进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E6%A8%A1%E5%BC%8F%E6%8A%93%E5%8F%96%E4%B8%80%E6%AC%A1%E6%95%B0%E6%8D%AE%E5%90%8E%E9%80%80%E5%87%BA"><span class="toc-number">5.3.</span> <span class="toc-text"> 批处理模式（抓取一次数据后退出）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%8F-5-%E7%A7%92%E5%88%B7%E6%96%B0%E4%B8%80%E6%AC%A1"><span class="toc-number">5.4.</span> <span class="toc-text"> 每 5 秒刷新一次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E7%9B%91%E6%8E%A7%E6%9F%90%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%8C%89-pid"><span class="toc-number">5.5.</span> <span class="toc-text"> 仅监控某个进程（按 PID）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E7%8E%87%E6%8E%92%E5%BA%8F"><span class="toc-number">5.6.</span> <span class="toc-text"> 按内存使用率排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.7.</span> <span class="toc-text"> 显示线程信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

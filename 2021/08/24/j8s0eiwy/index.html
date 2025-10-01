@@ -1,0 +1,748 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Java连接MySQL数据库 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 本章我们介绍，如何用java实现连接MySQL数据库并实现基本的增，删，改，查操作。 为了便于演示，首先我们使用Navicat Premium新建一个user表并添加如下数据：   导入jdbc驱动包 我们需要导入连接MySQL所需要的jar包: jdbc驱动包。 jdbc驱动包有多个版本，请根据自己的项目需要选择适合的版本（点击跳转至官网下载）：jdbc驱动包官网下载 。 根据自己的电脑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java连接MySQL数据库">
+<meta property="og:url" content="https://luoying.netlify.app/2021/08/24/j8s0eiwy/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 本章我们介绍，如何用java实现连接MySQL数据库并实现基本的增，删，改，查操作。 为了便于演示，首先我们使用Navicat Premium新建一个user表并添加如下数据：   导入jdbc驱动包 我们需要导入连接MySQL所需要的jar包: jdbc驱动包。 jdbc驱动包有多个版本，请根据自己的项目需要选择适合的版本（点击跳转至官网下载）：jdbc驱动包官网下载 。 根据自己的电脑">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/548204d15e7589b29487da6241133f81.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/6d115f836102f40caeb1d0235aac86a3.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/48da64e32e6ca8071f8403fb4037c965.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/feff6ae751bfd384ec4c6f8ea4b2f8c7.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/5fe1406d4e2ad3c8f63f7824a9e1a8ee.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/385279fdc59e8f9f8296a0008975662e.png">
+<meta property="article:published_time" content="2021-08-24T12:29:52.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:08.874Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/548204d15e7589b29487da6241133f81.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Java连接MySQL数据库">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Java连接MySQL数据库</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5jdbc%E9%A9%B1%E5%8A%A8%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 导入jdbc驱动包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 查询操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text"> 添加操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#executequerystring-sqlexecuteupdatestring-sqlexecutestring-sql"><span class="toc-number">5.</span> <span class="toc-text"> executeQuery(String sql)，executeUpdate(String sql)，execute(String sql)</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-j8s0eiwy" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/08/24/j8s0eiwy/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-08-24T12:29:52.000Z" itemprop="datePublished">2021-08-24</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/" data-aos="zoom-in">Java</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>本章我们介绍，如何用java实现连接<code>MySQL数据库</code>并实现基本的<code>增，删，改，查</code>操作。</p>
+<p>为了便于演示，首先我们使用<code>Navicat Premium</code>新建一个<code>user表</code>并添加如下数据：</p>
+<p><img src="/images/assets/548204d15e7589b29487da6241133f81.png" alt="img" /></p>
+<h1 id="导入jdbc驱动包"><a class="markdownIt-Anchor" href="#导入jdbc驱动包"></a> 导入jdbc驱动包</h1>
+<p>我们需要导入连接<code>MySQL</code>所需要的<code>jar包: jdbc驱动包</code>。<code> jdbc驱动包</code>有多个版本，请根据自己的项目需要选择适合的版本（点击跳转至官网下载）：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/c-j/">jdbc驱动包官网下载</a> 。</p>
+<p>根据自己的电脑对应的系统下载：</p>
+<p><img src="/images/assets/6d115f836102f40caeb1d0235aac86a3.png" alt="img" /></p>
+<p>以<code>Mac</code>为例，解压下载文件，找到下图中的圈红的<code>jar包</code>：</p>
+<p><img src="/images/assets/48da64e32e6ca8071f8403fb4037c965.png" alt="img" /></p>
+<p>即为连接<code>MySQL</code>所需的<code>jdbc驱动包</code>，接着在自己的项目中添加此驱动包。</p>
+<h1 id="查询操作"><a class="markdownIt-Anchor" href="#查询操作"></a> 查询操作</h1>
+<p>添加完成后，我们来编写一个简单的<code>查询操作</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.connect_mysql.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DButil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//声明Connection对象</span></span><br><span class="line">        Connection con;<span class="comment">//驱动程序名</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">driver</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;</span><br><span class="line">        <span class="comment">//URL指向要访问的数据库名--sixibiheye,（自行更改成自己的库名）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost:3306/sixibiheye&quot;</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的用户名（自行更改成自己的用户名）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">user</span> <span class="operator">=</span> <span class="string">&quot;everyone&quot;</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的密码（自行更改成自己的密码）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line">        <span class="comment">//遍历查询结果集</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//加载驱动程序</span></span><br><span class="line">            Class.forName(driver);</span><br><span class="line">            <span class="comment">//1.getConnection()方法，连接MySQL数据库！！</span></span><br><span class="line">            con = DriverManager.getConnection(url,user,password);</span><br><span class="line">            <span class="keyword">if</span>(!con.isClosed())</span><br><span class="line">                System.out.println(<span class="string">&quot;Succeeded connecting to the Database!&quot;</span>);</span><br><span class="line">            <span class="comment">//2.创建statement类对象，用来执行SQL语句！！</span></span><br><span class="line">            <span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> con.createStatement();</span><br><span class="line">            <span class="comment">//要执行的SQL语句</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select username,sex from user;&quot;</span>;</span><br><span class="line">            <span class="comment">//3.ResultSet类，用来存放获取的结果集！！</span></span><br><span class="line">            <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> statement.executeQuery(sql);</span><br><span class="line">            System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;执行结果如下所示:&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;姓名&quot;</span> + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;性别&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="type">String</span> <span class="variable">sex</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">                <span class="comment">//获取stuname这列数据</span></span><br><span class="line">                name = rs.getString(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">                <span class="comment">//获取stuid这列数据</span></span><br><span class="line">                sex = rs.getString(<span class="string">&quot;sex&quot;</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//输出结果</span></span><br><span class="line">                System.out.println(name + <span class="string">&quot;\t&quot;</span> + sex);</span><br><span class="line">            &#125;</span><br><span class="line">            rs.close();</span><br><span class="line">            con.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">//数据库驱动类异常处理</span></span><br><span class="line">            System.out.println(<span class="string">&quot;Sorry,can`t find the Driver!&quot;</span>);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            <span class="comment">//数据库连接失败异常处理</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于上面的查询操作，使用到的是<code>Statement对象</code>的<code>executeQuery(String sql)</code>方法，其返回一个<code>ResultSet对象</code>（结果集），可以通过调用其<code>getString(&quot;字段名&quot;)</code>方法来获取数据，其<code>next()</code>方法表示指针指向下一行，如果有数据就返回<code>true</code>，此外还有<code>first()指向第一行数据</code>，<code>last()指向最后一行数据</code>等等方法。</p>
+<p>运行之后，会得到如下结果：</p>
+<p><img src="/images/assets/feff6ae751bfd384ec4c6f8ea4b2f8c7.png" alt="img" /></p>
+<h1 id="添加操作"><a class="markdownIt-Anchor" href="#添加操作"></a> 添加操作</h1>
+<p>接着，我们来实现<code>添加数据</code>的操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.connect_mysql.example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DButil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//声明Connection对象</span></span><br><span class="line">        Connection con;<span class="comment">//驱动程序名</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">driver</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;</span><br><span class="line">        <span class="comment">//URL指向要访问的数据库名--sixibiheye,（自行更改成自己的库名）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost:3306/sixibiheye&quot;</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的用户名（自行更改成自己的用户名）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">user</span> <span class="operator">=</span> <span class="string">&quot;everyone&quot;</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的密码（自行更改成自己的密码）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line">        <span class="comment">//遍历查询结果集</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//加载驱动程序</span></span><br><span class="line">            Class.forName(driver);</span><br><span class="line">            <span class="comment">//1.getConnection()方法，连接MySQL数据库！！</span></span><br><span class="line">            con = DriverManager.getConnection(url,user,password);</span><br><span class="line">            <span class="keyword">if</span>(!con.isClosed())</span><br><span class="line">                System.out.println(<span class="string">&quot;Succeeded connecting to the Database!&quot;</span>);</span><br><span class="line">            <span class="comment">//2.创建statement类对象，用来执行SQL语句！！</span></span><br><span class="line">            <span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> con.createStatement();</span><br><span class="line">            <span class="comment">//要执行的SQL语句</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;insert into user(id,username,sex) values(5,&#x27;HaHa&#x27;,&#x27;boy&#x27;);&quot;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//executeUpdate(String sql)的返回值是一个int,指受影响的行数。</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> statement.executeUpdate(sql);</span><br><span class="line">            System.out.println(<span class="string">&quot;插入成功！受影响的行数：&quot;</span> + number);</span><br><span class="line"></span><br><span class="line">            con.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">//数据库驱动类异常处理</span></span><br><span class="line">            System.out.println(<span class="string">&quot;Sorry,can`t find the Driver!&quot;</span>);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            <span class="comment">//数据库连接失败异常处理</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述插入操作中，使用了<code>Statement对象</code>的<code>executeUpdate(String sql)</code>方法来执行插入操作。其返回值为一个<code>int</code>型数据，表示的是<code>受影响的行数</code>（即更新计数）。</p>
+<p>运行之后，得到如下结果：</p>
+<p><img src="/images/assets/5fe1406d4e2ad3c8f63f7824a9e1a8ee.png" alt="img" /></p>
+<p>在<code>Navicat Premium</code>里我们能看到新增的数据：</p>
+<p><img src="/images/assets/385279fdc59e8f9f8296a0008975662e.png" alt="img" /></p>
+<p>对于<code>删除</code>和<code>更新</code>操作，与上面的插入操作基本相同，就不具体演示了。小伙伴们可以自己动手试一试。</p>
+<h1 id="executequerystring-sqlexecuteupdatestring-sqlexecutestring-sql"><a class="markdownIt-Anchor" href="#executequerystring-sqlexecuteupdatestring-sqlexecutestring-sql"></a> executeQuery(String sql)，executeUpdate(String sql)，execute(String sql)</h1>
+<p>最后，附上executeQuery(String sql)，executeUpdate(String sql)，execute(String sql)三者的区别：</p>
+<blockquote>
+<ol>
+<li>executeQuery(String sql)：</li>
+</ol>
+<p>用于产生单个结果集的语句，典型的便是<code>SELECT语句</code>。这是执行<code>SQL语句</code>使用得最多的方法，主要用来执行<code>SELECT语句</code>。其返回的是一个<code>ResultSet对象</code>（结果集），可以通过调用其<code>getString(&quot;字段名&quot;)</code>方法来获取数据，调用其<code>next()</code>方法使指针指向下一行（如果有数据就返回<code>true</code>），调用其<code>first()</code>方法指向第一行数据，<code>last()</code>方法指向最后一行数据。</p>
+<ol start="2">
+<li>executeUpdate(String sql)：</li>
+</ol>
+<p>用于执行<code>SQL语句</code>中的<code>DDL</code>（数据定义语言）语句，比如<code>INSERT , UPDATE , DETELE , CREATE TABLE , DROP TABLE</code>等等，其返回值为一个<code>int</code>型数据，表示的是<code>受影响的行数</code>（即更新计数），对于<code>CREATE TABLE , DROP TABLE</code>等不影响行的操作，返回值总为<code>0</code>）。</p>
+<ol start="3">
+<li>execute(String sql):</li>
+</ol>
+<p>如果说<code>executeQuery</code>返回的是单个结果集，则<code>execute(String sql)</code>将会产生多个结果集，但其返回值是一个<code>boolean</code>类型，如果执行后有结果集，返回<code>true</code>，否则返回<code>false</code>。可以通过<code>getResultSet()</code>方法来获得第一个结果集。如果要获得第二个结果集，需先调用<code>getMoreResults()</code>方法，再调用<code>getResultSet()方法。如果已知某次执行返回两个更新计数，则应先调用getUpdateCount()</code>方法，再依次调用<code>getMoreResults()</code>方法 , <code>getResultSet()</code>方法。</p>
+<p>对于不知道返回结果的语句，情况则更为复杂。因此，在大多的应用中，很少使用<code>execute(String sql)</code>方法。</p>
+</blockquote>
+<p>尽管在实际的开发中，不会使用如此原生的方式来连接数据库，但了解最原始的连接方式，对理解许多框架连接<code>MySQL</code>的方式会很有帮助。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/08/24/j8s0eiwy/">https://luoying.netlify.app/2021/08/24/j8s0eiwy/</a></p>
+    <p><strong>本文标题：</strong>Java连接MySQL数据库</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件4.jpg" data-sizes="auto" alt="java的设计模式" class="lazyload">
+          
+        
+        <a href="/2021/08/24/fvb12szr/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            java的设计模式
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件35.jpg" data-sizes="auto" alt="数据结构与算法之-----图（代码实现）" class="lazyload">
+        
+      
+      <a href="/2021/08/22/58nr6yi6/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          数据结构与算法之-----图（代码实现）
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5jdbc%E9%A9%B1%E5%8A%A8%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 导入jdbc驱动包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 查询操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text"> 添加操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#executequerystring-sqlexecuteupdatestring-sqlexecutestring-sql"><span class="toc-number">5.</span> <span class="toc-text"> executeQuery(String sql)，executeUpdate(String sql)，execute(String sql)</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

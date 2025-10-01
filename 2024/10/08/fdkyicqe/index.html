@@ -1,0 +1,938 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---grep |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="grep 是 Linux 和类 Unix 操作系统中一个强大的文本搜索工具，用于在文件或标准输入中查找与指定模式匹配的行。它支持正则表达式，可以快速定位文件中的特定内容。 以下是对 grep 命令的详细介绍，包括基本用法、常用选项和示例。   基本语法 1grep [选项] &quot;搜索模式&quot; [文件...]  搜索模式：指定要查找的文本模式（可以是字符串或正则表达式）。 文件：要搜">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---grep">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/fdkyicqe/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="grep 是 Linux 和类 Unix 操作系统中一个强大的文本搜索工具，用于在文件或标准输入中查找与指定模式匹配的行。它支持正则表达式，可以快速定位文件中的特定内容。 以下是对 grep 命令的详细介绍，包括基本用法、常用选项和示例。   基本语法 1grep [选项] &quot;搜索模式&quot; [文件...]  搜索模式：指定要查找的文本模式（可以是字符串或正则表达式）。 文件：要搜">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T13:18:10.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.293Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---grep">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---grep</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%A6%E8%A7%A3%E9%80%89%E9%A1%B9%E5%92%8C%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text"> 详解选项和示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="toc-number">3.1.</span> <span class="toc-text"> 基本匹配**</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99-i"><span class="toc-number">3.2.</span> <span class="toc-text"> 忽略大小写（-i）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E5%8C%B9%E9%85%8D-v"><span class="toc-number">3.3.</span> <span class="toc-text"> 反向匹配（-v）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E6%90%9C%E7%B4%A2-r-%E6%88%96-r"><span class="toc-number">3.4.</span> <span class="toc-text"> 递归搜索（-r 或 -R）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7-n"><span class="toc-number">3.5.</span> <span class="toc-text"> 显示行号（-n）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E6%96%87%E4%BB%B6%E5%90%8D-l"><span class="toc-number">3.6.</span> <span class="toc-text"> 仅显示匹配文件名（-l）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E5%8C%B9%E9%85%8D%E8%A1%8C%E6%95%B0-c"><span class="toc-number">3.7.</span> <span class="toc-text"> 统计匹配行数（-c）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%86%85%E5%AE%B9-o"><span class="toc-number">3.8.</span> <span class="toc-text"> 仅显示匹配内容（-o）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E6%95%B4%E4%B8%AA%E5%8D%95%E8%AF%8D-w"><span class="toc-number">3.9.</span> <span class="toc-text"> 匹配整个单词（-w）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E6%95%B4%E8%A1%8C-x"><span class="toc-number">3.10.</span> <span class="toc-text"> 匹配整行（-x）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%8B%E6%96%87%E8%A1%8C-a-b-c"><span class="toc-number">3.11.</span> <span class="toc-text"> 显示上下文行（-A、-B、-C）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E7%89%B9%E5%AE%9A%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.12.</span> <span class="toc-text"> 排除特定文件或目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.13.</span> <span class="toc-text"> 结合正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%A5-start-%E5%BC%80%E5%A4%B4%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.1.</span> <span class="toc-text"> 匹配以 &quot;start&quot; 开头的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%A5-end-%E7%BB%93%E5%B0%BE%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.2.</span> <span class="toc-text"> 匹配以 &quot;end&quot; 结尾的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E5%8C%85%E5%90%AB%E6%95%B0%E5%AD%97%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.3.</span> <span class="toc-text"> 匹配包含数字的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E5%8C%85%E5%90%AB-error-%E6%88%96-fail-%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.4.</span> <span class="toc-text"> 匹配包含 &quot;error&quot; 或 &quot;fail&quot; 的行：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#grep-%E7%9A%84%E6%89%A9%E5%B1%95%E7%89%88%E6%9C%AC"><span class="toc-number">4.</span> <span class="toc-text"> grep 的扩展版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#egrep-%E5%92%8C-fgrep"><span class="toc-number">4.1.</span> <span class="toc-text"> egrep 和 fgrep</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text"> 综合示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%89%80%E6%9C%89-log-%E6%96%87%E4%BB%B6%E4%B8%AD%E6%9F%A5%E6%89%BE-error-%E5%B9%B6%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7"><span class="toc-number">5.1.</span> <span class="toc-text"> 在所有 .log 文件中查找 &quot;error&quot; 并显示行号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E6%89%BE%E5%8C%85%E5%90%AB-todo-%E7%9A%84%E6%96%87%E4%BB%B6%E6%8E%92%E9%99%A4-backup-%E7%9B%AE%E5%BD%95"><span class="toc-number">5.2.</span> <span class="toc-text"> 递归查找包含 &quot;TODO&quot; 的文件，排除 backup 目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%8C%85%E5%90%AB-https-%E7%9A%84%E8%A1%8C%E5%B9%B6%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%86%85%E5%AE%B9"><span class="toc-number">5.3.</span> <span class="toc-text"> 查找包含 &quot;https:&#x2F;&#x2F;&quot; 的行，并仅显示匹配内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%AD%E6%9F%A5%E6%89%BE%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97%E4%B8%8D%E5%8C%BA%E5%88%86%E5%A4%A7%E5%B0%8F%E5%86%99%E5%B9%B6%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%8B%E6%96%87-3-%E8%A1%8C"><span class="toc-number">5.4.</span> <span class="toc-text"> 在文件中查找错误日志（不区分大小写）并显示上下文 3 行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%9F%90%E7%94%A8%E6%88%B7%E7%9A%84%E6%89%80%E6%9C%89%E8%BF%9B%E7%A8%8B"><span class="toc-number">5.5.</span> <span class="toc-text"> 查找某用户的所有进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%9F%90%E5%8D%95%E8%AF%8D%E7%9A%84%E6%AC%A1%E6%95%B0"><span class="toc-number">5.6.</span> <span class="toc-text"> 统计文件中出现某单词的次数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%A4%A7%E5%86%99%E5%BC%80%E5%A4%B4%E7%9A%84%E5%8D%95%E8%AF%8D"><span class="toc-number">5.7.</span> <span class="toc-text"> 查找大写开头的单词</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-fdkyicqe" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/fdkyicqe/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T13:18:10.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>grep</code> 是 Linux 和类 Unix 操作系统中一个强大的文本搜索工具，用于在文件或标准输入中查找与指定模式匹配的行。它支持正则表达式，可以快速定位文件中的特定内容。</p>
+<p>以下是对 <code>grep</code> 命令的详细介绍，包括基本用法、常用选项和示例。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep [选项] <span class="string">&quot;搜索模式&quot;</span> [文件...]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>搜索模式</strong>：指定要查找的文本模式（可以是字符串或正则表达式）。</li>
+<li><strong>文件</strong>：要搜索的文件，可以是一个或多个文件。如果不指定文件，则从标准输入（<code>stdin</code>）读取数据。</li>
+<li><strong>选项</strong>：控制搜索行为，例如忽略大小写、递归搜索、显示行号等。</li>
+</ul>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-i</code></td>
+<td>忽略大小写匹配。</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>反向匹配，显示不符合模式的行。</td>
+</tr>
+<tr>
+<td><code>-r</code> 或 <code>-R</code></td>
+<td>递归搜索目录中的所有文件。</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>显示匹配行的行号。</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>仅显示匹配的行数。</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>仅显示包含匹配内容的文件名。</td>
+</tr>
+<tr>
+<td><code>-L</code></td>
+<td>仅显示不包含匹配内容的文件名。</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td>仅显示匹配的内容（而非整行）。</td>
+</tr>
+<tr>
+<td><code>-w</code></td>
+<td>匹配整个单词。</td>
+</tr>
+<tr>
+<td><code>-x</code></td>
+<td>匹配整行。</td>
+</tr>
+<tr>
+<td><code>-A [行数]</code></td>
+<td>显示匹配行及其后面指定的行数。</td>
+</tr>
+<tr>
+<td><code>-B [行数]</code></td>
+<td>显示匹配行及其前面指定的行数。</td>
+</tr>
+<tr>
+<td><code>-C [行数]</code></td>
+<td>显示匹配行及其前后指定的行数（等价于 <code>-A</code> 和 <code>-B</code> 的组合）。</td>
+</tr>
+<tr>
+<td><code>--color</code></td>
+<td>高亮显示匹配的内容（通常默认启用）。</td>
+</tr>
+<tr>
+<td><code>--include</code></td>
+<td>只搜索匹配的文件类型（如 <code>--include=&quot;*.txt&quot;</code>）。</td>
+</tr>
+<tr>
+<td><code>--exclude</code></td>
+<td>排除特定文件类型（如 <code>--exclude=&quot;*.log&quot;</code>）。</td>
+</tr>
+<tr>
+<td><code>--exclude-dir</code></td>
+<td>排除特定目录（如 <code>--exclude-dir=&quot;backup&quot;</code>）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="详解选项和示例"><a class="markdownIt-Anchor" href="#详解选项和示例"></a> <strong>详解选项和示例</strong></h1>
+<h2 id="基本匹配"><a class="markdownIt-Anchor" href="#基本匹配"></a> 基本匹配**</h2>
+<ul>
+<li>
+<p>在文件中搜索包含 &quot;pattern&quot; 的行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>示例：<br />
+如果 <code>file.txt</code> 内容为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">grep is powerful</span><br><span class="line">pattern matching</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pattern matching</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="忽略大小写-i"><a class="markdownIt-Anchor" href="#忽略大小写-i"></a> <strong>忽略大小写（<code>-i</code>）</strong></h2>
+<ul>
+<li>忽略大小写匹配：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="反向匹配-v"><a class="markdownIt-Anchor" href="#反向匹配-v"></a> <strong>反向匹配（<code>-v</code>）</strong></h2>
+<ul>
+<li>显示不包含 &quot;pattern&quot; 的行：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -v <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="递归搜索-r-或-r"><a class="markdownIt-Anchor" href="#递归搜索-r-或-r"></a> <strong>递归搜索（<code>-r</code> 或 <code>-R</code>）</strong></h2>
+<ul>
+<li>在当前目录及其子目录中递归搜索 &quot;pattern&quot;：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r <span class="string">&quot;pattern&quot;</span> .</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="显示行号-n"><a class="markdownIt-Anchor" href="#显示行号-n"></a> <strong>显示行号（<code>-n</code>）</strong></h2>
+<ul>
+<li>
+<p>显示匹配行及其行号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3:pattern matching</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="仅显示匹配文件名-l"><a class="markdownIt-Anchor" href="#仅显示匹配文件名-l"></a> <strong>仅显示匹配文件名（<code>-l</code>）</strong></h2>
+<ul>
+<li>查找包含 &quot;pattern&quot; 的文件，仅显示文件名：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -l <span class="string">&quot;pattern&quot;</span> *.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="统计匹配行数-c"><a class="markdownIt-Anchor" href="#统计匹配行数-c"></a> <strong>统计匹配行数（<code>-c</code>）</strong></h2>
+<ul>
+<li>显示文件中匹配的行数：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -c <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="仅显示匹配内容-o"><a class="markdownIt-Anchor" href="#仅显示匹配内容-o"></a> <strong>仅显示匹配内容（<code>-o</code>）</strong></h2>
+<ul>
+<li>仅显示匹配的部分，而不是整行：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="匹配整个单词-w"><a class="markdownIt-Anchor" href="#匹配整个单词-w"></a> <strong>匹配整个单词（<code>-w</code>）</strong></h2>
+<ul>
+<li>仅匹配独立的 &quot;pattern&quot; 单词（避免匹配部分单词）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -w <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="匹配整行-x"><a class="markdownIt-Anchor" href="#匹配整行-x"></a> <strong>匹配整行（<code>-x</code>）</strong></h2>
+<ul>
+<li>仅匹配整行与 &quot;pattern&quot; 完全一致的行：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -x <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="显示上下文行-a-b-c"><a class="markdownIt-Anchor" href="#显示上下文行-a-b-c"></a> <strong>显示上下文行（<code>-A</code>、<code>-B</code>、<code>-C</code>）</strong></h2>
+<ul>
+<li>
+<p>显示匹配行及其后 2 行（<code>-A</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -A 2 <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>显示匹配行及其前 2 行（<code>-B</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -B 2 <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>显示匹配行及其前后 2 行（<code>-C</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -C 2 <span class="string">&quot;pattern&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="排除特定文件或目录"><a class="markdownIt-Anchor" href="#排除特定文件或目录"></a> <strong>排除特定文件或目录</strong></h2>
+<ul>
+<li>
+<p>排除特定文件类型：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r --exclude=<span class="string">&quot;*.log&quot;</span> <span class="string">&quot;pattern&quot;</span> .</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>排除特定目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r --exclude-dir=<span class="string">&quot;backup&quot;</span> <span class="string">&quot;pattern&quot;</span> .</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="结合正则表达式"><a class="markdownIt-Anchor" href="#结合正则表达式"></a> <strong>结合正则表达式</strong></h2>
+<h3 id="匹配以-start-开头的行"><a class="markdownIt-Anchor" href="#匹配以-start-开头的行"></a> 匹配以 &quot;start&quot; 开头的行：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;^start&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<h3 id="匹配以-end-结尾的行"><a class="markdownIt-Anchor" href="#匹配以-end-结尾的行"></a> 匹配以 &quot;end&quot; 结尾的行：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;end$&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<h3 id="匹配包含数字的行"><a class="markdownIt-Anchor" href="#匹配包含数字的行"></a> 匹配包含数字的行：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;[0-9]&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<h3 id="匹配包含-error-或-fail-的行"><a class="markdownIt-Anchor" href="#匹配包含-error-或-fail-的行"></a> 匹配包含 &quot;error&quot; 或 &quot;fail&quot; 的行：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -E <span class="string">&quot;error|fail&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="grep-的扩展版本"><a class="markdownIt-Anchor" href="#grep-的扩展版本"></a> <strong>grep 的扩展版本</strong></h1>
+<h2 id="egrep-和-fgrep"><a class="markdownIt-Anchor" href="#egrep-和-fgrep"></a> <strong><code>egrep</code> 和 <code>fgrep</code></strong></h2>
+<ul>
+<li><code>egrep</code> 等价于 <code>grep -E</code>，支持扩展正则表达式。</li>
+<li><code>fgrep</code> 等价于 <code>grep -F</code>，不支持正则表达式，仅匹配固定字符串。</li>
+</ul>
+<hr />
+<h1 id="综合示例"><a class="markdownIt-Anchor" href="#综合示例"></a> <strong>综合示例</strong></h1>
+<h2 id="在所有-log-文件中查找-error-并显示行号"><a class="markdownIt-Anchor" href="#在所有-log-文件中查找-error-并显示行号"></a> <strong>在所有 <code>.log</code> 文件中查找 &quot;error&quot; 并显示行号</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -n <span class="string">&quot;error&quot;</span> *.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="递归查找包含-todo-的文件排除-backup-目录"><a class="markdownIt-Anchor" href="#递归查找包含-todo-的文件排除-backup-目录"></a> <strong>递归查找包含 &quot;TODO&quot; 的文件，排除 <code>backup</code> 目录</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r --exclude-dir=<span class="string">&quot;backup&quot;</span> <span class="string">&quot;TODO&quot;</span> .</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找包含-https-的行并仅显示匹配内容"><a class="markdownIt-Anchor" href="#查找包含-https-的行并仅显示匹配内容"></a> <strong>查找包含 &quot;https://&quot; 的行，并仅显示匹配内容</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o <span class="string">&quot;https://[a-zA-Z0-9./?=_-]*&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="在文件中查找错误日志不区分大小写并显示上下文-3-行"><a class="markdownIt-Anchor" href="#在文件中查找错误日志不区分大小写并显示上下文-3-行"></a> <strong>在文件中查找错误日志（不区分大小写）并显示上下文 3 行</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -i -C 3 <span class="string">&quot;error&quot;</span> system.log</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找某用户的所有进程"><a class="markdownIt-Anchor" href="#查找某用户的所有进程"></a> <strong>查找某用户的所有进程</strong></h2>
+<p>结合 <code>ps</code> 使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep <span class="string">&quot;username&quot;</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="统计文件中出现某单词的次数"><a class="markdownIt-Anchor" href="#统计文件中出现某单词的次数"></a> <strong>统计文件中出现某单词的次数</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o <span class="string">&quot;word&quot;</span> file.txt | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="查找大写开头的单词"><a class="markdownIt-Anchor" href="#查找大写开头的单词"></a> <strong>查找大写开头的单词</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -o <span class="string">&quot;\b[A-Z][a-z]*\b&quot;</span> file.txt</span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<ul>
+<li><strong><code>grep</code> 是 Linux 中最常用的文本处理工具之一，适用于从文件或输出中快速搜索指定内容。</strong></li>
+<li><strong>通过选项（如 <code>-i</code>、<code>-v</code>、<code>-r</code>）和正则表达式，可以实现灵活高效的内容过滤。</strong></li>
+<li>使用时要注意正则表达式的语法，以及结合 <code>grep</code> 的扩展功能（如 <code>--exclude</code> 和 <code>--include</code>）以优化搜索效率。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/fdkyicqe/">https://luoying.netlify.app/2024/10/08/fdkyicqe/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---grep</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件39.jpg" data-sizes="auto" alt="Linux命令详解---bash脚本语法" class="lazyload">
+          
+        
+        <a href="/2024/10/08/fqhsjsca/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---bash脚本语法
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件35.jpg" data-sizes="auto" alt="Linux命令详解---系统信息相关" class="lazyload">
+        
+      
+      <a href="/2024/10/08/xiou2s43/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---系统信息相关
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%A6%E8%A7%A3%E9%80%89%E9%A1%B9%E5%92%8C%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text"> 详解选项和示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8C%B9%E9%85%8D"><span class="toc-number">3.1.</span> <span class="toc-text"> 基本匹配**</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%BD%E7%95%A5%E5%A4%A7%E5%B0%8F%E5%86%99-i"><span class="toc-number">3.2.</span> <span class="toc-text"> 忽略大小写（-i）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E5%8C%B9%E9%85%8D-v"><span class="toc-number">3.3.</span> <span class="toc-text"> 反向匹配（-v）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E6%90%9C%E7%B4%A2-r-%E6%88%96-r"><span class="toc-number">3.4.</span> <span class="toc-text"> 递归搜索（-r 或 -R）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7-n"><span class="toc-number">3.5.</span> <span class="toc-text"> 显示行号（-n）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E6%96%87%E4%BB%B6%E5%90%8D-l"><span class="toc-number">3.6.</span> <span class="toc-text"> 仅显示匹配文件名（-l）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E5%8C%B9%E9%85%8D%E8%A1%8C%E6%95%B0-c"><span class="toc-number">3.7.</span> <span class="toc-text"> 统计匹配行数（-c）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%86%85%E5%AE%B9-o"><span class="toc-number">3.8.</span> <span class="toc-text"> 仅显示匹配内容（-o）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E6%95%B4%E4%B8%AA%E5%8D%95%E8%AF%8D-w"><span class="toc-number">3.9.</span> <span class="toc-text"> 匹配整个单词（-w）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E6%95%B4%E8%A1%8C-x"><span class="toc-number">3.10.</span> <span class="toc-text"> 匹配整行（-x）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%8B%E6%96%87%E8%A1%8C-a-b-c"><span class="toc-number">3.11.</span> <span class="toc-text"> 显示上下文行（-A、-B、-C）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E7%89%B9%E5%AE%9A%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95"><span class="toc-number">3.12.</span> <span class="toc-text"> 排除特定文件或目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.13.</span> <span class="toc-text"> 结合正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%A5-start-%E5%BC%80%E5%A4%B4%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.1.</span> <span class="toc-text"> 匹配以 &quot;start&quot; 开头的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%A5-end-%E7%BB%93%E5%B0%BE%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.2.</span> <span class="toc-text"> 匹配以 &quot;end&quot; 结尾的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E5%8C%85%E5%90%AB%E6%95%B0%E5%AD%97%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.3.</span> <span class="toc-text"> 匹配包含数字的行：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E5%8C%85%E5%90%AB-error-%E6%88%96-fail-%E7%9A%84%E8%A1%8C"><span class="toc-number">3.13.4.</span> <span class="toc-text"> 匹配包含 &quot;error&quot; 或 &quot;fail&quot; 的行：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#grep-%E7%9A%84%E6%89%A9%E5%B1%95%E7%89%88%E6%9C%AC"><span class="toc-number">4.</span> <span class="toc-text"> grep 的扩展版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#egrep-%E5%92%8C-fgrep"><span class="toc-number">4.1.</span> <span class="toc-text"> egrep 和 fgrep</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text"> 综合示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%89%80%E6%9C%89-log-%E6%96%87%E4%BB%B6%E4%B8%AD%E6%9F%A5%E6%89%BE-error-%E5%B9%B6%E6%98%BE%E7%A4%BA%E8%A1%8C%E5%8F%B7"><span class="toc-number">5.1.</span> <span class="toc-text"> 在所有 .log 文件中查找 &quot;error&quot; 并显示行号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E6%89%BE%E5%8C%85%E5%90%AB-todo-%E7%9A%84%E6%96%87%E4%BB%B6%E6%8E%92%E9%99%A4-backup-%E7%9B%AE%E5%BD%95"><span class="toc-number">5.2.</span> <span class="toc-text"> 递归查找包含 &quot;TODO&quot; 的文件，排除 backup 目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%8C%85%E5%90%AB-https-%E7%9A%84%E8%A1%8C%E5%B9%B6%E4%BB%85%E6%98%BE%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%86%85%E5%AE%B9"><span class="toc-number">5.3.</span> <span class="toc-text"> 查找包含 &quot;https:&#x2F;&#x2F;&quot; 的行，并仅显示匹配内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%AD%E6%9F%A5%E6%89%BE%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97%E4%B8%8D%E5%8C%BA%E5%88%86%E5%A4%A7%E5%B0%8F%E5%86%99%E5%B9%B6%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%B8%8B%E6%96%87-3-%E8%A1%8C"><span class="toc-number">5.4.</span> <span class="toc-text"> 在文件中查找错误日志（不区分大小写）并显示上下文 3 行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%9F%90%E7%94%A8%E6%88%B7%E7%9A%84%E6%89%80%E6%9C%89%E8%BF%9B%E7%A8%8B"><span class="toc-number">5.5.</span> <span class="toc-text"> 查找某用户的所有进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%9F%90%E5%8D%95%E8%AF%8D%E7%9A%84%E6%AC%A1%E6%95%B0"><span class="toc-number">5.6.</span> <span class="toc-text"> 统计文件中出现某单词的次数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%A4%A7%E5%86%99%E5%BC%80%E5%A4%B4%E7%9A%84%E5%8D%95%E8%AF%8D"><span class="toc-number">5.7.</span> <span class="toc-text"> 查找大写开头的单词</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

@@ -1,0 +1,789 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    超级简单的打jar包教程 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="今天我们来聊聊jar包。作为Java程序员，日常工作就是打自己的jar包和学别人的jar包。  什么是jar包？ jar包， Java Archive File，顾名思义，它与 Java 息息相关的，是 Java 的一种文档格式，同时也是一种与平台无关的文件格式，可将多个文件合成一个jar文件。 大伙会觉得它与zip包非常类似，确实，确切地说，它就是 zip 包。jar 与 zip 唯一的区别就只">
+<meta property="og:type" content="article">
+<meta property="og:title" content="超级简单的打jar包教程">
+<meta property="og:url" content="https://luoying.netlify.app/2021/11/03/86ticoox/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="今天我们来聊聊jar包。作为Java程序员，日常工作就是打自己的jar包和学别人的jar包。  什么是jar包？ jar包， Java Archive File，顾名思义，它与 Java 息息相关的，是 Java 的一种文档格式，同时也是一种与平台无关的文件格式，可将多个文件合成一个jar文件。 大伙会觉得它与zip包非常类似，确实，确切地说，它就是 zip 包。jar 与 zip 唯一的区别就只">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/c9fbbd1103431e625a9ffa2bd614e781.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/794c08029f1ec5884a010804367566af.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/148c163d7efe70644dad1593472d03ac.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/f4df857f2721a51c441484fa9c1050dc.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/7e0c6e43bc1f179caa6a887f0d30e600.png">
+<meta property="article:published_time" content="2021-11-03T04:47:33.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:08.914Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/c9fbbd1103431e625a9ffa2bd614e781.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="超级简单的打jar包教程">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">超级简单的打jar包教程</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFjar%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text"> 什么是jar包？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%89%93jar%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 如何打jar包？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%B0%81%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text"> 二次封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Cjar%E5%8C%85%E6%B8%85%E5%8D%95%E6%9D%90%E6%96%99"><span class="toc-number">2.2.</span> <span class="toc-text"> 制作jar包清单材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93jar%E5%8C%85"><span class="toc-number">2.3.</span> <span class="toc-text"> 打jar包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jar%E5%8C%85%E6%B5%8B%E8%AF%95"><span class="toc-number">2.4.</span> <span class="toc-text"> jar包测试</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-86ticoox" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/11/03/86ticoox/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-11-03T04:47:33.000Z" itemprop="datePublished">2021-11-03</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/" data-aos="zoom-in">Java</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p>今天我们来聊聊<code>jar</code>包。作为<code>Java</code>程序员，日常工作就是打自己的<code>jar</code>包和学别人的<code>jar</code>包。</p>
+<h1 id="什么是jar包"><a class="markdownIt-Anchor" href="#什么是jar包"></a> 什么是jar包？</h1>
+<p><code>jar包</code>，<code> Java Archive File</code>，顾名思义，它与<code> Java</code> 息息相关的，是<code> Java</code> 的一种文档格式，同时也是一种与平台无关的文件格式，可将多个文件合成一个<code>jar</code>文件。</p>
+<p>大伙会觉得它与<code>zip包</code>非常类似，确实，确切地说，它就是<code> zip 包</code>。<code>jar</code> 与<code> zip</code> 唯一的区别就只是在<code> jar</code> 文件的<code>META-INF</code>目录下多包含了一个 <code>MANIFEST.MF</code> 文件作为jar里面的&quot;详情单&quot;，这个文件里包含了该<code>Jar</code>包的版本、创建人和类搜索路径<code>Class-Path</code>等信息，当然如果是可执行<code>Jar</code>包（包含<code>main()</code>方法），还会包含<code>Main-Class</code>属性，表明<code>main()</code>方法入口。其中较为重要的<code>Class-Path</code>和<code>Main-Class</code>。</p>
+<p>此外，由于<code>jar</code>包主要是对<code>.class</code>文件进行打包，而<code>java</code>编译生成的<code>.class</code>文件是跨平台的，这就意味着<code>jar</code>包也是跨平台的，这是<code>jar</code>包的优势。</p>
+<p>小伙伴们在平时编写代码的时候，可以把自己代码中的通用部分分离出来，积累一些通用的工具类，将其逐渐模块化，最后打成<code>jar</code>包供自己在别的项目或者模块中使用。同时可以不断完善<code>jar</code>包里面的内容，将其做得更加容易理解和使用。</p>
+<p>因此，将自己写好的通用工具类或者框架分离出来，打成<code>jar</code>包供自己或他人调用，不仅能够提升自己的编程水准，同时也能扩宽整个<code>Java</code>生态圈，这也是<code>Java</code>如此受欢迎的原因之一。</p>
+<h1 id="如何打jar包"><a class="markdownIt-Anchor" href="#如何打jar包"></a> 如何打jar包？</h1>
+<p>现在，我们来试着打包我们自己写好的<code>java</code>源文件。</p>
+<p>记得最早接触的一个第三方<code>jar</code>包，是 <code>mysql-connector-java-8.0.24.jar</code>，即<code>Java</code>中著名的<code>jdbc</code>驱动包</p>
+<p>虽然这个驱动包使用起来非常方便，但是仍然有许多重复的代码需要我们去编写，所以一些主流的<code>Java</code>框架会对其进行再次封装，比如<code>SpringBoot</code>框架中，我们只需要填入数据库地址，用户名，密码等基本信息即可访问我们的数据库，下面，我们就尝试着对这个驱动包进行二次封装，并把它打包成<code>jar</code>包，以下是我们的目标：</p>
+<ul>
+<li>向用户开放一个主构造方法：<code>ConnectMysql(String url, String username, String password)</code>用于连接<code>mysql</code>数据库。</li>
+<li>用户只需调用 <strong><code>insert(), delete(), update(), select()</code></strong> 四个方法即可实现对于数据库的 <strong>增 删 改 查</strong> 四个操作。</li>
+</ul>
+<h2 id="二次封装"><a class="markdownIt-Anchor" href="#二次封装"></a> 二次封装</h2>
+<p>首先对<code>jdbc</code>驱动包做二次封装，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sixibiheye.mysql;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.sql.Statement;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConnectMysql</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String url;</span><br><span class="line">    <span class="keyword">private</span> String user;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Statement statement;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ConnectMysql</span><span class="params">(String url, String user, String password)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.url = <span class="string">&quot;jdbc:mysql://&quot;</span> + url + <span class="string">&quot;?useUnicode=true&amp;characterEncoding=utf8&quot;</span>;</span><br><span class="line">        <span class="built_in">this</span>.user = user;</span><br><span class="line">        <span class="built_in">this</span>.password = password;</span><br><span class="line">        <span class="built_in">this</span>.init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">driver</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;</span><br><span class="line">            Class.forName(driver);</span><br><span class="line">            <span class="type">Connection</span> <span class="variable">con</span> <span class="operator">=</span> DriverManager.getConnection(<span class="built_in">this</span>.url, <span class="built_in">this</span>.user, <span class="built_in">this</span>.password);</span><br><span class="line">            <span class="keyword">if</span> (!con.isClosed()) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;数据库连接成功！&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">this</span>.statement = con.createStatement();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException var3) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;对不起，无法找到驱动！&quot;</span>);</span><br><span class="line">            var3.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var4) &#123;</span><br><span class="line">            var4.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ResultSet <span class="title function_">select</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.statement.executeQuery(sql);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException var3) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;查询异常......&quot;</span>);</span><br><span class="line">            var3.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">insert</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="built_in">this</span>.statement.executeUpdate(sql);</span><br><span class="line">            System.out.println(<span class="string">&quot;插入成功！受影响的行数：&quot;</span> + number);</span><br><span class="line">            <span class="keyword">return</span> number;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException var3) &#123;</span><br><span class="line">            var3.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">update</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="built_in">this</span>.statement.executeUpdate(sql);</span><br><span class="line">            System.out.println(<span class="string">&quot;更新成功！受影响的行数：&quot;</span> + number);</span><br><span class="line">            <span class="keyword">return</span> number;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException var3) &#123;</span><br><span class="line">            var3.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">delete</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="built_in">this</span>.statement.executeUpdate(sql);</span><br><span class="line">            System.out.println(<span class="string">&quot;删除成功！受影响的行数：&quot;</span> + number);</span><br><span class="line">            <span class="keyword">return</span> number;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException var3) &#123;</span><br><span class="line">            var3.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>记住 <strong><code>ConnectMysql</code></strong> 这个类放在了 <strong><code>com.sixibiheye.mysql</code></strong> 包里，现在，我们尝试着将其打包成<code>jar</code>包。同样的，我们不借助任何第三方工具，采用最原生的<code>java</code>命令来打<code>jar</code>包。下面的教程假设小伙伴们已经配置好了java的基础环境。（<code>Mac</code>用户与<code>Windows</code>用户均可用）</p>
+<h2 id="制作jar包清单材料"><a class="markdownIt-Anchor" href="#制作jar包清单材料"></a> 制作<code>jar</code>包清单材料</h2>
+<p>首先，我们来看看，打包成一个<code>jar</code>包需要哪些东西：</p>
+<p><img src="/images/assets/c9fbbd1103431e625a9ffa2bd614e781.png" alt="img" /></p>
+<p>我们新建一个<code>MakeJar</code>文件夹（文件夹名任意），在这个文件夹中，添加三个材料：</p>
+<ul>
+<li>编译后的<code>.class</code>文件（如果有多个<code>.class</code>文件且处于不同的包里，注意放到对应的包里）</li>
+<li><code>MANIFEST.MF</code>清单文件（待会解释）</li>
+<li>打<code>jar</code>包所依赖的<code>jar</code>包（此例中由于使用到了<code>jdbc</code>驱动包，故需要将其添加进去，此外，<code>java</code>自带的<code>jar</code>包无需添加进去，如<code>java.sql.*</code>）</li>
+</ul>
+<p>第一，三个材料大家容易理解，这里主要介绍一下<code>MANIFEST.MF</code>清单文件， 清单文件用来指明我们打<code>jar</code>包的一些基本信息，最重要的是主区（<code>Main Section</code>）的四个属性：</p>
+<ul>
+<li><strong><code>Manifest-Version</code></strong></li>
+</ul>
+<p>​    版本号，如<code>1.0</code></p>
+<ul>
+<li><strong><code>Create-By</code></strong></li>
+</ul>
+<p>​    创建者，一般格式：<code>jdk</code>版本(开发者或公司) ，如 <code>1.6.0_35(sum Microsystems Inc.)</code>，可以省略。</p>
+<ul>
+<li><strong><code>Main-Class</code></strong></li>
+</ul>
+<p>可执行<code>jar</code>包（即包含<code>main</code>方法）的入口类名，如果我们编写的多个类含有多个<code>main</code>方法，此属性可指定调用<code>jar</code>包的入口类的<code>main</code>方法。如果编写的 <code>ConnectMysql </code>类中无<code>main()</code>方法，则<code>Main-Class</code>属性可以省略。值得注意的是，属性值一定要包含类所在的包名，如：</p>
+<p><code>Main-Class: com.sixibiheye.mysql.ConnectMysql</code></p>
+<ul>
+<li>
+<p><strong><code>Class-Path</code></strong></p>
+<p><code> JVM</code>搜索依赖的<code>jar</code>包的路径，三种情况：</p>
+</li>
+<li>
+<p>如果依赖的<code>jar</code>包就在当前路径，直接使用jar包名即可；</p>
+</li>
+<li>
+<p>如果依赖的<code>jar</code>包不在当前路径，使用全局路径；</p>
+</li>
+<li>
+<p>如果依赖的<code>jar</code>包在当前路径的子路径中，使用相对路径。</p>
+</li>
+</ul>
+<p>如果有多个依赖的<code>jar</code>包，包与包之间用一个空格隔开即可。此处，我们所依赖的<code>jar</code>包就在当前路径，所以直接写<code>jar</code>包名即可。</p>
+<p>当然清单文件中还可以添加一些其他内容，感兴趣的小伙伴们可以去查阅有关资料。</p>
+<p>此例中，我们的<code>MANIFEST.MF</code>清单文件长这样：</p>
+<p><img src="/images/assets/794c08029f1ec5884a010804367566af.png" alt="img" /></p>
+<p>注意：属性与属性值之间有一个空格；最后一定要留出一空行，否则最后一行读取不到。</p>
+<h2 id="打jar包"><a class="markdownIt-Anchor" href="#打jar包"></a> 打<code>jar</code>包</h2>
+<p>接下来，我们开始打包，<code>Java</code>提供了 <strong><code>jar命令</code></strong> 用于打jar包。</p>
+<p>打开我们的<code>cmd</code>（控制台），将当前路径切换至<code>MakeJar</code>，接着输入如下命令：</p>
+<p><strong><code>jar -cvfm mysql-connector-java.jar MANIFEST.MF -C ./ .</code></strong></p>
+<p>命令中，<code>mysql-connector-java.jar</code>为生成的jar包的名称，<code>MANIFEST.MF</code> 表示使用指定此清单文件用于生成<code>jar</code>包，“<code> ./</code> ”和后面的“<code> .</code> ”之间有一空格，控制参数<code>c，v，f，m</code>的含义分别是：</p>
+<ul>
+<li>-c：即<code>create</code>，创建一个<code>jar</code>包</li>
+<li>-v：即<code>view</code>，生成详细的报告并输出至标准设备</li>
+<li>-f：即<code>force</code>，指定生成的<code>jar</code>包的名称</li>
+<li>-m：即<code>manifest.mf</code>清单文件，指定一个清单文件</li>
+</ul>
+<p>末尾 “ <code>-C</code> ” 参数的含义是， 转到相应的目录下执行<code>jar</code>命令，即相当于<code>cd</code>到那个目录，然后不带“<code> -C</code> ” 参数执行<code>jar</code>命令。</p>
+<p>图示如下：</p>
+<p><img src="/images/assets/148c163d7efe70644dad1593472d03ac.png" alt="img" /></p>
+<p>如果输出类似上述信息，则表示打包成功。</p>
+<p>在<code>MakeJar</code>文件夹中，我们可以看到生成的 **<code>mysql-connector-java.jar</code> **:</p>
+<p><img src="/images/assets/f4df857f2721a51c441484fa9c1050dc.png" alt="img" /></p>
+<p>一个简单的<code>jar</code>包就生成完毕了。</p>
+<h2 id="jar包测试"><a class="markdownIt-Anchor" href="#jar包测试"></a> <code>jar</code>包测试</h2>
+<p>我们来测试一下这个<code>jar</code>包好不好使，在上述目录中，编写一个<code>Test.java</code>类，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sixibiheye.mysql;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.ResultSet;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sixibiheye</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/11/3</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiNote</span> 自定义jar包的测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">ConnectMysql</span> <span class="variable">connector</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ConnectMysql</span>(<span class="string">&quot;localhost:3306/sixibiheye&quot;</span>,<span class="string">&quot;everyone&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select username,sex from user;&quot;</span>;</span><br><span class="line">        <span class="comment">//ResultSet类，用来存放获取的结果集！！</span></span><br><span class="line">        <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> connector.select(sql);</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;执行结果如下所示:&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;姓名&quot;</span> + <span class="string">&quot;\t&quot;</span> + <span class="string">&quot;性别&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sex</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">            <span class="comment">//获取stuname这列数据</span></span><br><span class="line">            name = rs.getString(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">            <span class="comment">//获取stuid这列数据</span></span><br><span class="line">            sex = rs.getString(<span class="string">&quot;sex&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//输出结果</span></span><br><span class="line">            System.out.println(name + <span class="string">&quot;\t&quot;</span> + sex);</span><br><span class="line">        &#125;</span><br><span class="line">        rs.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>MakeJar</code>文件夹中，在命令行输入如下命令：</p>
+<p><img src="/images/assets/7e0c6e43bc1f179caa6a887f0d30e600.png" alt="img" />控制参数 “ <strong><code>-cp</code></strong> ” （即<code>ClassPath</code>)告诉<code>JVM</code>源文件编译运行时所依赖的<code>jar</code>包的路径，路径的写法与之前清单文件中的<code>Class-Path</code>类似。</p>
+<p>可以看到，我们成功地获得了想要的数据。使用封装好的<code>jar</code>包连接数据库并获得数据的代码量要少得多。这再一次体现出封装的优越性。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/11/03/86ticoox/">https://luoying.netlify.app/2021/11/03/86ticoox/</a></p>
+    <p><strong>本文标题：</strong>超级简单的打jar包教程</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件6.jpg" data-sizes="auto" alt="爬虫框架Scrapy速成" class="lazyload">
+          
+        
+        <a href="/2021/12/02/9bh6zzdd/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            爬虫框架Scrapy速成
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件45.jpg" data-sizes="auto" alt="游戏实战之--《ink spill》（附游戏完整源码）" class="lazyload">
+        
+      
+      <a href="/2021/10/10/y1s02h4v/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          游戏实战之--《ink spill》（附游戏完整源码）
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFjar%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text"> 什么是jar包？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%89%93jar%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 如何打jar包？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%B0%81%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text"> 二次封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Cjar%E5%8C%85%E6%B8%85%E5%8D%95%E6%9D%90%E6%96%99"><span class="toc-number">2.2.</span> <span class="toc-text"> 制作jar包清单材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93jar%E5%8C%85"><span class="toc-number">2.3.</span> <span class="toc-text"> 打jar包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jar%E5%8C%85%E6%B5%8B%E8%AF%95"><span class="toc-number">2.4.</span> <span class="toc-text"> jar包测试</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

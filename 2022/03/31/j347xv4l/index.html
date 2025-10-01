@@ -1,0 +1,738 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    B站视频弹幕提取 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 全网都在追的2022年新剧《开端》🤣…不会有人看了几十分钟的弹幕吧…我想了想，看弹幕不太方便，所以干脆爬下来…  网页分析 在b站，很容易找到弹幕的接口：  https:&#x2F;&#x2F;api.bilibili.com&#x2F;x&#x2F;v1&#x2F;dm&#x2F;list.so?oid&#x3D;{oid&#x2F;cid}  这个接口需要一个参数oid，这其实是b站的每个视频的独一无二的编号，怎么搞到这个编号呢？ 我们来瞧瞧b站随便一个视频的u">
+<meta property="og:type" content="article">
+<meta property="og:title" content="B站视频弹幕提取">
+<meta property="og:url" content="https://luoying.netlify.app/2022/03/31/j347xv4l/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 全网都在追的2022年新剧《开端》🤣…不会有人看了几十分钟的弹幕吧…我想了想，看弹幕不太方便，所以干脆爬下来…  网页分析 在b站，很容易找到弹幕的接口：  https:&#x2F;&#x2F;api.bilibili.com&#x2F;x&#x2F;v1&#x2F;dm&#x2F;list.so?oid&#x3D;{oid&#x2F;cid}  这个接口需要一个参数oid，这其实是b站的每个视频的独一无二的编号，怎么搞到这个编号呢？ 我们来瞧瞧b站随便一个视频的u">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/2022/03/31/j347xv4l/images/assets/46d392614ad11419d6a9b837c851bf27-20241206160548801.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/ac52226250a191a8d35f1ac9f2347443-20241206160548572.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/0315020edb56939162fbbeb9556e21db-20241206160548783.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/3acc0059d5b3015889334bee48b5529b-20241206160548672.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/cbab2792b1d8541f808929a652e1de8c-20241206160548826.png">
+<meta property="article:published_time" content="2022-03-31T03:55:06.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.520Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/2022/03/31/j347xv4l/images/assets/46d392614ad11419d6a9b837c851bf27-20241206160548801.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="B站视频弹幕提取">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">B站视频弹幕提取</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text"> 网页分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-number">3.</span> <span class="toc-text"> 代码编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-number">4.</span> <span class="toc-text"> 运行程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8scrapy%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text"> 使用scrapy实现</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-j347xv4l" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2022/03/31/j347xv4l/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2022-03-31T03:55:06.000Z" itemprop="datePublished">2022-03-31</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/" data-aos="zoom-in">Python</a><a class="article-category-link" href="/categories/Python/%E7%88%AC%E8%99%AB/" data-aos="zoom-in">爬虫</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>全网都在追的2022年新剧《开端》🤣…不会有人看了几十分钟的弹幕吧…我想了想，看弹幕不太方便，所以干脆爬下来…</p>
+<h1 id="网页分析"><a class="markdownIt-Anchor" href="#网页分析"></a> 网页分析</h1>
+<p>在<code>b站</code>，很容易找到弹幕的接口：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://api.bilibili.com/x/v1/dm/list.so?oid=%7Boid/cid%7D">https://api.bilibili.com/x/v1/dm/list.so?oid={oid/cid}</a></p>
+</blockquote>
+<p>这个接口需要一个参数<code>oid</code>，这其实是<code>b站</code>的每个视频的独一无二的编号，怎么搞到这个编号呢？</p>
+<p>我们来瞧瞧<code>b站</code>随便一个视频的<code>url地址</code>： <img src="images/assets/46d392614ad11419d6a9b837c851bf27-20241206160548801.png" alt="watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5piT5p6c5ZWl56yU,size_20,color_FFFFFF,t_70,g_se,x_16" /></p>
+<p>其实，<code>b站</code>每个视频的<code>URL</code>中都有一串<code>bvid</code>字符编号，比如<code>BV1wq4y1C785</code>，通过这个<code>bvid编号</code>，我们可以轻松获得视频对应的<code>oid编号</code>，这是因为…<code>b站</code>又给我们提供了一个另一个接口：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://api.bilibili.com/x/player/pagelist?bvid=BV1wq4y1C785">https://api.bilibili.com/x/player/pagelist?bvid=BV1wq4y1C785</a></p>
+</blockquote>
+<p>如上，我们将这串字符输进去，在浏览器中输入回车，看到以下结果：</p>
+<p><img src="/images/assets/ac52226250a191a8d35f1ac9f2347443-20241206160548572.png" alt="watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5piT5p6c5ZWl56yU,size_20,color_FFFFFF,t_70,g_se,x_16" />可以看到<code>b站服务器</code>返回的<code>response</code>是一个<code>json格式</code>的文本，里面有一个<code>键cid</code>，它的值就是我们想要的<code>cid编号</code>。将此编号输入前述的弹幕接口地址中：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://api.bilibili.com/x/v1/dm/list.so?oid=489314781">https://api.bilibili.com/x/v1/dm/list.so?oid=489314781</a></p>
+</blockquote>
+<p>浏览器打开，可以看到如下结果：</p>
+<p><img src="/images/assets/0315020edb56939162fbbeb9556e21db-20241206160548783.png" alt="watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5piT5p6c5ZWl56yU,size_20,color_FFFFFF,t_70,g_se,x_16" /></p>
+<p>由此看出，咱可爱的<code>b站</code>把弹幕集中放在了一个xml文件中…从这个文件中提取弹幕不算太难，可以使用正则提取。此外， 我们关注的还有弹幕发布的时间，其实xml文件中有，只不过不太明显…</p>
+<blockquote>
+<p>1642863060</p>
+</blockquote>
+<p>这是一个用Unix时间戳表示的时间，简单来说就是<code>从1970年1月1日（UTC/GMT的午夜）开始所经过的秒数（不考虑闰秒）</code>，至于如何计算，就交给Python吧。</p>
+<h1 id="代码编写"><a class="markdownIt-Anchor" href="#代码编写"></a> 代码编写</h1>
+<p>准备工作完毕，我们就开始爬了，这个爬虫非常容易，使用<code>requests库</code>即可完成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_comments</span>(<span class="params">bvid</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    通过视频的bvid获得视频的cid</span></span><br><span class="line"><span class="string">    输入：视频的bvid</span></span><br><span class="line"><span class="string">    输出：弹幕发布时间及弹幕内容</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    url = <span class="string">&#x27;https://api.bilibili.com/x/player/pagelist?bvid=%s&#x27;</span> % bvid</span><br><span class="line">    res = requests.get(url)</span><br><span class="line">    <span class="comment"># 获取cid编号</span></span><br><span class="line">    cid = res.json()[<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;cid&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 通过https://api.bilibili.com/x/v1/dm/list.so?oid= 接口获得包含弹幕的xml文件</span></span><br><span class="line">    url = <span class="string">&#x27;https://api.bilibili.com/x/v1/dm/list.so?oid=%d&#x27;</span> % cid</span><br><span class="line">    res = requests.get(url)</span><br><span class="line">    res.encoding = <span class="string">&#x27;utf-8&#x27;</span></span><br><span class="line">    text = res.text</span><br><span class="line"></span><br><span class="line">    result = []  <span class="comment"># 用于存储解析结果</span></span><br><span class="line">    <span class="comment"># 用正则表达式提取</span></span><br><span class="line">    comments = re.findall(<span class="string">&#x27;&lt;d p=&quot;(.*?)&quot;&gt;(.*?)&lt;/d&gt;&#x27;</span>, text)</span><br><span class="line">    <span class="keyword">for</span> comment <span class="keyword">in</span> comments:</span><br><span class="line">        item = &#123;&#125;  <span class="comment"># 每条弹幕数据</span></span><br><span class="line">        <span class="comment"># &lt;p&gt;标签的第五个数据为时间戳，使用time库处理为友好的格式</span></span><br><span class="line">        comment_date = <span class="built_in">int</span>(comment[<span class="number">0</span>].split(<span class="string">&#x27;,&#x27;</span>)[<span class="number">4</span>])  </span><br><span class="line">        item[<span class="string">&#x27;评论时间&#x27;</span>] = time.strftime(<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>, time.localtime(comment_date))</span><br><span class="line">        item[<span class="string">&#x27;弹幕内容&#x27;</span>] = comment[<span class="number">1</span>]</span><br><span class="line">        result.append(item)</span><br><span class="line">    <span class="comment"># 为了便于观看，转化为json</span></span><br><span class="line">    comments_json = json.dumps(result, indent=<span class="number">0</span>, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">return</span> comments_json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># 随便传入一个b站的bvid即可：</span></span><br><span class="line">    comments = get_comments(<span class="string">&quot;BV1y34y1B7q9&quot;</span>)  <span class="comment"># 解析弹幕</span></span><br><span class="line">    <span class="built_in">print</span>(comments)</span><br></pre></td></tr></table></figure>
+<h1 id="运行程序"><a class="markdownIt-Anchor" href="#运行程序"></a> 运行程序</h1>
+<p>跑一下，结果如下（部分）：</p>
+<p><img src="/images/assets/3acc0059d5b3015889334bee48b5529b-20241206160548672.png" alt="watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5piT5p6c5ZWl56yU,size_20,color_FFFFFF,t_70,g_se,x_16" /></p>
+<h1 id="使用scrapy实现"><a class="markdownIt-Anchor" href="#使用scrapy实现"></a> 使用scrapy实现</h1>
+<p>习惯使用<code>scrapy框架</code>的小伙伴们，也可以使用<code>scrapy</code>实现（当然有点大材小用了）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">KaiduanSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;kaiduan&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;api.bilibili.com&#x27;</span>]</span><br><span class="line">    start_urls = [</span><br><span class="line">        <span class="string">&#x27;https://api.bilibili.com/x/player/pagelist?bvid=BV1wq4y1C785&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        cid = re.findall(<span class="string">&#x27;&quot;cid&quot;:(d+)&#x27;</span>, response.body.decode())[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(</span><br><span class="line">            <span class="string">&#x27;https://api.bilibili.com/x/v1/dm/list.so?oid=&#x27;</span> + cid,</span><br><span class="line">            callback=<span class="variable language_">self</span>.parse_comments</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_comments</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            解析视频弹幕</span></span><br><span class="line"><span class="string">            输入：视频弹幕的原数据</span></span><br><span class="line"><span class="string">            输出：弹幕的解析结果</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 用正则表达式提取</span></span><br><span class="line">        comments = re.findall(<span class="string">&#x27;&lt;d p=&quot;(.*?)&quot;&gt;(.*?)&lt;/d&gt;&#x27;</span>, response.text)</span><br><span class="line">        <span class="keyword">for</span> comment <span class="keyword">in</span> comments:</span><br><span class="line">            item = &#123;&#125;  <span class="comment"># 每条弹幕数据</span></span><br><span class="line">            <span class="comment"># &lt;p&gt;标签的第五个数据为时间戳</span></span><br><span class="line">            comment_date = <span class="built_in">int</span>(comment[<span class="number">0</span>].split(<span class="string">&#x27;,&#x27;</span>)[<span class="number">4</span>])  </span><br><span class="line">            item[<span class="string">&#x27;评论时间&#x27;</span>] = time.strftime(<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>, time.localtime(comment_date))</span><br><span class="line">            item[<span class="string">&#x27;弹幕内容&#x27;</span>] = comment[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">yield</span> item</span><br></pre></td></tr></table></figure>
+<p>终端运行程序，输入命令 <code>scrapy crawl kaiduan -o comments.csv</code>回车，运行完之后，得到如下<code>csv文件</code>：    <img src="/images/assets/cbab2792b1d8541f808929a652e1de8c-20241206160548826.png" alt="watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5piT5p6c5ZWl56yU,size_20,color_FFFFFF,t_70,g_se,x_16" />哈哈，是不是挺有乐趣的呢？</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2022/03/31/j347xv4l/">https://luoying.netlify.app/2022/03/31/j347xv4l/</a></p>
+    <p><strong>本文标题：</strong>B站视频弹幕提取</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件15.jpg" data-sizes="auto" alt="听说you-get和python更配？" class="lazyload">
+          
+        
+        <a href="/2022/04/08/mnq371jx/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            听说you-get和python更配？
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件38.jpg" data-sizes="auto" alt="selenium爬取图片的保姆级教程" class="lazyload">
+        
+      
+      <a href="/2022/03/30/0jh1h2dc/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          selenium爬取图片的保姆级教程
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text"> 网页分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-number">3.</span> <span class="toc-text"> 代码编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-number">4.</span> <span class="toc-text"> 运行程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8scrapy%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text"> 使用scrapy实现</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

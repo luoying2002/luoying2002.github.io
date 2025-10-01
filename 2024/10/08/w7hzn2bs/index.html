@@ -1,0 +1,982 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---命令帮助信息 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="在 Linux&#x2F;Unix 系统中，获取命令的帮助信息是常见的需求。以下是几种常用的方法，用于查看命令的帮助文档、参数说明和相关使用信息。   使用 --help 几乎所有命令都支持 --help 选项，用于简要地显示命令的使用方法和参数说明。 1命令 --help  示例：  1ls --help   输出：显示 ls 命令的所有选项及其功能。   适用场景：快速查看命令的基本用法和选项。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---命令帮助信息">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/w7hzn2bs/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="在 Linux&#x2F;Unix 系统中，获取命令的帮助信息是常见的需求。以下是几种常用的方法，用于查看命令的帮助文档、参数说明和相关使用信息。   使用 --help 几乎所有命令都支持 --help 选项，用于简要地显示命令的使用方法和参数说明。 1命令 --help  示例：  1ls --help   输出：显示 ls 命令的所有选项及其功能。   适用场景：快速查看命令的基本用法和选项。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T11:17:27.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.730Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---命令帮助信息">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---命令帮助信息</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-help"><span class="toc-number">1.</span> <span class="toc-text"> 使用 --help</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-man%E6%89%8B%E5%86%8C%E9%A1%B5"><span class="toc-number">2.</span> <span class="toc-text"> 使用 man（手册页）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#man-%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text"> man 的快捷键操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-info"><span class="toc-number">3.</span> <span class="toc-text"> 使用 info</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#info-%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">3.1.</span> <span class="toc-text"> info 的快捷键操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-helpshell-%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text"> 使用 help（Shell 内置命令）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4%E4%BD%8D%E7%BD%AE%E4%B8%8E%E6%89%8B%E5%86%8C%E9%A1%B5"><span class="toc-number">5.</span> <span class="toc-text"> 查看命令位置与手册页</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-which"><span class="toc-number">5.1.</span> <span class="toc-text"> 使用 which</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-type"><span class="toc-number">5.2.</span> <span class="toc-text"> 使用 type</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-apropos"><span class="toc-number">6.</span> <span class="toc-text"> 使用 apropos</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-whatis"><span class="toc-number">7.</span> <span class="toc-text"> 使用 whatis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-h"><span class="toc-number">8.</span> <span class="toc-text"> 使用 -h</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-command-help-%E4%B8%8E-man-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">9.</span> <span class="toc-text"> 通过 command --help 与 man 的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text"> 示例总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E7%BB%84%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">11.</span> <span class="toc-text"> 推荐组合使用</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-w7hzn2bs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/w7hzn2bs/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T11:17:27.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p>在 Linux/Unix 系统中，获取命令的帮助信息是常见的需求。以下是几种常用的方法，用于查看命令的帮助文档、参数说明和相关使用信息。</p>
+<hr />
+<h1 id="使用-help"><a class="markdownIt-Anchor" href="#使用-help"></a> <strong>使用 <code>--help</code></strong></h1>
+<p>几乎所有命令都支持 <code>--help</code> 选项，用于简要地显示命令的使用方法和参数说明。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令 --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>输出：显示 <code>ls</code> 命令的所有选项及其功能。</p>
+</li>
+<li>
+<p><strong>适用场景</strong>：快速查看命令的基本用法和选项。</p>
+</li>
+</ul>
+<hr />
+<h1 id="使用-man手册页"><a class="markdownIt-Anchor" href="#使用-man手册页"></a> <strong>使用 <code>man</code>（手册页）</strong></h1>
+<p><code>man</code> 命令用于查看命令的详细手册页，包括用法、参数、描述等。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：显示 <code>ls</code> 命令的完整手册页。</li>
+</ul>
+<h2 id="man-的快捷键操作"><a class="markdownIt-Anchor" href="#man-的快捷键操作"></a> <strong><code>man</code> 的快捷键操作</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>快捷键</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Space</code></td>
+<td>向下翻页。</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>向上翻页。</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>退出手册页。</td>
+</tr>
+<tr>
+<td><code>/关键词</code></td>
+<td>搜索关键字。</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>跳到下一个匹配的关键字。</td>
+</tr>
+<tr>
+<td><code>Shift+n</code></td>
+<td>跳到上一个匹配的关键字。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>适用场景</strong>：需要更详细的命令信息时。</li>
+</ul>
+<hr />
+<h1 id="使用-info"><a class="markdownIt-Anchor" href="#使用-info"></a> <strong>使用 <code>info</code></strong></h1>
+<p><code>info</code> 命令提供类似于 <code>man</code> 的文档，但通常包含更详细的说明和结构化的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：显示 <code>ls</code> 命令的详细信息，通常比 <code>man</code> 更详细。</li>
+</ul>
+<h2 id="info-的快捷键操作"><a class="markdownIt-Anchor" href="#info-的快捷键操作"></a> <strong><code>info</code> 的快捷键操作</strong></h2>
+<table>
+<thead>
+<tr>
+<th><strong>快捷键</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Space</code></td>
+<td>向下翻页。</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>向上翻页。</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>退出文档。</td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>跳到下一节点。</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td>跳到上一节点。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>适用场景</strong>：需要更深入的命令文档时。</li>
+</ul>
+<hr />
+<h1 id="使用-helpshell-内置命令"><a class="markdownIt-Anchor" href="#使用-helpshell-内置命令"></a> <strong>使用 <code>help</code>（Shell 内置命令）</strong></h1>
+<p>对于 Shell 内置命令（如 <code>cd</code>、<code>echo</code>），可以使用 <code>help</code> 显示它们的帮助信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">help</span> 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">help</span> <span class="built_in">cd</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>输出：显示 <code>cd</code> 命令的内置帮助信息。</p>
+</li>
+<li>
+<p><strong>适用场景</strong>：查看 Shell 内置命令的帮助信息。</p>
+</li>
+</ul>
+<hr />
+<h1 id="查看命令位置与手册页"><a class="markdownIt-Anchor" href="#查看命令位置与手册页"></a> <strong>查看命令位置与手册页</strong></h1>
+<h2 id="使用-which"><a class="markdownIt-Anchor" href="#使用-which"></a> <strong>使用 <code>which</code></strong></h2>
+<p><code>which</code> 命令用于查看命令的实际路径，以区分外部命令和内置命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：显示 <code>ls</code> 的实际路径，如 <code>/bin/ls</code>。</li>
+</ul>
+<hr />
+<h2 id="使用-type"><a class="markdownIt-Anchor" href="#使用-type"></a> <strong>使用 <code>type</code></strong></h2>
+<p><code>type</code> 命令用于查看命令是外部命令还是内置命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">cd</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出：<code>cd</code> 是一个 Shell 内置命令。</li>
+</ul>
+<hr />
+<h1 id="使用-apropos"><a class="markdownIt-Anchor" href="#使用-apropos"></a> <strong>使用 <code>apropos</code></strong></h1>
+<p><code>apropos</code> 命令根据关键字搜索相关的命令和手册页。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apropos 关键词</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apropos file</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>输出：显示与 <code>file</code> 相关的命令和手册页简介。</p>
+</li>
+<li>
+<p><strong>适用场景</strong>：不确定命令名称时，查找相关命令。</p>
+</li>
+</ul>
+<hr />
+<h1 id="使用-whatis"><a class="markdownIt-Anchor" href="#使用-whatis"></a> <strong>使用 <code>whatis</code></strong></h1>
+<p><code>whatis</code> 命令简要描述某个命令的功能。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whatis 命令</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whatis <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>输出：<code>ls (1)             - list directory contents</code></p>
+</li>
+<li>
+<p><strong>适用场景</strong>：快速了解命令的功能。</p>
+</li>
+</ul>
+<hr />
+<h1 id="使用-h"><a class="markdownIt-Anchor" href="#使用-h"></a> <strong>使用 <code>-h</code></strong></h1>
+<p>许多命令支持 <code>-h</code> 参数，用于显示帮助信息（类似于 <code>--help</code>）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令 -h</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -h</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>输出：显示 <code>tar</code> 命令的帮助信息。</p>
+</li>
+<li>
+<p><strong>适用场景</strong>：快速查看命令的基本用法。</p>
+</li>
+</ul>
+<hr />
+<h1 id="通过-command-help-与-man-的区别"><a class="markdownIt-Anchor" href="#通过-command-help-与-man-的区别"></a> <strong>通过 <code>command --help</code> 与 <code>man</code> 的区别</strong></h1>
+<ul>
+<li><strong><code>command --help</code> 或 <code>command -h</code></strong>：
+<ul>
+<li>提供简短的帮助信息。</li>
+<li>适合快速了解命令的基本选项和用法。</li>
+</ul>
+</li>
+<li><strong><code>man command</code></strong>：
+<ul>
+<li>提供更详细的文档，包含用法、选项、示例和注意事项。</li>
+<li>适合深入了解命令。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="示例总结"><a class="markdownIt-Anchor" href="#示例总结"></a> <strong>示例总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>方法</strong></th>
+<th><strong>命令示例</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--help</code></td>
+<td><code>ls --help</code></td>
+<td>查看命令的简要帮助信息。</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>tar -h</code></td>
+<td>查看命令的简要帮助信息（部分命令支持）。</td>
+</tr>
+<tr>
+<td><code>man</code></td>
+<td><code>man ls</code></td>
+<td>查看命令的详细手册页。</td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td><code>info ls</code></td>
+<td>查看命令的详细信息（更结构化）。</td>
+</tr>
+<tr>
+<td><code>help</code></td>
+<td><code>help cd</code></td>
+<td>查看 Shell 内置命令的帮助信息。</td>
+</tr>
+<tr>
+<td><code>apropos</code></td>
+<td><code>apropos file</code></td>
+<td>根据关键字查找相关命令。</td>
+</tr>
+<tr>
+<td><code>whatis</code></td>
+<td><code>whatis ls</code></td>
+<td>快速了解命令的功能。</td>
+</tr>
+<tr>
+<td><code>which</code></td>
+<td><code>which ls</code></td>
+<td>查看命令所在路径（判断是否为外部命令）。</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>type cd</code></td>
+<td>查看命令是内置命令还是外部命令。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="推荐组合使用"><a class="markdownIt-Anchor" href="#推荐组合使用"></a> <strong>推荐组合使用</strong></h1>
+<ol>
+<li>不确定命令功能时：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whatis 命令</span><br></pre></td></tr></table></figure>
+</li>
+<li>想快速查看选项：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令 --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>想详细了解用法：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man 命令</span><br></pre></td></tr></table></figure>
+</li>
+<li>想查找相关命令：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apropos 关键词</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>通过这些方法，可以快速找到命令的帮助信息并高效使用！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/w7hzn2bs/">https://luoying.netlify.app/2024/10/08/w7hzn2bs/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---命令帮助信息</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件16.jpg" data-sizes="auto" alt="Linux命令详解---系统信息相关" class="lazyload">
+          
+        
+        <a href="/2024/10/08/xiou2s43/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---系统信息相关
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件38.jpg" data-sizes="auto" alt="Linux命令详解---crontab" class="lazyload">
+        
+      
+      <a href="/2024/10/08/3pjws2yl/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---crontab
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-help"><span class="toc-number">1.</span> <span class="toc-text"> 使用 --help</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-man%E6%89%8B%E5%86%8C%E9%A1%B5"><span class="toc-number">2.</span> <span class="toc-text"> 使用 man（手册页）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#man-%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text"> man 的快捷键操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-info"><span class="toc-number">3.</span> <span class="toc-text"> 使用 info</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#info-%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">3.1.</span> <span class="toc-text"> info 的快捷键操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-helpshell-%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text"> 使用 help（Shell 内置命令）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4%E4%BD%8D%E7%BD%AE%E4%B8%8E%E6%89%8B%E5%86%8C%E9%A1%B5"><span class="toc-number">5.</span> <span class="toc-text"> 查看命令位置与手册页</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-which"><span class="toc-number">5.1.</span> <span class="toc-text"> 使用 which</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-type"><span class="toc-number">5.2.</span> <span class="toc-text"> 使用 type</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-apropos"><span class="toc-number">6.</span> <span class="toc-text"> 使用 apropos</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-whatis"><span class="toc-number">7.</span> <span class="toc-text"> 使用 whatis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-h"><span class="toc-number">8.</span> <span class="toc-text"> 使用 -h</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-command-help-%E4%B8%8E-man-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">9.</span> <span class="toc-text"> 通过 command --help 与 man 的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text"> 示例总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E7%BB%84%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">11.</span> <span class="toc-text"> 推荐组合使用</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

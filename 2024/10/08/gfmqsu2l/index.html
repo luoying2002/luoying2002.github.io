@@ -1,0 +1,924 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---ifconfig |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="ifconfig（Interface Configuration）是一个用于查看和配置网络接口的命令。在 Linux 系统中，ifconfig 主要用于显示网络接口的状态信息（例如 IP 地址、子网掩码、广播地址等）以及配置网络接口。 尽管在较新的 Linux 发行版中，ifconfig 已逐渐被 ip 命令所取代，但它仍然是许多网络工程师和管理员熟悉和使用的命令。   基本语法 1ifconfi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---ifconfig">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/gfmqsu2l/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="ifconfig（Interface Configuration）是一个用于查看和配置网络接口的命令。在 Linux 系统中，ifconfig 主要用于显示网络接口的状态信息（例如 IP 地址、子网掩码、广播地址等）以及配置网络接口。 尽管在较新的 Linux 发行版中，ifconfig 已逐渐被 ip 命令所取代，但它仍然是许多网络工程师和管理员熟悉和使用的命令。   基本语法 1ifconfi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T14:14:25.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.315Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---ifconfig">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---ifconfig</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E4%BF%A1%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text"> 查看网络接口信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text"> 查看所有网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text"> 查看指定网络接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.</span> <span class="toc-text"> 配置网络接口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-ip-%E5%9C%B0%E5%9D%80"><span class="toc-number">3.1.</span> <span class="toc-text"> 设置 IP 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text"> 启用网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.3.</span> <span class="toc-text"> 禁用网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="toc-number">3.4.</span> <span class="toc-text"> 设置广播地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-mtu%E6%9C%80%E5%A4%A7%E4%BC%A0%E8%BE%93%E5%8D%95%E5%85%83"><span class="toc-number">3.5.</span> <span class="toc-text"> 设置 MTU（最大传输单元）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%88%AB%E5%90%8D%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.6.</span> <span class="toc-text"> 配置别名接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E5%92%8C%E8%AF%8A%E6%96%AD%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text"> 检测和诊断网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8E%A5%E5%8F%A3%E6%B5%81%E9%87%8F%E7%BB%9F%E8%AE%A1"><span class="toc-number">4.1.</span> <span class="toc-text"> 查看接口流量统计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E9%99%A4%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E7%9A%84%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">4.2.</span> <span class="toc-text"> 清除网络接口的统计信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%BF%E4%BB%A3%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text"> 替代命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-gfmqsu2l" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/gfmqsu2l/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T14:14:25.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>ifconfig</code>（<strong>Interface Configuration</strong>）是一个用于查看和配置网络接口的命令。在 Linux 系统中，<code>ifconfig</code> 主要用于显示网络接口的状态信息（例如 IP 地址、子网掩码、广播地址等）以及配置网络接口。</p>
+<p>尽管在较新的 Linux 发行版中，<code>ifconfig</code> 已逐渐被 <code>ip</code> 命令所取代，但它仍然是许多网络工程师和管理员熟悉和使用的命令。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig [网络接口] [选项] [参数]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>网络接口</strong>：网络设备的名称，例如 <code>eth0</code>、<code>wlan0</code>、<code>lo</code> 等。</li>
+<li><strong>选项和参数</strong>：用于配置或查看网络接口的功能。</li>
+</ul>
+<hr />
+<h1 id="查看网络接口信息"><a class="markdownIt-Anchor" href="#查看网络接口信息"></a> <strong>查看网络接口信息</strong></h1>
+<h2 id="查看所有网络接口"><a class="markdownIt-Anchor" href="#查看所有网络接口"></a> <strong>查看所有网络接口</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 192.168.1.10  netmask 255.255.255.0  broadcast 192.168.1.255</span><br><span class="line">        inet6 fe80::1e5a:3ff:fe42:8c25  prefixlen 64  scopeid 0x20&lt;link&gt;</span><br><span class="line">        ether 00:1e:5a:42:8c:25  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 12345  bytes 9876543 (9.8 MB)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 54321  bytes 1234567 (1.2 MB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line"></span><br><span class="line">lo: flags=73&lt;UP,LOOPBACK,RUNNING&gt;  mtu 65536</span><br><span class="line">        inet 127.0.0.1  netmask 255.0.0.0</span><br><span class="line">        inet6 ::1  prefixlen 128  scopeid 0x10&lt;host&gt;</span><br><span class="line">        loop  txqueuelen 1000  (Local Loopback)</span><br><span class="line">        RX packets 100  bytes 2000 (2.0 KB)</span><br><span class="line">        TX packets 100  bytes 2000 (2.0 KB)</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>字段说明</strong>：</p>
+<ul>
+<li><strong>网络接口名称</strong>（如 <code>eth0</code>、<code>lo</code>）：表示网络设备名称。</li>
+<li><strong>flags</strong>：接口的状态标志，如 <code>UP</code>（接口激活）、<code>RUNNING</code>（接口正在运行）。</li>
+<li><strong>inet</strong>：IPv4 地址。</li>
+<li><strong>inet6</strong>：IPv6 地址。</li>
+<li><strong>netmask</strong>：子网掩码。</li>
+<li><strong>broadcast</strong>：广播地址。</li>
+<li><strong>ether</strong>：MAC 地址（物理地址）。</li>
+<li><strong>RX/TX packets</strong>：接收（RX）和发送（TX）数据包的统计信息。</li>
+<li><strong>errors/dropped</strong>：接收和发送过程中发生的错误统计。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="查看指定网络接口"><a class="markdownIt-Anchor" href="#查看指定网络接口"></a> <strong>查看指定网络接口</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 192.168.1.10  netmask 255.255.255.0  broadcast 192.168.1.255</span><br><span class="line">        ether 00:1e:5a:42:8c:25  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 12345  bytes 9876543 (9.8 MB)</span><br><span class="line">        TX packets 54321  bytes 1234567 (1.2 MB)</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：只显示指定接口（如 <code>eth0</code>）的信息。</p>
+</li>
+</ul>
+<hr />
+<h1 id="配置网络接口"><a class="markdownIt-Anchor" href="#配置网络接口"></a> <strong>配置网络接口</strong></h1>
+<h2 id="设置-ip-地址"><a class="markdownIt-Anchor" href="#设置-ip-地址"></a> <strong>设置 IP 地址</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 192.168.1.100 netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：
+<ul>
+<li>将接口 <code>eth0</code> 的 IP 地址设置为 <code>192.168.1.100</code>，子网掩码为 <code>255.255.255.0</code>。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="启用网络接口"><a class="markdownIt-Anchor" href="#启用网络接口"></a> <strong>启用网络接口</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 up</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：激活网络接口 <code>eth0</code>。</li>
+</ul>
+<hr />
+<h2 id="禁用网络接口"><a class="markdownIt-Anchor" href="#禁用网络接口"></a> <strong>禁用网络接口</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 down</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：关闭网络接口 <code>eth0</code>。</li>
+</ul>
+<hr />
+<h2 id="设置广播地址"><a class="markdownIt-Anchor" href="#设置广播地址"></a> <strong>设置广播地址</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 broadcast 192.168.1.255</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：将 <code>eth0</code> 的广播地址设置为 <code>192.168.1.255</code>。</li>
+</ul>
+<hr />
+<h2 id="设置-mtu最大传输单元"><a class="markdownIt-Anchor" href="#设置-mtu最大传输单元"></a> <strong>设置 MTU（最大传输单元）</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 mtu 1400</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：设置网络接口 <code>eth0</code> 的 MTU 值为 <code>1400</code>。</li>
+</ul>
+<hr />
+<h2 id="配置别名接口"><a class="markdownIt-Anchor" href="#配置别名接口"></a> <strong>配置别名接口</strong></h2>
+<p>通过别名创建虚拟接口（常用于多 IP 绑定）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0:1 192.168.2.1 netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：为 <code>eth0</code> 创建一个别名接口 <code>eth0:1</code>，并分配 IP 地址 <code>192.168.2.1</code>。</li>
+</ul>
+<hr />
+<h1 id="检测和诊断网络"><a class="markdownIt-Anchor" href="#检测和诊断网络"></a> <strong>检测和诊断网络</strong></h1>
+<h2 id="查看接口流量统计"><a class="markdownIt-Anchor" href="#查看接口流量统计"></a> <strong>查看接口流量统计</strong></h2>
+<p>接口的接收（RX）和发送（TX）字节数、数据包数量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>字段说明</strong>：
+<ul>
+<li><strong>RX packets</strong>：接收的数据包数量。</li>
+<li><strong>TX packets</strong>：发送的数据包数量。</li>
+<li><strong>bytes</strong>：接收或发送的字节总量。</li>
+<li><strong>errors</strong>：接收或发送过程中遇到的错误。</li>
+<li><strong>dropped</strong>：丢弃的包。</li>
+<li><strong>overruns</strong>：硬件缓存溢出统计。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="清除网络接口的统计信息"><a class="markdownIt-Anchor" href="#清除网络接口的统计信息"></a> <strong>清除网络接口的统计信息</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ifconfig eth0 -statistics</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>说明</strong>：清除接口的流量统计数据（部分系统可能不支持）。</li>
+</ul>
+<hr />
+<h1 id="替代命令"><a class="markdownIt-Anchor" href="#替代命令"></a> <strong>替代命令</strong></h1>
+<p>在较新的 Linux 系统中，<code>ifconfig</code> 已被 <code>ip</code> 命令所取代。以下是 <code>ip</code> 命令的等效操作：</p>
+<table>
+<thead>
+<tr>
+<th><strong>操作</strong></th>
+<th><strong><code>ifconfig</code> 命令</strong></th>
+<th><strong><code>ip</code> 命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查看所有接口信息</td>
+<td><code>ifconfig</code></td>
+<td><code>ip addr</code> 或 <code>ip a</code></td>
+</tr>
+<tr>
+<td>查看指定接口信息</td>
+<td><code>ifconfig eth0</code></td>
+<td><code>ip addr show dev eth0</code></td>
+</tr>
+<tr>
+<td>设置 IP 地址</td>
+<td><code>ifconfig eth0 192.168.1.100</code></td>
+<td><code>sudo ip addr add 192.168.1.100/24 dev eth0</code></td>
+</tr>
+<tr>
+<td>启用网络接口</td>
+<td><code>ifconfig eth0 up</code></td>
+<td><code>sudo ip link set eth0 up</code></td>
+</tr>
+<tr>
+<td>禁用网络接口</td>
+<td><code>ifconfig eth0 down</code></td>
+<td><code>sudo ip link set eth0 down</code></td>
+</tr>
+<tr>
+<td>设置 MTU</td>
+<td><code>ifconfig eth0 mtu 1400</code></td>
+<td><code>sudo ip link set dev eth0 mtu 1400</code></td>
+</tr>
+<tr>
+<td>查看接口流量统计</td>
+<td><code>ifconfig eth0</code></td>
+<td><code>ip -s link show dev eth0</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> <strong>注意事项</strong></h1>
+<ol>
+<li>
+<p><strong>权限问题</strong>：</p>
+<ul>
+<li>需要超级用户权限（<code>sudo</code>）才能配置网络接口。</li>
+</ul>
+</li>
+<li>
+<p><strong>替代工具</strong>：</p>
+<ul>
+<li><code>ifconfig</code> 已在较新的 Linux 发行版中被标记为过时，建议使用 <code>ip</code> 命令。</li>
+</ul>
+</li>
+<li>
+<p><strong>安装 <code>ifconfig</code></strong>：</p>
+<ul>
+<li>如果系统中没有安装 <code>ifconfig</code>，可以通过以下命令安装：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install net-tools    <span class="comment"># 在基于 Debian 的系统中</span></span><br><span class="line"><span class="built_in">sudo</span> yum install net-tools    <span class="comment"># 在基于 RHEL 的系统中</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>命令</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查看所有接口信息</td>
+<td><code>ifconfig</code></td>
+</tr>
+<tr>
+<td>查看指定接口信息</td>
+<td><code>ifconfig eth0</code></td>
+</tr>
+<tr>
+<td>启用接口</td>
+<td><code>sudo ifconfig eth0 up</code></td>
+</tr>
+<tr>
+<td>禁用接口</td>
+<td><code>sudo ifconfig eth0 down</code></td>
+</tr>
+<tr>
+<td>设置 IP 地址</td>
+<td><code>sudo ifconfig eth0 192.168.1.100</code></td>
+</tr>
+<tr>
+<td>设置子网掩码</td>
+<td><code>sudo ifconfig eth0 netmask 255.255.255.0</code></td>
+</tr>
+<tr>
+<td>设置广播地址</td>
+<td><code>sudo ifconfig eth0 broadcast 192.168.1.255</code></td>
+</tr>
+<tr>
+<td>设置 MTU</td>
+<td><code>sudo ifconfig eth0 mtu 1400</code></td>
+</tr>
+</tbody>
+</table>
+<p>尽管 <code>ifconfig</code> 仍然有效，但建议在现代系统中逐渐过渡到 <code>ip</code> 命令，以便获得更多功能和更好的支持。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/gfmqsu2l/">https://luoying.netlify.app/2024/10/08/gfmqsu2l/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---ifconfig</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件11.jpg" data-sizes="auto" alt="Linux命令详解---apt" class="lazyload">
+          
+        
+        <a href="/2024/10/08/lx5mg678/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---apt
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件10.jpg" data-sizes="auto" alt="Linux命令详解---用户权限相关" class="lazyload">
+        
+      
+      <a href="/2024/10/08/o85pl50g/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---用户权限相关
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E4%BF%A1%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text"> 查看网络接口信息</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text"> 查看所有网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text"> 查看指定网络接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.</span> <span class="toc-text"> 配置网络接口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-ip-%E5%9C%B0%E5%9D%80"><span class="toc-number">3.1.</span> <span class="toc-text"> 设置 IP 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text"> 启用网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.3.</span> <span class="toc-text"> 禁用网络接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80"><span class="toc-number">3.4.</span> <span class="toc-text"> 设置广播地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-mtu%E6%9C%80%E5%A4%A7%E4%BC%A0%E8%BE%93%E5%8D%95%E5%85%83"><span class="toc-number">3.5.</span> <span class="toc-text"> 设置 MTU（最大传输单元）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%88%AB%E5%90%8D%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.6.</span> <span class="toc-text"> 配置别名接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E5%92%8C%E8%AF%8A%E6%96%AD%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text"> 检测和诊断网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8E%A5%E5%8F%A3%E6%B5%81%E9%87%8F%E7%BB%9F%E8%AE%A1"><span class="toc-number">4.1.</span> <span class="toc-text"> 查看接口流量统计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E9%99%A4%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E7%9A%84%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">4.2.</span> <span class="toc-text"> 清除网络接口的统计信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%BF%E4%BB%A3%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text"> 替代命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text"> 注意事项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

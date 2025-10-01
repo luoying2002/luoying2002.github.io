@@ -1,0 +1,961 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    Linux命令详解---echo |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="echo 是一个非常常用的命令，用于在终端打印文本或变量的值。它简单而强大，适用于脚本编写、调试和输出信息等场景。   基本语法 1echo [选项] [字符串]  字符串：要输出的内容，可以是普通文本、变量值或转义字符。 选项：控制 echo 的行为（如是否解析转义字符等）。    常用选项    选项 作用     -n 输出内容后不换行。   -e 启用转义字符处理（默认不解析转义字符）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令详解---echo">
+<meta property="og:url" content="https://luoying.netlify.app/2024/10/08/fnb83o9t/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="echo 是一个非常常用的命令，用于在终端打印文本或变量的值。它简单而强大，适用于脚本编写、调试和输出信息等场景。   基本语法 1echo [选项] [字符串]  字符串：要输出的内容，可以是普通文本、变量值或转义字符。 选项：控制 echo 的行为（如是否解析转义字符等）。    常用选项    选项 作用     -n 输出内容后不换行。   -e 启用转义字符处理（默认不解析转义字符）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-08T10:20:30.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:09.251Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="Linux命令详解---echo">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">Linux命令详解---echo</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%A8%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text"> 示例用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%96%87%E6%9C%AC"><span class="toc-number">3.1.</span> <span class="toc-text"> 输出文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%8F%98%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text"> 输出变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E6%8D%A2%E8%A1%8C%E8%BE%93%E5%87%BA"><span class="toc-number">3.3.</span> <span class="toc-text"> 不换行输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.4.</span> <span class="toc-text"> 转义字符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86-e"><span class="toc-number">3.4.1.</span> <span class="toc-text"> 启用转义字符处理（-e）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.4.2.</span> <span class="toc-text"> 常用转义字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.4.3.</span> <span class="toc-text"> 示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.5.</span> <span class="toc-text"> 禁用转义字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-number">3.6.</span> <span class="toc-text"> 输出文件内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.1.</span> <span class="toc-text"> 使用重定向符输出到文件：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E5%8A%A0%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.2.</span> <span class="toc-text"> 追加到文件：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%8C%E8%BE%93%E5%87%BA"><span class="toc-number">3.7.</span> <span class="toc-text"> 多行输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-1%E4%BD%BF%E7%94%A8-e-%E5%92%8C%E6%8D%A2%E8%A1%8C%E7%AC%A6"><span class="toc-number">3.7.1.</span> <span class="toc-text"> 方法 1：使用 -e 和换行符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-2%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E5%A4%9A%E6%AC%A1-echo"><span class="toc-number">3.7.2.</span> <span class="toc-text"> 方法 2：直接使用多次 echo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-3%E4%BD%BF%E7%94%A8-here-document"><span class="toc-number">3.7.3.</span> <span class="toc-text"> 方法 3：使用 Here Document</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%91%BD%E4%BB%A4%E7%BB%93%E6%9E%9C"><span class="toc-number">3.8.</span> <span class="toc-text"> 输出命令结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%98%BE%E7%A4%BA"><span class="toc-number">3.9.</span> <span class="toc-text"> 格式化显示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-tab-%E5%AF%B9%E9%BD%90"><span class="toc-number">3.9.1.</span> <span class="toc-text"> 使用 Tab 对齐：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E7%A9%BA%E8%A1%8C"><span class="toc-number">3.10.</span> <span class="toc-text"> 输出空行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text"> 常见应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF"><span class="toc-number">4.1.</span> <span class="toc-text"> 打印错误信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%90%88%E8%84%9A%E6%9C%AC%E8%BE%93%E5%87%BA%E6%97%A5%E5%BF%97"><span class="toc-number">4.2.</span> <span class="toc-text"> 配合脚本输出日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E8%B7%AF%E5%BE%84%E6%88%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">4.3.</span> <span class="toc-text"> 打印路径或环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E7%AE%80%E5%8D%95%E8%AD%A6%E5%91%8A%E6%8F%90%E7%A4%BA"><span class="toc-number">4.4.</span> <span class="toc-text"> 生成简单警告提示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-fnb83o9t" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2024/10/08/fnb83o9t/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-10-08T10:20:30.000Z" itemprop="datePublished">2024-10-08</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/" data-aos="zoom-in">Linux</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <p><code>echo</code> 是一个非常常用的命令，用于在终端打印文本或变量的值。它简单而强大，适用于脚本编写、调试和输出信息等场景。</p>
+<hr />
+<h1 id="基本语法"><a class="markdownIt-Anchor" href="#基本语法"></a> <strong>基本语法</strong></h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> [选项] [字符串]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>字符串</strong>：要输出的内容，可以是普通文本、变量值或转义字符。</li>
+<li><strong>选项</strong>：控制 <code>echo</code> 的行为（如是否解析转义字符等）。</li>
+</ul>
+<hr />
+<h1 id="常用选项"><a class="markdownIt-Anchor" href="#常用选项"></a> <strong>常用选项</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>选项</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-n</code></td>
+<td>输出内容后不换行。</td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td>启用转义字符处理（默认不解析转义字符）。</td>
+</tr>
+<tr>
+<td><code>-E</code></td>
+<td>禁用转义字符处理（默认行为，通常不需要显式指定）。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="示例用法"><a class="markdownIt-Anchor" href="#示例用法"></a> <strong>示例用法</strong></h1>
+<h2 id="输出文本"><a class="markdownIt-Anchor" href="#输出文本"></a> <strong>输出文本</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello, World!&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, World!</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>作用：在终端打印字符串。</p>
+</li>
+</ul>
+<hr />
+<h2 id="输出变量"><a class="markdownIt-Anchor" href="#输出变量"></a> <strong>输出变量</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=<span class="string">&quot;Alice&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello, <span class="variable">$name</span>!&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello, Alice!</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：<code>$name</code> 被解析为变量的值。</p>
+</li>
+</ul>
+<hr />
+<h2 id="不换行输出"><a class="markdownIt-Anchor" href="#不换行输出"></a> <strong>不换行输出</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;Processing...&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; Done.&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Processing... Done.</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：<code>-n</code> 禁止 <code>echo</code> 命令在输出后自动换行。</p>
+</li>
+</ul>
+<hr />
+<h2 id="转义字符"><a class="markdownIt-Anchor" href="#转义字符"></a> <strong>转义字符</strong></h2>
+<h3 id="启用转义字符处理-e"><a class="markdownIt-Anchor" href="#启用转义字符处理-e"></a> 启用转义字符处理（<code>-e</code>）</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Line1\nLine2&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Line1</span><br><span class="line">Line2</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：<code>\n</code> 表示换行符，<code>-e</code> 启用了转义字符的解析。</p>
+</li>
+</ul>
+<hr />
+<h3 id="常用转义字符"><a class="markdownIt-Anchor" href="#常用转义字符"></a> 常用转义字符</h3>
+<table>
+<thead>
+<tr>
+<th><strong>转义字符</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\n</code></td>
+<td>换行符</td>
+</tr>
+<tr>
+<td><code>\t</code></td>
+<td>水平制表符（Tab 键）</td>
+</tr>
+<tr>
+<td><code>\\</code></td>
+<td>反斜杠</td>
+</tr>
+<tr>
+<td><code>\&quot;</code></td>
+<td>双引号</td>
+</tr>
+<tr>
+<td><code>\'</code></td>
+<td>单引号</td>
+</tr>
+<tr>
+<td><code>\b</code></td>
+<td>退格符（删除前一个字符）</td>
+</tr>
+<tr>
+<td><code>\a</code></td>
+<td>警告声音（响铃）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例"><a class="markdownIt-Anchor" href="#示例"></a> 示例：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Name:\tAlice\nAge:\t25&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Name:   Alice</span><br><span class="line">Age:    25</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="禁用转义字符"><a class="markdownIt-Anchor" href="#禁用转义字符"></a> <strong>禁用转义字符</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -E <span class="string">&quot;Hello\nWorld&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello\nWorld</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：<code>-E</code> 禁用转义字符解析，默认行为是直接输出文本。</p>
+</li>
+</ul>
+<hr />
+<h2 id="输出文件内容"><a class="markdownIt-Anchor" href="#输出文件内容"></a> <strong>输出文件内容</strong></h2>
+<h3 id="使用重定向符输出到文件"><a class="markdownIt-Anchor" href="#使用重定向符输出到文件"></a> 使用重定向符输出到文件：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello, File!&quot;</span> &gt; file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：将 <code>Hello, File!</code> 写入到 <code>file.txt</code> 文件中（覆盖原内容）。</li>
+</ul>
+<h3 id="追加到文件"><a class="markdownIt-Anchor" href="#追加到文件"></a> 追加到文件：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Another Line&quot;</span> &gt;&gt; file.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：将 <code>Another Line</code> 追加到 <code>file.txt</code> 的末尾。</li>
+</ul>
+<hr />
+<h2 id="多行输出"><a class="markdownIt-Anchor" href="#多行输出"></a> <strong>多行输出</strong></h2>
+<h3 id="方法-1使用-e-和换行符"><a class="markdownIt-Anchor" href="#方法-1使用-e-和换行符"></a> 方法 1：使用 <code>-e</code> 和换行符</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Line1\nLine2\nLine3&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Line1</span><br><span class="line">Line2</span><br><span class="line">Line3</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="方法-2直接使用多次-echo"><a class="markdownIt-Anchor" href="#方法-2直接使用多次-echo"></a> 方法 2：直接使用多次 <code>echo</code></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Line1&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Line2&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Line3&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="方法-3使用-here-document"><a class="markdownIt-Anchor" href="#方法-3使用-here-document"></a> 方法 3：使用 Here Document</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">Line1</span></span><br><span class="line"><span class="string">Line2</span></span><br><span class="line"><span class="string">Line3</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="输出命令结果"><a class="markdownIt-Anchor" href="#输出命令结果"></a> <strong>输出命令结果</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Today is <span class="subst">$(date)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>输出</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Today is Mon Dec 9 12:34:56 UTC 2024</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>说明：<code>$(date)</code> 将运行 <code>date</code> 命令，并将结果嵌入到 <code>echo</code> 中。</p>
+</li>
+</ul>
+<hr />
+<h2 id="格式化显示"><a class="markdownIt-Anchor" href="#格式化显示"></a> <strong>格式化显示</strong></h2>
+<h3 id="使用-tab-对齐"><a class="markdownIt-Anchor" href="#使用-tab-对齐"></a> 使用 Tab 对齐：</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Name\tAge\tCity\nAlice\t25\tNew York\nBob\t30\tLondon&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Name    Age     City</span><br><span class="line">Alice   25      New York</span><br><span class="line">Bob     30      London</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="输出空行"><a class="markdownIt-Anchor" href="#输出空行"></a> <strong>输出空行</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：打印一个空行。</li>
+</ul>
+<p>或者：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;\n&quot;</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h1 id="常见应用场景"><a class="markdownIt-Anchor" href="#常见应用场景"></a> <strong>常见应用场景</strong></h1>
+<h2 id="打印错误信息"><a class="markdownIt-Anchor" href="#打印错误信息"></a> <strong>打印错误信息</strong></h2>
+<p>使用标准错误输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Error: Something went wrong!&quot;</span> &gt;&amp;2</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="配合脚本输出日志"><a class="markdownIt-Anchor" href="#配合脚本输出日志"></a> <strong>配合脚本输出日志</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Starting the script...&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Processing...&quot;</span></span><br><span class="line"><span class="built_in">sleep</span> 1</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Done.&quot;</span></span><br></pre></td></tr></table></figure>
+<p>运行输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Starting the script...</span><br><span class="line">Processing...</span><br><span class="line">Done.</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="打印路径或环境变量"><a class="markdownIt-Anchor" href="#打印路径或环境变量"></a> <strong>打印路径或环境变量</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Current Path: <span class="variable">$PATH</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>输出</strong>：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Current Path: /usr/local/bin:/usr/bin:/bin</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr />
+<h2 id="生成简单警告提示"><a class="markdownIt-Anchor" href="#生成简单警告提示"></a> <strong>生成简单警告提示</strong></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;\aWarning: Low disk space!&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>-e</code> 启用转义字符，<code>\a</code> 会发出警告声音。</li>
+</ul>
+<hr />
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> <strong>总结</strong></h1>
+<table>
+<thead>
+<tr>
+<th><strong>功能</strong></th>
+<th><strong>命令示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输出文本</td>
+<td><code>echo &quot;Hello, World!&quot;</code></td>
+</tr>
+<tr>
+<td>输出变量值</td>
+<td><code>echo &quot;User: $USER&quot;</code></td>
+</tr>
+<tr>
+<td>不换行输出</td>
+<td><code>echo -n &quot;Processing...&quot;</code></td>
+</tr>
+<tr>
+<td>启用转义字符</td>
+<td><code>echo -e &quot;Line1\nLine2&quot;</code></td>
+</tr>
+<tr>
+<td>禁用转义字符</td>
+<td><code>echo -E &quot;Hello\nWorld&quot;</code></td>
+</tr>
+<tr>
+<td>输出到文件（覆盖）</td>
+<td><code>echo &quot;Text&quot; &gt; file.txt</code></td>
+</tr>
+<tr>
+<td>输出到文件（追加）</td>
+<td><code>echo &quot;More Text&quot; &gt;&gt; file.txt</code></td>
+</tr>
+<tr>
+<td>打印命令结果</td>
+<td><code>echo &quot;Today is $(date)&quot;</code></td>
+</tr>
+<tr>
+<td>格式化输出</td>
+<td><code>echo -e &quot;Name\tAge\nAlice\t25\nBob\t30&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>echo</code> 是 Bash 脚本中不可或缺的工具，简单易用，能够满足多种文本输出需求！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2024/10/08/fnb83o9t/">https://luoying.netlify.app/2024/10/08/fnb83o9t/</a></p>
+    <p><strong>本文标题：</strong>Linux命令详解---echo</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件16.jpg" data-sizes="auto" alt="Linux命令详解---crontab" class="lazyload">
+          
+        
+        <a href="/2024/10/08/3pjws2yl/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            Linux命令详解---crontab
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件21.jpg" data-sizes="auto" alt="Linux命令详解---curl" class="lazyload">
+        
+      
+      <a href="/2024/10/08/6s15w53k/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          Linux命令详解---curl
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 基本语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%80%89%E9%A1%B9"><span class="toc-number">2.</span> <span class="toc-text"> 常用选项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%A8%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text"> 示例用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%96%87%E6%9C%AC"><span class="toc-number">3.1.</span> <span class="toc-text"> 输出文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%8F%98%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text"> 输出变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E6%8D%A2%E8%A1%8C%E8%BE%93%E5%87%BA"><span class="toc-number">3.3.</span> <span class="toc-text"> 不换行输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.4.</span> <span class="toc-text"> 转义字符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86-e"><span class="toc-number">3.4.1.</span> <span class="toc-text"> 启用转义字符处理（-e）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.4.2.</span> <span class="toc-text"> 常用转义字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.4.3.</span> <span class="toc-text"> 示例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">3.5.</span> <span class="toc-text"> 禁用转义字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-number">3.6.</span> <span class="toc-text"> 输出文件内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%87%8D%E5%AE%9A%E5%90%91%E7%AC%A6%E8%BE%93%E5%87%BA%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.1.</span> <span class="toc-text"> 使用重定向符输出到文件：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E5%8A%A0%E5%88%B0%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.2.</span> <span class="toc-text"> 追加到文件：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%8C%E8%BE%93%E5%87%BA"><span class="toc-number">3.7.</span> <span class="toc-text"> 多行输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-1%E4%BD%BF%E7%94%A8-e-%E5%92%8C%E6%8D%A2%E8%A1%8C%E7%AC%A6"><span class="toc-number">3.7.1.</span> <span class="toc-text"> 方法 1：使用 -e 和换行符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-2%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E5%A4%9A%E6%AC%A1-echo"><span class="toc-number">3.7.2.</span> <span class="toc-text"> 方法 2：直接使用多次 echo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-3%E4%BD%BF%E7%94%A8-here-document"><span class="toc-number">3.7.3.</span> <span class="toc-text"> 方法 3：使用 Here Document</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%91%BD%E4%BB%A4%E7%BB%93%E6%9E%9C"><span class="toc-number">3.8.</span> <span class="toc-text"> 输出命令结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%98%BE%E7%A4%BA"><span class="toc-number">3.9.</span> <span class="toc-text"> 格式化显示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-tab-%E5%AF%B9%E9%BD%90"><span class="toc-number">3.9.1.</span> <span class="toc-text"> 使用 Tab 对齐：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E7%A9%BA%E8%A1%8C"><span class="toc-number">3.10.</span> <span class="toc-text"> 输出空行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text"> 常见应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF"><span class="toc-number">4.1.</span> <span class="toc-text"> 打印错误信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E5%90%88%E8%84%9A%E6%9C%AC%E8%BE%93%E5%87%BA%E6%97%A5%E5%BF%97"><span class="toc-number">4.2.</span> <span class="toc-text"> 配合脚本输出日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E8%B7%AF%E5%BE%84%E6%88%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">4.3.</span> <span class="toc-text"> 打印路径或环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E7%AE%80%E5%8D%95%E8%AD%A6%E5%91%8A%E6%8F%90%E7%A4%BA"><span class="toc-number">4.4.</span> <span class="toc-text"> 生成简单警告提示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

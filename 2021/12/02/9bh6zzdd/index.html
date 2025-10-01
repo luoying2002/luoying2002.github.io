@@ -1,0 +1,948 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    爬虫框架Scrapy速成 |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 趁着闲暇的时间，我们来系统学习一个python非常流行的框架-----Scrapy。Scrapy是一个使用python编写，基于Twisted框架的开源网络爬虫框架，目前由Scrapingphub Ltd维护。 Scrapy的最大特点，四个字：简单实用。 简单到什么程度，一天的学习即可掌握核心知识，并应用到实际中去。由于Scrapy灵活易扩展，开发社区活跃，跨平台支持，使得其使用群体广泛。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫框架Scrapy速成">
+<meta property="og:url" content="https://luoying.netlify.app/2021/12/02/9bh6zzdd/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 趁着闲暇的时间，我们来系统学习一个python非常流行的框架-----Scrapy。Scrapy是一个使用python编写，基于Twisted框架的开源网络爬虫框架，目前由Scrapingphub Ltd维护。 Scrapy的最大特点，四个字：简单实用。 简单到什么程度，一天的学习即可掌握核心知识，并应用到实际中去。由于Scrapy灵活易扩展，开发社区活跃，跨平台支持，使得其使用群体广泛。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/476181bd88754274b314718325b67120.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/ce982840828181ebe83f4ac1745365bd.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/3fe9d95f8f2ffebcab382b797aa61454.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/b930bc3ccdf6af338fa956e806814c63.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/4d73dd9cbbd1002af0a87d5e3aee5a62.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/4274c6bb1300cee0fdf09a0a5b8e1082.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/90b3ce924a49390c1b8ba354ce237ef5.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/5afc1470a19c6e4160e444e24a3ebac2.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/46e4cf426a382cba474ba5f9c6bc3a20.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/2285e70136b268325dd9087b43606f64.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/1d6820a5babc69ac172af664aa66c58b.png">
+<meta property="og:image" content="https://luoying.netlify.app/images/assets/6312f08b943872fba2dc133611f8124c.png">
+<meta property="article:published_time" content="2021-12-02T14:58:03.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:10.650Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luoying.netlify.app/images/assets/476181bd88754274b314718325b67120.png">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="爬虫框架Scrapy速成">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">爬虫框架Scrapy速成</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85scrapy"><span class="toc-number">2.</span> <span class="toc-text"> 安装Scrapy</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAscrapy%E7%88%AC%E8%99%AB%E7%A8%8B%E5%BA%8F"><span class="toc-number">3.</span> <span class="toc-text"> 第一个Scrapy爬虫程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.1.</span> <span class="toc-text"> 第一步：分析页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.2.</span> <span class="toc-text"> 第二步：创建项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrapy%E6%A1%86%E6%9E%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">3.2.2.</span> <span class="toc-text"> Scrapy框架流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#css%E9%80%89%E6%8B%A9%E5%99%A8%E5%92%8Cxpath%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">3.2.3.</span> <span class="toc-text"> css选择器和xpath选择器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E9%A1%B5%E9%9D%A2%E8%A7%A3%E6%9E%90%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 编写页面解析函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E8%BF%90%E8%A1%8C%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.3.</span> <span class="toc-text"> 第三步：运行项目</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-9bh6zzdd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/12/02/9bh6zzdd/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-12-02T14:58:03.000Z" itemprop="datePublished">2021-12-02</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/" data-aos="zoom-in">Python</a><a class="article-category-link" href="/categories/Python/%E7%88%AC%E8%99%AB/" data-aos="zoom-in">爬虫</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>趁着闲暇的时间，我们来系统学习一个<code>python</code>非常流行的框架-----<code>Scrapy</code>。<code>Scrapy</code>是一个使用<code>python</code>编写，基于<code>Twisted</code>框架的开源网络爬虫框架，目前由<code>Scrapingphub Ltd</code>维护。</p>
+<p><code>Scrapy</code>的最大特点，四个字：<code>简单实用</code>。</p>
+<p>简单到什么程度，一天的学习即可掌握核心知识，并应用到实际中去。由于<code>Scrapy</code>灵活易扩展，开发社区活跃，跨平台支持，使得其使用群体广泛。</p>
+<p>本着实用的原则，本教程不涉及<code>Scrapy</code>框架的底层实现讲解，对于一些不太好理解的地方，偶尔会涉及到<code>Scrapy</code>的底层原理，以便于理解。</p>
+<h1 id="安装scrapy"><a class="markdownIt-Anchor" href="#安装scrapy"></a> 安装Scrapy</h1>
+<p>安装<code>Scrapy</code>非常地简单，在任意操作系统下，均可以使用pip命令安装：</p>
+<blockquote>
+<p>pip install scrapy</p>
+</blockquote>
+<p>测试是否安装成功，可以在<code>cmd(控制台)</code>里输入<code>scrapy</code>：</p>
+<p><img src="/images/assets/476181bd88754274b314718325b67120.png" alt="img" /></p>
+<h1 id="第一个scrapy爬虫程序"><a class="markdownIt-Anchor" href="#第一个scrapy爬虫程序"></a> 第一个Scrapy爬虫程序</h1>
+<p>下面我们来编写第一个<code>Scrapy</code>爬虫程序。</p>
+<p>爬虫，首先得有“地”可爬。大家都听过，“爬虫学的好，牢饭少不了”，</p>
+<p>我们不去爬取网站的私密信息，仅仅是为了学习和交流。</p>
+<p>在这，有一个专供爬虫初学者训练爬虫技术的网站，网址为： <a target="_blank" rel="noopener" href="http://books.toscrape.com">All products | Books to Scrape - Sandbox</a></p>
+<p>我们来瞧瞧这个网站的主界面：</p>
+<p><img src="/images/assets/ce982840828181ebe83f4ac1745365bd.png" alt="img" /></p>
+<p>可以看到，里面有许多关于书籍的信息。</p>
+<p>下面，我们就使用<code>Scrapy</code>框架来爬取这些书籍信息。咱分几步完成：</p>
+<h2 id="第一步分析页面"><a class="markdownIt-Anchor" href="#第一步分析页面"></a> 第一步：分析页面</h2>
+<p>编写爬虫程序前，我们首先要分析这个页面，这需要一点简单的<code>html知识</code>，现在主流的浏览器中都带有分析网站页面的工具或插件，个人比较推荐<code>Chrome浏览器</code>的开发者工具，因为它的功能实在是太强大了！</p>
+<p>在<code>Chrome浏览器</code>中打开书籍信息所在的网页，接着按<code>F12</code>，即可调出谷歌的<code>开发者工具</code>，我们来看看这个网页的<code>HTML</code>源代码：</p>
+<p><img src="/images/assets/3fe9d95f8f2ffebcab382b797aa61454.png" alt="img" /></p>
+<p>谷歌浏览器小技巧：如果你想找到页面某个内容所在的<code>HTML</code>代码，可以右键该内容，选择“审查元素”，即可定位到该内容所在的<code>HTML</code>代码。 （其他浏览器也有类似的方式）</p>
+<p>从源代码中可以看到，所有的书籍信息放在了一个<code>ol</code>（无序标签）下， 其中的每一本书放在一个 <code>li</code> 块中，所有的书籍信息包裹在<code>&lt;article class=&quot;product_pod&quot;&gt;</code>元素中，具体信息有：</p>
+<ul>
+<li>书名信息：其下 <code>h3 &gt; a</code>元素的 <code>title</code> 属性中</li>
+<li>书价信息：其下<code> &lt;p class=&quot;price_color&quot;&gt;</code>元素的文本中</li>
+</ul>
+<p>当然网页中书籍信息还有许多，此处我们先爬取这两个信息。</p>
+<h2 id="第二步创建项目"><a class="markdownIt-Anchor" href="#第二步创建项目"></a> 第二步：创建项目</h2>
+<p>同其他框架一样，使用<code>Scrapy</code>，首先得新建一个<code>Scrapy项目</code>，在<code>cmd</code>（控制台）中使用如下指令创建一个<code>Scrapy项目</code>：</p>
+<blockquote>
+<p>scrapy startproject 项目名</p>
+</blockquote>
+<p><img src="/images/assets/b930bc3ccdf6af338fa956e806814c63.png" alt="img" />根据执行结果（红框所述)，先<code>cd</code>到项目中，再执行如下命令：</p>
+<blockquote>
+<p>scrapy genspider 爬虫名 待爬取的网站域名</p>
+</blockquote>
+<p><img src="/images/assets/4d73dd9cbbd1002af0a87d5e3aee5a62.png" alt="img" />这样，在项目存储位置处，我们可以看到项目的文件结构：</p>
+<p><img src="/images/assets/4274c6bb1300cee0fdf09a0a5b8e1082.png" alt="img" /></p>
+<p>这些文件的具体作用，我们随着学习的深入会一一了解。</p>
+<p>我们使用<code>pycharm</code>来打开这个项目，注意这个项目的<code>python解释器</code>中需要导入<code>scrapy包</code>：</p>
+<p><img src="/images/assets/90b3ce924a49390c1b8ba354ce237ef5.png" alt="img" /></p>
+<h3 id="项目结构"><a class="markdownIt-Anchor" href="#项目结构"></a> 项目结构</h3>
+<p>设置好环境后，我们来分析这个项目中的文件，可以看到如下这个**<code>getbooks.py</code>**文件：</p>
+<p><img src="/images/assets/5afc1470a19c6e4160e444e24a3ebac2.png" alt="img" /></p>
+<p>这个文件就是我们编写<code>Spider</code>的核心文件了。基本上我们所有的逻辑代码都在这个文件中。什么逻辑呢？在写任何一个爬虫之前，我们考虑如下三个问题：</p>
+<ul>
+<li>爬取的时候从哪个或者哪些页面开始爬取呢？</li>
+<li>对于一个已下载待爬取的页面，提取其中的哪些数据呢？</li>
+<li>爬取完当前页面后，接下来该爬取哪个或者哪些页面呢？</li>
+</ul>
+<p>当回答完上述问题，一个爬虫也就开发出来了。</p>
+<p>一般而言，编写一个Spider只需如下四个步骤：</p>
+<blockquote>
+<ol>
+<li>继承scrapy.Spider；</li>
+<li>为Spider取名（爬虫名）；</li>
+<li>设定起始爬取点（网址列表）；</li>
+<li>实现页面解析函数；</li>
+</ol>
+</blockquote>
+<p>我们来分析一下这个核心文件中的代码：</p>
+<p><img src="/images/assets/46e4cf426a382cba474ba5f9c6bc3a20.png" alt="img" />这段代码虽只有10行，但已经囊括了上述的四个步骤，解释如下：</p>
+<blockquote>
+<ol>
+<li><code>Scrapy</code>框架提供了一个<code>Spider</code>基类，我们编写的<code>Spider</code>只需要继承它即可（代码第四行）</li>
+<li>有时候我们编写的爬虫不止一个，因此，爬虫名的设置便非常重要，<code>Spider</code>基类有一个 <strong><code>name</code></strong> 属性，用来指定爬虫名，如代码第五行，设置此爬虫程序的爬虫名为 “<code>getbooks</code>”。（此处的爬虫名在前面使用命令行创建项目的时候就已经指定了，此处为代码自动生成）</li>
+<li><code>Spider</code>基类还有一个 <strong><code>allowed_domains</code></strong> 属性用于设定爬取网站的域名（亦在创建项目的时候指定了），<strong><code>start_urls</code></strong> 属性用于指定爬取的起始网页（可以有多个，采用列表存储）。</li>
+<li>页面解析函数名默认为 <strong><code>parse</code></strong> ，代码中使用<code>pass</code>占位，需由我们编写。</li>
+</ol>
+</blockquote>
+<h3 id="scrapy框架流程"><a class="markdownIt-Anchor" href="#scrapy框架流程"></a> Scrapy框架流程</h3>
+<p>简单介绍一下<code>Scrapy框架</code>的爬取流程。</p>
+<p>首先，<code>Scrapy引擎</code>根据<code>start_urls</code>中的<code>url地址</code>向对应网页发送一个<code>request下载请求</code>，用于下载该网页，接着该网页所在网站返回一个<code>response对象</code>，并将该对象作为参数传递给页面解析函数<code>parse()</code>，作为该函数的参数，接下来的爬取工作主要在页面解析函数中进行。</p>
+<p>值得关注的是，下载该网页所返回的<code>response对象</code>中，包含了这个网页完整的<code>html代码</code>，那么我们如何选择到指定的<code>html标签呢</code>？</p>
+<h3 id="css选择器和xpath选择器"><a class="markdownIt-Anchor" href="#css选择器和xpath选择器"></a> <strong>css</strong>选择器和<strong>xpath</strong>选择器</h3>
+<p><code>Scrapy框架</code>给此<code>response对象</code>添加了两种选择器函数：<strong>css</strong>选择器和<strong>xpath</strong>选择器。首先说明，这两种选择器并无优劣之分。一般而言，在语法上，<code>css选择器</code>要比<code>xpath选择器</code>简洁一些，但<code>xpath选择器</code>在功能上更强大一点。而且实际上，当我们调用<code>css选择器</code>函数时，在<code>python</code>内部会使用<strong>cssselect</strong>库将<code>css表达式</code>翻译成<code>xpath表达式</code>。关于这两种选择器的使用，列举如下：</p>
+<p><strong>CSS选择器常用语法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>表达式</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>举例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*****</td>
+<td><strong>选中所有元素</strong></td>
+<td>*****</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td><strong>选中E元素</strong></td>
+<td><strong>p</strong></td>
+</tr>
+<tr>
+<td><strong>E1,E2</strong></td>
+<td><strong>选中E1和E2元素</strong></td>
+<td><strong>div,span</strong></td>
+</tr>
+<tr>
+<td><strong>E1 E2</strong></td>
+<td><strong>选中E1后代元素中的E2元素</strong></td>
+<td><strong>div p</strong></td>
+</tr>
+<tr>
+<td><strong>E1&gt;E2</strong></td>
+<td><strong>选中E1子元素中的E2元素</strong></td>
+<td><strong>div&gt;p</strong></td>
+</tr>
+<tr>
+<td><strong>E1+E2</strong></td>
+<td><strong>选中E1兄弟元素中的E2元素</strong></td>
+<td><strong>p+span</strong></td>
+</tr>
+<tr>
+<td><strong>.classname</strong></td>
+<td><strong>选中属性class的值为classname的元素</strong></td>
+<td><strong>.info</strong></td>
+</tr>
+<tr>
+<td><strong>#idname</strong></td>
+<td><strong>选中属性id的值为idname的元素</strong></td>
+<td><strong>#main</strong></td>
+</tr>
+<tr>
+<td><strong>[attr]</strong></td>
+<td><strong>选中包含attr属性的元素</strong></td>
+<td><strong>[href]</strong></td>
+</tr>
+<tr>
+<td><strong>[attr=value]</strong></td>
+<td><strong>选中包含attr属性且其值为value的元素</strong></td>
+<td><strong>[method=get]</strong></td>
+</tr>
+<tr>
+<td><strong>E:first-child</strong></td>
+<td><strong>选中E元素，且E元素为其父元素的第一个子元素</strong></td>
+<td><strong>a:first-child</strong></td>
+</tr>
+<tr>
+<td><strong>E:last-child</strong></td>
+<td><strong>选中E元素，且E元素为其父元素的最后一个子元素</strong></td>
+<td><strong>a:last-child</strong></td>
+</tr>
+<tr>
+<td><strong>E:empty</strong></td>
+<td><strong>选中没有子元素的E元素</strong></td>
+<td><strong>div:empty</strong></td>
+</tr>
+<tr>
+<td><strong>E:text</strong></td>
+<td><strong>选中E元素的文本内容</strong></td>
+<td><strong>p:tex</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>xpath选择器常用语法</strong></p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>作用</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/</td>
+<td>选中文档的根</td>
+<td>/</td>
+</tr>
+<tr>
+<td>.</td>
+<td>选中当前元素</td>
+<td>.</td>
+</tr>
+<tr>
+<td>…</td>
+<td>选中父元素</td>
+<td>img/…</td>
+</tr>
+<tr>
+<td>E</td>
+<td>选中当前元素的子元素中的所有E元素</td>
+<td>./a</td>
+</tr>
+<tr>
+<td>//E</td>
+<td>选中根元素的后代元素中的所有E元素</td>
+<td>//a</td>
+</tr>
+<tr>
+<td>.//E</td>
+<td>选中当前元素的后代元素中的所有E元素</td>
+<td>.//a</td>
+</tr>
+<tr>
+<td>*</td>
+<td>选中所有子元素</td>
+<td>//div/*/img</td>
+</tr>
+<tr>
+<td>E/text()</td>
+<td>选中E元素的文本内容</td>
+<td>//div/a/text()</td>
+</tr>
+<tr>
+<td>@attr</td>
+<td>选中包含attr属性的元素</td>
+<td>//img/@src</td>
+</tr>
+<tr>
+<td>@*</td>
+<td>选中所有属性的元素</td>
+<td>//img/@*</td>
+</tr>
+</tbody>
+</table>
+<h3 id="编写页面解析函数"><a class="markdownIt-Anchor" href="#编写页面解析函数"></a> 编写页面解析函数</h3>
+<p>依据前面的页面分析，我们来编写页面解析函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GetbooksSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;getbooks&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;books.toscrapy.com&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;http://books.toscrape.com/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> books <span class="keyword">in</span> response.css(<span class="string">&quot;article.product_pod&quot;</span>):</span><br><span class="line">            name = books.xpath(<span class="string">&quot;./h3/a/@title&quot;</span>).extract_first()</span><br><span class="line">            price = books.css(<span class="string">&quot;p.price_color::text&quot;</span>).extract_first()</span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="string">&quot;name&quot;</span> : name,</span><br><span class="line">                <span class="string">&quot;price&quot;</span> : price,</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p><strong><code>response.css()</code>函数和<code>response.xpath()</code>函数</strong>均返回一个列表，由符合选择条件的<code>Selector对象</code>组成的列表，均提供 <strong>extract函数</strong>（获取所有符合条件的<code>html标签</code>），<strong>extract_first函数</strong>（获取第一个符合条件的<code>html标签</code>)。<code>yield</code>用于提交对应内容给<code>Scrapy引擎</code>。</p>
+<h2 id="第三步运行项目"><a class="markdownIt-Anchor" href="#第三步运行项目"></a> 第三步：运行项目</h2>
+<p>代码编写完毕后，我们来运行这个项目：</p>
+<p><img src="/images/assets/2285e70136b268325dd9087b43606f64.png" alt="img" /></p>
+<p>当出现类似如下信息时，即为爬取成功：</p>
+<p><img src="/images/assets/1d6820a5babc69ac172af664aa66c58b.png" alt="img" /></p>
+<p>运行结束后，在我们指定的目录下，可以看到生成的<code>books.csv文件</code>：</p>
+<p><img src="/images/assets/6312f08b943872fba2dc133611f8124c.png" alt="img" /></p>
+<p>一个简单的爬虫程序就开发出来了。</p>
+<p>当然这只是一个最为简单的爬虫，随着接下来的深入学习，我们能够实现一些更为复杂的爬取工作。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/12/02/9bh6zzdd/">https://luoying.netlify.app/2021/12/02/9bh6zzdd/</a></p>
+    <p><strong>本文标题：</strong>爬虫框架Scrapy速成</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件46.jpg" data-sizes="auto" alt="随机组卷功能模拟" class="lazyload">
+          
+        
+        <a href="/2021/12/04/oucxjgcx/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            随机组卷功能模拟
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/文件4.jpg" data-sizes="auto" alt="超级简单的打jar包教程" class="lazyload">
+        
+      
+      <a href="/2021/11/03/86ticoox/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          超级简单的打jar包教程
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85scrapy"><span class="toc-number">2.</span> <span class="toc-text"> 安装Scrapy</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AAscrapy%E7%88%AC%E8%99%AB%E7%A8%8B%E5%BA%8F"><span class="toc-number">3.</span> <span class="toc-text"> 第一个Scrapy爬虫程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.1.</span> <span class="toc-text"> 第一步：分析页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.2.</span> <span class="toc-text"> 第二步：创建项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrapy%E6%A1%86%E6%9E%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">3.2.2.</span> <span class="toc-text"> Scrapy框架流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#css%E9%80%89%E6%8B%A9%E5%99%A8%E5%92%8Cxpath%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">3.2.3.</span> <span class="toc-text"> css选择器和xpath选择器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E9%A1%B5%E9%9D%A2%E8%A7%A3%E6%9E%90%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 编写页面解析函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E8%BF%90%E8%A1%8C%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.3.</span> <span class="toc-text"> 第三步：运行项目</span></a></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+

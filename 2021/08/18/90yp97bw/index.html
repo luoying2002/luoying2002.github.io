@@ -1,0 +1,704 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.outdate = {"enable":true,"daysAgo":730,"message":"本文最后更新于 {time}，请注意文中内容可能已经发生变化。"};window.REIMU_CONFIG.code_block = {"expand":30};</script>
+  
+  <title>
+    数据结构与算法之-----向量（Vector) |
+    
+    小小白的笔记屋
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CJetBrains%20Mono:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="前言 写在前面的话：数据结构与算法。    对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；   对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～     向量构建 本章的主要内容：数据结构之-----向量 数据结构中最基础也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法之-----向量（Vector)">
+<meta property="og:url" content="https://luoying.netlify.app/2021/08/18/90yp97bw/index.html">
+<meta property="og:site_name" content="小小白的笔记屋">
+<meta property="og:description" content="前言 写在前面的话：数据结构与算法。    对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；   对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～     向量构建 本章的主要内容：数据结构之-----向量 数据结构中最基础也">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-18T14:24:55.000Z">
+<meta property="article:modified_time" content="2025-10-01T10:48:11.026Z">
+<meta property="article:author" content="LuoYing">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+    
+      
+        
+<link rel="stylesheet" href="https://npm.webcache.cn/katex@0.16.11/dist/katex.min.css">
+
+      
+    
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">小小白祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+    
+    
+      <a id="nav-search-btn" class="nav-icon popup-trigger" title="搜索"></a>
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="数据结构与算法之-----向量（Vector)">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">数据结构与算法之-----向量（Vector)</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%9E%84%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text"> 向量构建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%B5%8B%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text"> 向量测试</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+          <section id="main"><article id="post-90yp97bw" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2021/08/18/90yp97bw/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2021-08-18T14:24:55.000Z" itemprop="datePublished">2021-08-18</time>
+    <time style="display: none;" id="post-update-time">2025-10-01</time>
+  </a>
+</div>
+
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" data-aos="zoom-in">数据结构与算法</a>
+  </div>
+
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote id="outdate-blockquote" style="display: none;"><p></p></blockquote>
+      
+      
+        <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>写在前面的话：数据结构与算法。</p>
+<blockquote>
+<ol>
+<li>
+<p>对于初识数据结构的小伙伴们，鉴于后面的数据结构的构建会使用到同tag前面的内容，包括具体数据结构的应用，所使用到的数据结构，也是自己构建的，未使用系统的库文件，因此，建议这类小伙伴们按顺序进行学习；</p>
+</li>
+<li>
+<p>对于想查询有关资料的小伙伴们，可以选择性地浏览。希望大家都能有所收获～</p>
+</li>
+</ol>
+</blockquote>
+<h1 id="向量构建"><a class="markdownIt-Anchor" href="#向量构建"></a> 向量构建</h1>
+<p>本章的主要内容：数据结构之-----<strong>向量</strong></p>
+<p>数据结构中最基础也是最重要的一个数据结构----<code>向量</code>。笔者大学所学的数据结构貌似与当前流行的学习内容有些不同，如果将数据按逻辑结构来简单划分的话，可以分为<code>线性结构</code>和<code>非线性结构</code>，线性结构里有一个<code>顺序表</code>的概念，其实，您可以把向量看成是<code>顺序表</code>的实例。</p>
+<p>下面我们来看向量的<code>C++实现</code>：</p>
+<p>先来看头文件，头文件中的内容非常之多，基本囊括了向量中大部分的知识，包括多种<code>查询算法</code>，<code>插入算法</code>，<code>删除算法</code>等等。</p>
+<p>为了代码的高可用性，笔者使用了<code>模版类</code>，如果您对于某段代码不太理解，可以先放一放，去查询一下相关资料，此外，如果代码中有错误之处，敬请指出，谢谢！</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 作者：易果啥笔</span></span><br><span class="line"><span class="comment"> * 时间：2021.8.18</span></span><br><span class="line"><span class="comment"> * 内容：向量模板类的头文件</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> VECTOR_VECTOR_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VECTOR_VECTOR_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Vector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> Rank;  <span class="comment">//秩</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_CAPACITY 3   <span class="comment">//默认的初始容量</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Vector</span>    &#123;   <span class="comment">//向量模板类</span></span><br><span class="line">    <span class="keyword">protected</span>:</span><br><span class="line">        Rank _size&#123;&#125; ; <span class="type">int</span> _capacity&#123;&#125; ; T* _elem ; <span class="comment">//规模，容量，数据区</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">copyForm</span><span class="params">(T <span class="type">const</span>* A , Rank lo , Rank hi)</span> </span>; <span class="comment">//复制数组区间A[lo,hi)</span></span><br><span class="line">    	<span class="function"><span class="type">void</span> <span class="title">expand</span><span class="params">()</span> </span>; <span class="comment">//空间不足时扩容</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">shrink</span><span class="params">()</span> </span>; <span class="comment">//装填因子过小时压缩</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">bubble</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//扫描交换</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(T&amp; e1,T&amp; e2)</span> </span>; <span class="comment">//交换元素</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//起泡排序算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">selectionSort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//选择排序算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(Rank lo ,Rank mi, Rank hi)</span> </span>; <span class="comment">//归并算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">mergeSort</span><span class="params">(Rank lo,Rank hi)</span> </span>; <span class="comment">//归并排序算法</span></span><br><span class="line">        <span class="function">Rank <span class="title">partition</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//轴点构造算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">quickSort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//快速排序算法</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">insertionSort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//插入排序算法</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="comment">//构造函数</span></span><br><span class="line">        <span class="function"><span class="keyword">explicit</span> <span class="title">Vector</span><span class="params">(<span class="type">int</span> c = DEFAULT_CAPACITY , <span class="type">int</span> s = <span class="number">0</span> , T v = <span class="number">0</span>)</span></span>&#123;</span><br><span class="line">            _elem = <span class="keyword">new</span> T[_capacity  = c] ;</span><br><span class="line">            <span class="keyword">for</span> (_size = <span class="number">0</span> ; _size &lt; s ; _elem[_size++] = v);</span><br><span class="line">            </span><br><span class="line">        &#125; <span class="comment">//容量为c,规模为s,所有元素初始为v</span></span><br><span class="line">        <span class="built_in">Vector</span>(T <span class="type">const</span>* A , Rank lo , Rank hi)&#123;</span><br><span class="line">            <span class="built_in">copyForm</span>(A,lo,hi) ; <span class="comment">//数组区间复制</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">Vector</span>(T <span class="type">const</span>* A , Rank n)&#123;</span><br><span class="line">            <span class="built_in">copyForm</span>(A,<span class="number">0</span>,n) ; <span class="comment">//数组整体复制</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">Vector</span>(Vector&lt;T&gt; <span class="type">const</span>* V , Rank lo , Rank hi)&#123;</span><br><span class="line">            <span class="built_in">copyForm</span>(V-&gt;_elem,lo,hi) ; <span class="comment">//向量区间复制</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">Vector</span>(Vector&lt;T&gt; <span class="type">const</span>* V)&#123;</span><br><span class="line">            <span class="built_in">copyForm</span>(V-&gt;_elem,<span class="number">0</span>,V-&gt;_size) ; <span class="comment">//向量整体复制</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//析构函数</span></span><br><span class="line">        ~<span class="built_in">Vector</span>()&#123; <span class="keyword">delete</span> [] _elem ; &#125; <span class="comment">//释放内部空间</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//只读访问接口</span></span><br><span class="line">        <span class="function">Rank <span class="title">size</span><span class="params">()</span> <span class="type">const</span> </span>&#123;<span class="keyword">return</span> _size ; &#125; <span class="comment">//规模</span></span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">isEmpty</span><span class="params">()</span> <span class="type">const</span> </span>&#123;<span class="keyword">return</span> _size;&#125; <span class="comment">//判空</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">disordered</span><span class="params">()</span> <span class="type">const</span> </span>; <span class="comment">//判断向量是否已排序</span></span><br><span class="line">        <span class="function">Rank <span class="title">find</span><span class="params">(T <span class="type">const</span>&amp; e)</span> <span class="type">const</span> </span>&#123;<span class="keyword">return</span> <span class="built_in">find</span>(e,<span class="number">0</span>,(Rank)_size) ; &#125; <span class="comment">//无序向量整体查找</span></span><br><span class="line">        <span class="function">Rank <span class="title">find</span><span class="params">(T <span class="type">const</span>&amp; e , Rank lo , Rank hi)</span> <span class="type">const</span> </span>; <span class="comment">//无序向量区间查找</span></span><br><span class="line">        <span class="function">Rank <span class="title">search</span><span class="params">(T <span class="type">const</span>&amp; e )</span> <span class="type">const</span> </span>&#123;<span class="keyword">return</span> (<span class="number">0</span> &gt;= _size) ? <span class="number">-1</span> : <span class="built_in">search</span>(e,(Rank)<span class="number">0</span>,(Rank)_size) ; &#125; <span class="comment">//有序向量整体查找</span></span><br><span class="line">        <span class="function">Rank <span class="title">search</span><span class="params">(T <span class="type">const</span>&amp; e , Rank lo , Rank hi)</span> <span class="type">const</span> </span>; <span class="comment">//有序向量区间查找</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//可写访问接口</span></span><br><span class="line">        T&amp; <span class="keyword">operator</span>[](Rank r) <span class="type">const</span> ; <span class="comment">//重载[]运算符，可以类似数组形式引用各元素</span></span><br><span class="line">        Vector&lt;T&gt; &amp; <span class="keyword">operator</span>=(Vector&lt;T&gt; <span class="type">const</span>&amp;) ; <span class="comment">//重载赋值操作符，以便直接克隆向量</span></span><br><span class="line">        <span class="function">T <span class="title">remove</span><span class="params">(Rank r)</span> </span>; <span class="comment">//删除秩为r的元素</span></span><br><span class="line">        <span class="function">Rank <span class="title">remove</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//删除秩在[lo,hi)之内的元素</span></span><br><span class="line"></span><br><span class="line">        <span class="function">Rank <span class="title">insert</span><span class="params">(Rank r , T <span class="type">const</span>&amp; e)</span> </span>; <span class="comment">//插入元素</span></span><br><span class="line">        <span class="function">Rank <span class="title">insert</span><span class="params">(T <span class="type">const</span>&amp; e)</span> </span>&#123;<span class="keyword">return</span> <span class="built_in">insert</span>(_size,e) ; &#125; <span class="comment">//默认作为末元素插入</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">sort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//对[lo,hi)排序</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">sort</span><span class="params">()</span> </span>&#123;<span class="built_in">sort</span>(<span class="number">0</span>,_size) ; &#125; <span class="comment">//整体排序</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unsort</span><span class="params">(Rank lo , Rank hi)</span> </span>; <span class="comment">//对[lo,hi)置乱</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unsort</span><span class="params">()</span> </span>&#123;<span class="built_in">unsort</span>(<span class="number">0</span>,_size) ; &#125; <span class="comment">//整体置乱</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">deduplicate</span><span class="params">()</span> </span>; <span class="comment">//无序去重</span></span><br><span class="line">        <span class="function"><span class="type">int</span> <span class="title">uniquify</span><span class="params">()</span> </span>; <span class="comment">//有序去重</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历</span></span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(<span class="type">void</span> (* visit)(T&amp;))</span></span>; <span class="comment">//遍历(使用函数指针，只读或局部性修改)</span></span><br><span class="line">        <span class="comment">//template&lt;typename VST&gt; void traverse(VST &amp;) ; //遍历(使用函数对象，可全局性修改)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;; <span class="comment">// Vector</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 静态方法</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//Fibonacci数列的构造</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">fibonacci</span><span class="params">(T *f,<span class="type">int</span> MAXSIZE)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    f[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>;i &lt; MAXSIZE;++i)</span><br><span class="line">        f[i] = f[i - <span class="number">2</span>] + f[i - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * protected方法</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;  <span class="function">Rank <span class="title">binSearch</span><span class="params">(T* A,T <span class="type">const</span>&amp; e,Rank lo,Rank hi)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">        Rank mi = (lo+hi) &gt;&gt; <span class="number">1</span> ; <span class="comment">//以中点为轴点</span></span><br><span class="line">        (e &lt; A[mi]) ? hi = mi : lo = mi + <span class="number">1</span> ; <span class="comment">//成功查找不能提前终止</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> --lo ;</span><br><span class="line">&#125; <span class="comment">//查找失败时，能指示失败的位置</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;  <span class="function">Rank <span class="title">fibSearch</span><span class="params">(T* A,T <span class="type">const</span>&amp; e,Rank lo,Rank hi)</span></span>&#123;</span><br><span class="line">    Rank n = hi-lo , k = <span class="number">0</span> , *array;</span><br><span class="line">    array = <span class="keyword">new</span> T[n] ;</span><br><span class="line">    <span class="built_in">fibonacci</span>(array,n) ;</span><br><span class="line">    <span class="keyword">while</span>(n &gt; array[k] - <span class="number">1</span>) <span class="comment">//计算出n在斐波那契中的数列</span></span><br><span class="line">        ++k;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = n ; i &lt; array[k] - <span class="number">1</span> ; ++i) <span class="comment">//把数组补全</span></span><br><span class="line">        array[i] = array[n<span class="number">-1</span>];</span><br><span class="line">    <span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">        Rank mi = lo + array[k<span class="number">-1</span>] - <span class="number">1</span> ; <span class="comment">//找轴点</span></span><br><span class="line">        <span class="keyword">if</span>(e &lt;A[mi]) hi = mi ;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(A[mi] &lt; e) lo = mi + <span class="number">1</span> ;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> mi ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span> ; <span class="comment">//查找失败返回-1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">copyForm</span>(<span class="type">const</span> T *A, Rank lo, Rank hi) &#123;</span><br><span class="line">    _elem = <span class="keyword">new</span> T[_capacity = (hi-lo)&lt;&lt;<span class="number">1</span>] ; _size = <span class="number">0</span> ;<span class="comment">//分配空间，规模清零</span></span><br><span class="line">    <span class="keyword">while</span>(lo &lt; hi)</span><br><span class="line">        _elem[_size++] = A[lo++] ; <span class="comment">//复制至_elem[0,hi-lo)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">expand</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span>(_size &lt; _capacity)<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(_capacity &lt; DEFAULT_CAPACITY) _capacity = DEFAULT_CAPACITY ; <span class="comment">//不低于最小容量</span></span><br><span class="line">    T* oldElem  = _elem ; _elem = <span class="keyword">new</span> T[_capacity &lt;&lt;= <span class="number">1</span>] ; <span class="comment">//容量加倍</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i &lt; _size ; i++)</span><br><span class="line">        _elem[i] = oldElem[i] ; <span class="comment">//复制原向量内容(T为基本类型，或已经重载赋值操作符&quot;=&quot;)</span></span><br><span class="line">    <span class="keyword">delete</span> [] oldElem ; <span class="comment">//释放原空间</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">shrink</span>() &#123; <span class="comment">//装填因子过小时压缩向量所占空间</span></span><br><span class="line">    <span class="keyword">if</span>(_capacity &lt; DEFAULT_CAPACITY &lt;&lt; <span class="number">1</span>) <span class="keyword">return</span>; <span class="comment">//不至于收缩到DEFAULT_CAPACITY以下</span></span><br><span class="line">    <span class="keyword">if</span>(_size &lt;&lt; <span class="number">2</span> &gt; _capacity) <span class="keyword">return</span>; <span class="comment">//以25%为界</span></span><br><span class="line">    T* oldElem = _elem ; _elem = <span class="keyword">new</span> T[_capacity &gt;&gt;= <span class="number">1</span>] ; <span class="comment">//容量减半</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i&lt; _size ; i++) &#123;_elem[i] = oldElem[i];&#125;<span class="comment">//复制原向量内容</span></span><br><span class="line">    <span class="keyword">delete</span> [] oldElem ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">swap</span>(T &amp;e1, T &amp;e2) &#123;</span><br><span class="line">    <span class="type">int</span> temp ;</span><br><span class="line">    temp = e1 ;</span><br><span class="line">    e1 = e2 ;</span><br><span class="line">    e2 = temp ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">bool</span> Vector&lt;T&gt;::<span class="built_in">bubble</span>(Rank lo, Rank hi) &#123; <span class="comment">//一趟扫描交换</span></span><br><span class="line">    <span class="type">bool</span> sorted = <span class="literal">true</span> ;</span><br><span class="line">    <span class="keyword">while</span> (++lo &lt; hi)</span><br><span class="line">        <span class="keyword">if</span>(_elem[lo<span class="number">-1</span>] &gt; _elem[lo])&#123;</span><br><span class="line">            sorted = <span class="literal">false</span> ;</span><br><span class="line">            <span class="built_in">swap</span>(_elem[lo<span class="number">-1</span>],_elem[lo]) ; <span class="comment">//通过交换使局部有序</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> sorted ; <span class="comment">//返回有序标志</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">bubbleSort</span>(Rank lo, Rank hi) &#123;</span><br><span class="line">    <span class="keyword">while</span> (!<span class="built_in">bubble</span>(lo,hi--)) ; <span class="comment">//逐趟做扫描交换，直至全序</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">selectionSort</span>(Rank lo, Rank hi) &#123;</span><br><span class="line">    <span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">        Rank temp = lo ;</span><br><span class="line">        <span class="keyword">for</span>(Rank i = lo<span class="number">+1</span> ; i &lt; hi ; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(_elem[temp] &gt; _elem[i]) temp = i ;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">swap</span>(_elem[lo++],_elem[temp]) ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">insertionSort</span>(Rank lo , Rank hi) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i &lt; hi - lo ; i++)&#123;</span><br><span class="line">        <span class="built_in">insert</span>(<span class="built_in">binSearch</span>(_elem,_elem[lo],lo-i,lo)<span class="number">+1</span>,_elem[lo]);</span><br><span class="line">        lo++ ; <span class="built_in">remove</span>(lo--) ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">merge</span>(Rank lo, Rank mi, Rank hi) &#123; <span class="comment">//有序向量的归并，以mi为界，各自有序的子向量[lo,mi)和[mi,hi)</span></span><br><span class="line">    T* A = _elem + lo ; <span class="comment">//合并后的向量A[0,hi - lo) = _elem[lo,hi)</span></span><br><span class="line">    <span class="type">int</span> lb = mi - lo ; T* B = <span class="keyword">new</span> T[lb] ; <span class="comment">//前子向量B[0,lb) = _elem[lo,mi)</span></span><br><span class="line">    <span class="keyword">for</span>(Rank i = <span class="number">0</span> ; i &lt; lb ; i++)</span><br><span class="line">        B[i] = A[i] ; <span class="comment">//复制前子向量</span></span><br><span class="line">    <span class="type">int</span> lc = hi - mi ; T* C = _elem + mi ; <span class="comment">//后子向量C[0,lc) = _elem[mi,hi)</span></span><br><span class="line">    <span class="keyword">for</span>(Rank i = <span class="number">0</span> , j = <span class="number">0</span> , k = <span class="number">0</span> ; (j &lt; lb) || (k &lt; lc) ; )&#123; <span class="comment">//将B[j]和C[k]中的小者续至A末尾</span></span><br><span class="line">        <span class="keyword">if</span> ( (j &lt; lb) &amp;&amp; (!(k &lt; lc) || (B[j] &lt;= C[k]) ) ) A[i++] = B[j++] ;</span><br><span class="line">        <span class="keyword">if</span> ( (k &lt; lc) &amp;&amp; (!(j &lt; lb) || (C[k] &lt; B[j]) ) ) A[i++] = C[k++] ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> [] B ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">mergeSort</span>(Rank lo, Rank hi) &#123; <span class="comment">//向量归并排序</span></span><br><span class="line">    <span class="keyword">if</span> (hi - lo &lt; <span class="number">2</span>) <span class="keyword">return</span> ;</span><br><span class="line">    <span class="type">int</span> mi = (lo + hi) &gt;&gt; <span class="number">1</span> ; <span class="comment">//以中点为界</span></span><br><span class="line">    <span class="built_in">mergeSort</span>(lo,mi) ; <span class="built_in">mergeSort</span>(mi,hi) ; <span class="built_in">merge</span>(lo,mi,hi) ; <span class="comment">//分别对前后半段排序，然后归并</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">partition</span>(Rank lo, Rank hi) &#123; <span class="comment">//轴点构造算法：通过调整元素位置构造区间[lo,hi]的轴点，并返回其秩</span></span><br><span class="line">    <span class="built_in">swap</span>(_elem[lo],_elem[lo + <span class="built_in">rand</span>() % (hi -lo <span class="number">+1</span>)]) ; <span class="comment">//任意一个元素与首元素交换</span></span><br><span class="line">    T pivot = _elem[lo] ; <span class="comment">//以首元素为候选轴点-----经以上交换，等效于随机选取</span></span><br><span class="line">    <span class="keyword">while</span>(lo &lt; hi)&#123; <span class="comment">//以向量的两端交替地向中间扫描</span></span><br><span class="line">        <span class="keyword">while</span>((lo &lt; hi))</span><br><span class="line">            <span class="keyword">if</span>(pivot &lt; _elem[hi]) <span class="comment">//在大于的pivot前提下</span></span><br><span class="line">                hi--; <span class="comment">//向左扩展右端子向量</span></span><br><span class="line">            <span class="keyword">else</span> <span class="comment">//直至遇到不大于pivot者</span></span><br><span class="line">            &#123;_elem[lo++] = _elem[hi] ; <span class="keyword">break</span> ;&#125; <span class="comment">//将其归入左端子向量</span></span><br><span class="line">        <span class="keyword">while</span> ((lo &lt; hi))</span><br><span class="line">            <span class="keyword">if</span>(_elem[lo] &lt; pivot)</span><br><span class="line">                lo++;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                &#123;_elem[hi--] = _elem[lo] ; <span class="keyword">break</span> ;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    _elem[lo] = pivot ; <span class="comment">//将备份的轴点记录置于前，后子向量之间</span></span><br><span class="line">    <span class="keyword">return</span> lo ; <span class="comment">//返回轴点的秩</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">quickSort</span>(Rank lo, Rank hi) &#123;</span><br><span class="line">    <span class="keyword">if</span>(hi - lo &lt; <span class="number">2</span>) <span class="keyword">return</span> ;</span><br><span class="line">    Rank mi = <span class="built_in">partition</span>(lo,hi - <span class="number">1</span>) ;</span><br><span class="line">    <span class="built_in">quickSort</span>(lo,mi) ;</span><br><span class="line">    <span class="built_in">quickSort</span>(mi + <span class="number">1</span>,hi) ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * public方法</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Vector&lt;T&gt;&amp; Vector&lt;T&gt;::<span class="keyword">operator</span>=(<span class="type">const</span> Vector&lt;T&gt; &amp; V) &#123;</span><br><span class="line">    <span class="keyword">if</span>(_elem) <span class="keyword">delete</span> [] _elem ; <span class="comment">//释放原有内容</span></span><br><span class="line">    <span class="built_in">copyForm</span>(V._elem,<span class="number">0</span>,V.<span class="built_in">size</span>()) ; <span class="comment">//整体复制</span></span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span> ; <span class="comment">//返回当前对象的引用，以便链式赋值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; T&amp; Vector&lt;T&gt;::<span class="keyword">operator</span>[](Rank r) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> _elem[r] ; <span class="comment">// 0 &lt;= r &lt; _size</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">unsort</span>(Rank lo, Rank hi) &#123;</span><br><span class="line">    T* V = _elem + lo ; <span class="comment">//将子向量_elem[lo,hi)视作另一向量V[0,hi-lo)</span></span><br><span class="line">    <span class="keyword">for</span>(Rank i = hi - lo ; i &gt; <span class="number">0</span> ; i--) <span class="comment">//自后向前</span></span><br><span class="line">        <span class="built_in">swap</span>(V[i<span class="number">-1</span>],V[<span class="built_in">random</span>() % i]) ; <span class="comment">//V[i - 1]与V[0 , i]中某一随机元素交换</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">find</span>(<span class="type">const</span> T &amp;e, Rank lo, Rank hi) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>((lo &lt; hi--) &amp;&amp; (e != _elem[hi])) ; <span class="comment">//从后向前，顺序查找</span></span><br><span class="line">    <span class="keyword">return</span> hi ; <span class="comment">//若hi &lt; lo，则意味着失败，否则将返回hi即为命中元素的秩</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">insert</span>(Rank r, <span class="type">const</span> T &amp;e) &#123;</span><br><span class="line">    <span class="built_in">expand</span>() ; <span class="comment">//若有必要，扩容</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = _size ; i &gt; r ; i--) _elem[i] = _elem[i<span class="number">-1</span>] ; <span class="comment">//自后向前，后继元素顺次后移一个单元</span></span><br><span class="line">    _elem[r] = e ; _size++ ; <span class="comment">//置入新元素并更新容量</span></span><br><span class="line">    <span class="keyword">return</span> r ; <span class="comment">//返回秩</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">remove</span>(Rank lo, Rank hi) &#123;</span><br><span class="line">    <span class="keyword">if</span>(lo == hi) <span class="keyword">return</span> <span class="number">0</span> ; <span class="comment">//出于效率考虑，单独处理退化情况，比如remove(0,0);</span></span><br><span class="line">    <span class="keyword">while</span>(hi &lt; _size) _elem[lo++] = _elem[hi++] ; <span class="comment">//[hi,_size)顺次前移hi-lo个单元</span></span><br><span class="line">    _size = lo ; <span class="comment">//更新规模，直接丢弃尾部[lo,_size = hi)区间</span></span><br><span class="line">    <span class="built_in">shrink</span>() ; <span class="comment">//若有必要，则缩容</span></span><br><span class="line">    <span class="keyword">return</span> hi - lo ; <span class="comment">//返回被删除的元素个数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; T Vector&lt;T&gt;::<span class="built_in">remove</span>(Rank r) &#123;</span><br><span class="line">    T e = _elem[r] ; <span class="comment">//备份被删除元素</span></span><br><span class="line">    <span class="built_in">remove</span>(r,r<span class="number">+1</span>) ; <span class="comment">//调用区间删除算法，等效于对区间[r,r+1)的删除</span></span><br><span class="line">    <span class="keyword">return</span> e ; <span class="comment">//返回被删除的元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">deduplicate</span>() &#123;</span><br><span class="line">    <span class="type">int</span> oldSize = _size ; <span class="comment">//记录原规模</span></span><br><span class="line">    Rank i = <span class="number">1</span> ; <span class="comment">//从_elem[1]开始</span></span><br><span class="line">    <span class="keyword">while</span>(i &lt; _size)</span><br><span class="line">        ( <span class="built_in">find</span>(_elem[i] , <span class="number">0</span> , i) &lt; <span class="number">0</span>) ? <span class="comment">//在其前缀中寻找与之雷同者(至多一个)</span></span><br><span class="line">        i++ : <span class="built_in">remove</span>(i) ; <span class="comment">//若无雷同者则继续考察其后继，否则就删除雷同者</span></span><br><span class="line">    <span class="keyword">return</span> oldSize - _size ; <span class="comment">//返回被删除元素的总数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">traverse</span>(<span class="built_in">void</span> (*visit)(T &amp;)) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ; i &lt; _size ; i++) <span class="built_in">visit</span>(_elem[i]) ; <span class="comment">//利用函数指针机制的遍历</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//template &lt;typename T&gt; template &lt;typename VST&gt;</span></span><br><span class="line"><span class="comment">//Rank Vector&lt;T&gt;::traverse(VST &amp; visit) &#123;</span></span><br><span class="line">   <span class="comment">//for(int i = 0 ; i &lt; _size ; i++) visit(_elem[i]) ; //利用函数对象机制的遍历</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="type">int</span> Vector&lt;T&gt;::<span class="built_in">disordered</span>() <span class="type">const</span> &#123;</span><br><span class="line">    <span class="type">int</span> n = <span class="number">0</span> ; <span class="comment">//计数器</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span> ; i &lt; _size ; i++) <span class="comment">//逐一检查_size-1对相邻元素</span></span><br><span class="line">        <span class="keyword">if</span>(_elem[i<span class="number">-1</span>] &gt; _elem[i]) n++ ; <span class="comment">//逆序则计数</span></span><br><span class="line">    <span class="keyword">return</span> n ; <span class="comment">//向量有序但且仅当n=0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">uniquify</span>() &#123;</span><br><span class="line">    Rank i = <span class="number">0</span> , j = <span class="number">0</span> ; <span class="comment">//各对互异&quot;相邻&quot;元素的秩</span></span><br><span class="line">    <span class="keyword">while</span>(++j &lt; _size) <span class="comment">//逐一扫描，直至末元素</span></span><br><span class="line">        <span class="keyword">if</span>(_elem[i] != _elem[j]) <span class="comment">//跳过雷同者</span></span><br><span class="line">            _elem[++i] = _elem[j] ; <span class="comment">//发现不同元素时，向前移至紧邻于前者右侧</span></span><br><span class="line">    _size = ++i ; <span class="built_in">shrink</span>() ; <span class="comment">//直接截除尾部多余元素</span></span><br><span class="line">    <span class="keyword">return</span>  j<span class="number">-1</span> ; <span class="comment">//返回被删除元素总数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; Rank Vector&lt;T&gt;::<span class="built_in">search</span>(<span class="type">const</span> T &amp;e, Rank lo, Rank hi) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="built_in">random</span>()%<span class="number">2</span>) ?</span><br><span class="line">        <span class="built_in">binSearch</span>(_elem,e,lo,hi) : <span class="built_in">fibSearch</span>(_elem,e,lo,hi) ; <span class="comment">//Fibonacci查找</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Vector&lt;T&gt;::<span class="built_in">sort</span>(Rank lo, Rank hi) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (<span class="built_in">random</span>() % <span class="number">4</span>) &#123; <span class="comment">//随机选择排序算法，可根据问题的特点灵活选取或扩充</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span> : <span class="built_in">bubbleSort</span>(lo,hi) ; <span class="keyword">break</span> ; <span class="comment">//起泡排序</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span> : <span class="built_in">selectionSort</span>(lo,hi) ; <span class="keyword">break</span> ; <span class="comment">//选择排序</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span> : <span class="built_in">mergeSort</span>(lo,hi) ; <span class="keyword">break</span> ; <span class="comment">//归并排序</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span> : <span class="built_in">insertionSort</span>(lo,hi); <span class="comment">//插入排序</span></span><br><span class="line">        <span class="keyword">default</span>: <span class="built_in">quickSort</span>(lo,hi) ; <span class="keyword">break</span> ; <span class="comment">//快速排序</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">//VECTOR_VECTOR_H</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="向量测试"><a class="markdownIt-Anchor" href="#向量测试"></a> 向量测试</h1>
+<p>在头文件里，我们定义了向量的一些基本运算，下面，我们以一个<code>main</code>文件来展示向量的基本操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 作者：易果啥笔</span></span><br><span class="line"><span class="comment"> * 时间：2021.8.18</span></span><br><span class="line"><span class="comment"> * 内容：Vector模版类的应用</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Vector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CAPACITY 10</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SIZE 5</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VALUE 0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">print</span><span class="params">(T a)</span></span>&#123;</span><br><span class="line">    std::cout&lt;&lt;a&lt;&lt;<span class="string">&quot;  &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">clock_t</span> start,finish; <span class="comment">//clock_t为CPU时钟计时单元数</span></span><br><span class="line"></span><br><span class="line">    start = <span class="built_in">clock</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function">Vector&lt;<span class="type">int</span>&gt; <span class="title">vector</span><span class="params">(CAPACITY,SIZE,VALUE)</span></span>;</span><br><span class="line">    vector[<span class="number">0</span>] = <span class="number">1</span> ;</span><br><span class="line">    vector[<span class="number">1</span>] = <span class="number">2</span> ;</span><br><span class="line">    vector.<span class="built_in">insert</span>(<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">    vector.<span class="built_in">insert</span>(<span class="number">3</span>,<span class="number">7</span>);</span><br><span class="line">    vector[<span class="number">4</span>] = <span class="number">1</span> ;</span><br><span class="line">    <span class="comment">//遍历</span></span><br><span class="line">    vector.<span class="built_in">traverse</span>(print);</span><br><span class="line">    </span><br><span class="line">    vector.<span class="built_in">sort</span>();cout&lt;&lt;endl;</span><br><span class="line">    <span class="comment">//遍历</span></span><br><span class="line">    vector.<span class="built_in">traverse</span>(print);</span><br><span class="line"></span><br><span class="line">    finish = <span class="built_in">clock</span>();</span><br><span class="line">    cout&lt;&lt;endl&lt;&lt;<span class="string">&quot;进程耗时：&quot;</span>&lt;&lt;<span class="built_in">double</span> (finish - start)/CLOCKS_PER_SEC&lt;&lt;<span class="string">&#x27;s&#x27;</span>&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;vector.<span class="built_in">isEmpty</span>()&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>main</code>文件中，笔者使用了<code>C++</code>中的<code>ctime库</code>中的<code>clock_t对象</code>来测试向量的一些基本操作的耗时，读者可以忽略。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <blockquote class="article-copyright">
+    <p><strong>本文作者：</strong>LuoYing @ 小小白的笔记屋</p>
+    <p><strong>本文链接：</strong><a href="https://luoying.netlify.app/2021/08/18/90yp97bw/">https://luoying.netlify.app/2021/08/18/90yp97bw/</a></p>
+    <p><strong>本文标题：</strong>数据结构与算法之-----向量（Vector)</p>
+    
+    
+    <p><strong>本文版权：</strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！</p>
+    <span class="icon-creative-commons article-copyright-bg"></span>
+  </blockquote>
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/文件35.jpg" data-sizes="auto" alt="数据结构与算法之-----链表（List)" class="lazyload">
+          
+        
+        <a href="/2021/08/18/jzasferb/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            数据结构与算法之-----链表（List)
+          
+        </h3>
+      </div>
+    
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      LuoYing
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        285.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        18:26
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%9E%84%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text"> 向量构建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%B5%8B%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text"> 向量测试</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="LuoYing" class="lazyload">
+  <div class="sidebar-author-name">LuoYing</div>
+  <div class="sidebar-description">一方小筑，与君共勉</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">119</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">15</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">2</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+      <div class="site-search">
+        <div class="reimu-popup popup">
+          <div class="reimu-search">
+            <div class="reimu-search-input-icon"></div>
+            <div class="reimu-search-input" id="reimu-search-input"></div>
+            <div class="popup-btn-close"></div>
+          </div>
+          <div class="reimu-results">
+            <div id="reimu-stats"></div>
+            <div id="reimu-hits"></div>
+            <div id="reimu-pagination" class="reimu-pagination"></div>
+          </div>
+          <img class="reimu-bg" src="/images/reimu.png"/>
+        </div>
+      </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+  
+<script src="/js/generator_search.js" defer></script>
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+<script data-pjax>
+  var updateTime = _$('#post-update-time')?.innerHTML;
+
+  if (updateTime) {
+    const update = new Date(updateTime);
+    const now = new Date();
+    const diff = now - update;
+    const days = diff / 86400000;
+    const { daysAgo, message: template } = window.REIMU_CONFIG.outdate;
+    if (days >= daysAgo) {
+      const message = template.replace(/{time}/, updateTime);
+      const blockquote = _$('#outdate-blockquote');
+      if (blockquote) {
+        blockquote.querySelector('p').innerText = message;
+        blockquote.style.display = 'block';
+      }
+    }
+  }
+</script>
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+  
+
+
+  </body>
+  </html>
+
